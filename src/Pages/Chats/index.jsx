@@ -6,7 +6,7 @@ import Chat from './components/chat';
 import UserProfile from '../../components/UserProfile';
 import UserChats from './components/userChats';
 
-import { OnSnapshotGetSingleUser, OnSnapshotHandel } from '../../Data/Chats/';
+import { OnSnapshotGetChatMessage, OnSnapshotGetSingleUser, OnSnapshotHandel } from '../../Data/Chats/';
 
 import { catchError } from "../../Helper/helper"
 import EmptyChat from './components/EmptyChat';
@@ -25,7 +25,7 @@ class Chats extends Component {
                 isEmpty: true,
                 isLoading: true,
                 userProfile: {},
-                userChat: {},
+                userChatsMessage: {},
             },
         };
     }
@@ -40,7 +40,7 @@ class Chats extends Component {
                 isEmpty: true,
                 isLoading: true,
                 userProfile: {},
-                userChat: {},
+                userChatsMessage: {},
             },
         }, () => {
             this.getUserList();
@@ -85,18 +85,46 @@ class Chats extends Component {
 
         this.setState({
             userDetails: newData,
-        }, () => {
-            this.findUser(uid);
+        }, async () => {
+            await this.findUser(chatId, uid);
         });
     }
 
-    findUser = async (uid) => {
+    findUser = async (chatId, uid) => {
         const { userDetails } = this.state;
 
         try {
             const data = await OnSnapshotGetSingleUser('users', uid);
             const newData = update(userDetails, {
                 userProfile: { $set: data },
+            });
+
+            this.setState({
+                userDetails: newData,
+            }, async () => {
+                await this.getChatMessage(chatId);
+            });
+        } catch (err) {
+            const newData = update(userDetails, {
+                userProfile: { $set: {} },
+            });
+
+            this.setState({
+                userDetails: newData,
+            });
+
+            NotificationManager.error(catchError(err), 'Terjadi Kesalahan', 5000);
+        }
+    }
+
+    getChatMessage = async (chatId) => {
+        const { userDetails } = this.state;
+
+        try {
+            const dataChats = await OnSnapshotGetChatMessage('chats', chatId);
+
+            const newData = update(userDetails, {
+                userChatsMessage: { $set: dataChats },
                 isEmpty: { $set: false },
                 isLoading: { $set: false },
             });
@@ -106,7 +134,7 @@ class Chats extends Component {
             });
         } catch (err) {
             const newData = update(userDetails, {
-                userProfile: { $set: {} },
+                userChatsMessage: { $set: {} },
                 isEmpty: { $set: true },
                 isLoading: { $set: false },
             });
@@ -125,9 +153,13 @@ class Chats extends Component {
                 isLoading, list,
             },
             userDetails: {
-                isEmpty, isLoading: isLoadingUserDetails, userProfile,
+                isEmpty, isLoading: isLoadingUserDetails,
+                userProfile,
+                userChatsMessage,
             },
         } = this.state;
+
+        const { allow_chat: allowChat } = userChatsMessage;
 
         return (
             <div className="row">
@@ -164,15 +196,14 @@ class Chats extends Component {
                                                     <UserProfile
                                                         isEmpty={isEmpty}
                                                         data={userProfile}
-                                                        userName="Hayase Yuuka"
-                                                        userRole="Pengguna"
+                                                        allowChat={allowChat}
                                                         userDesc="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis gravida, ante nec consectetur tempus, nisi dui dapibus eros, tempus laoreet quam tellus in justo."
-                                                        userImage="https://images2.alphacoders.com/130/1301500.jpg"
-                                                        chatLength="100"
                                                         fileLength="2"
                                                     />
+
                                                     <Chat
                                                         titleChat="Direct Chats"
+                                                        data={userChatsMessage}
                                                     />
                                                 </>
                                             )

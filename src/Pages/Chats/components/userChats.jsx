@@ -56,7 +56,18 @@ const UserChats = ({
                                                     {displayName}
                                                 </span>
                                                 <span className="description">
-                                                    {lastMessage ? lastMessage.text : 'Pengguna Baru'}
+                                                    {
+                                                        lastMessage
+                                                        && (
+                                                            <>                                                          
+                                                                {
+                                                                    lastMessage.text.length > 35
+                                                                    ? `${lastMessage.text.substring(0, 35)}...`
+                                                                    : lastMessage.text
+                                                                }
+                                                            </>
+                                                        )
+                                                    }
                                                     <br />
                                                     {
                                                         `${fireBaseTime(date).toDateString().toString("MMMM yyyy")}

@@ -1,4 +1,7 @@
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+    collection, query, where, getDocs,
+    doc, getDoc,
+} from "firebase/firestore";
 
 import { db } from "../../firebase";
 
@@ -25,3 +28,15 @@ export const OnSnapshotGetSingleUser = async (tableName, uid) => {
         return err;
     }
 }
+
+export const OnSnapshotGetChatMessage = async (tableName, id) => {
+    try {
+        const docRef = doc(db, tableName, id);
+        const data = await getDoc(docRef);
+        
+        return data.data();
+    } catch (err){
+        return err;
+    }
+  };
+  

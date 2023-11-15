@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Image from './Image';
 
 const UserProfile = ({
-    data, userRole, userDesc, userImage, chatLength, fileLength,
+    data, userRole, userDesc, allowChat, chatLength, fileLength,
 }) => {
     const { displayName, email, photoURL, uid } = data;
 
@@ -14,22 +14,18 @@ const UserProfile = ({
                 <h3 className="widget-user-username">{displayName}</h3>
                 <h5 className="widget-user-desc">{email} - {userRole}</h5>
             </div>
-            {
-                userImage && (
-                    <div className="widget-user-image">
-                        <Image
-                            className="img-circle elevation-2"
-                            src={photoURL}
-                            alt={`User Profile - ${uid}`}
-                            style={{
-                                width: '100px',
-                                height: '100px',
-                                objectFit: 'cover',
-                            }}
-                        />
-                    </div>
-                )
-            }
+            <div className="widget-user-image">
+                <Image
+                    className="img-circle elevation-2"
+                    src={photoURL}
+                    alt={`User Profile - ${uid}`}
+                    style={{
+                        width: '100px',
+                        height: '100px',
+                        objectFit: 'cover',
+                    }}
+                />
+            </div>
             <div className="card-footer" style={{ paddingTop: '40px' }}>
                 <div className="row my-3 text-center">
                     <div className="col-sm-12">
@@ -57,6 +53,7 @@ const UserProfile = ({
 
 UserProfile.propTypes = {
     userRole: PropTypes.string,
+    allowChat: PropTypes.bool,
     data: PropTypes.shape({
       displayName: PropTypes.string,
       email: PropTypes.string,
@@ -67,6 +64,7 @@ UserProfile.propTypes = {
 
 UserProfile.defaultProps = {
     userRole: 'Pengguna',
+    allowChat: false,
     data: {
         displayName: 'Display name',
         email: 'email@gmail.com ',

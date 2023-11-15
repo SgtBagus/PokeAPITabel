@@ -17,8 +17,6 @@ export const SidebarComponents = ({ dataLogin, path: currentPath }) => {
         return navigate(path);
     }
 
-    console.log(currentPath);
-
     return (
         <aside className="main-sidebar sidebar-dark-primary elevation-4">
             <a href="index3.html" className="brand-link">
