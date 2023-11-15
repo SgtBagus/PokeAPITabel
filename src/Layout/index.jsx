@@ -4,7 +4,9 @@ import { HeaderComponents } from './components/Header';
 import { SidebarComponents } from './components/Sidebar';
 import { FooterComponents } from './components/Footer';
 
-export const LayoutDefault = ({ dataLogin, children, pageName, path }) => (
+export const LayoutDefault = ({
+    dataLogin, children, pageName, path
+}) => (
     <>
         {
             dataLogin && (

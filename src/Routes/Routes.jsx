@@ -1,6 +1,5 @@
 import { useContext } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import { NotificationContainer } from 'react-notifications';
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 
 import { LayoutDefault } from "../Layout"; 
 
@@ -12,17 +11,18 @@ import ForgotPassword from "../Pages/Login/ForgotPassword";
 import { NotFound404 } from "../Layout/404";
 
 import { AuthContext } from "../Context/AuthContext";
+import Chats from "../Pages/Chats";
 
 
-const RenderDefaultLayout = (page, pageName, currentUser, path) => {
-  return (
-    <LayoutDefault dataLogin={currentUser} pageName={pageName} path={path}>
-      {page}
-
-      <NotificationContainer />
-    </LayoutDefault>
-  )
-}
+const RenderDefaultLayout = (page, pageName, currentUser, path) => (
+  <LayoutDefault
+    dataLogin={currentUser}
+    pageName={pageName}
+    path={path}
+  >
+    {page}
+  </LayoutDefault>
+)
 
 const App = () => {
   const { currentUser, isLoading } = useContext(AuthContext);
@@ -53,6 +53,12 @@ const App = () => {
       <Route path="" element={
           <ProtectedRoute>
             {RenderDefaultLayout(<Home dataLogin={currentUser} />, "Home", currentUser, "/" )}
+          </ProtectedRoute>
+        }
+      />
+      <Route path="chats" element={
+          <ProtectedRoute>
+            {RenderDefaultLayout(<Chats dataLogin={currentUser} />, "Chats", currentUser, "Chats" )}
           </ProtectedRoute>
         }
       />

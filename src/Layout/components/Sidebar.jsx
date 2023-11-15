@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { signOut } from "firebase/auth"
+import { useNavigate } from 'react-router-dom';
 
 import ButonComponents from '../../components/Button';
 
@@ -8,12 +9,13 @@ import { auth } from '../../firebase';
 
 import { MENU_LIST } from '../config';
 
-const OnClickMenuHandel = (path) => {
-    window.location.href = `#${path}`;
-};
-
 export const SidebarComponents = ({ dataLogin, path: currentPath }) => {
     const { displayName, email, photoURL } = dataLogin;
+
+    const navigate = useNavigate();
+    const handelNavigate = (path) => {
+        return navigate(path);
+    }
 
     return (
         <aside className="main-sidebar sidebar-dark-primary elevation-4">
@@ -42,7 +44,7 @@ export const SidebarComponents = ({ dataLogin, path: currentPath }) => {
                                     <div
                                         className={`nav-link ${currentPath === path && 'active'}`}
                                         style={{ color: currentPath !== path && '#c2c7d0', cursor: 'pointer' }}
-                                        onClick={() => OnClickMenuHandel(path)}
+                                        onClick={() => handelNavigate(path)}
                                     >
                                         <i className={icon}></i>
                                         <p>{menuName}</p>

@@ -1,7 +1,11 @@
 import React from "react";
 import { HashRouter } from "react-router-dom";
+import { NotificationContainer } from 'react-notifications';
 
 import { AuthContextProvider } from "./Context/AuthContext";
+
+
+import 'react-notifications/lib/notifications.css';
 
 import Routes from './Routes/Routes';
 
@@ -11,6 +15,8 @@ function App() {
       <React.StrictMode>
         <HashRouter>
           <Routes />
+
+          <NotificationContainer />
         </HashRouter>
       </React.StrictMode>
     </AuthContextProvider>
