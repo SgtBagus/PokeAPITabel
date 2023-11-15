@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import { LayoutDefault } from "../Layout"; 
 
@@ -58,7 +58,7 @@ const App = () => {
       />
       <Route path="chats" element={
           <ProtectedRoute>
-            {RenderDefaultLayout(<Chats dataLogin={currentUser} />, "Chats", currentUser, "Chats" )}
+            {RenderDefaultLayout(<Chats dataLogin={currentUser} />, "Chats", currentUser, "/chats" )}
           </ProtectedRoute>
         }
       />

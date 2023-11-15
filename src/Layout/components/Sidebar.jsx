@@ -17,6 +17,8 @@ export const SidebarComponents = ({ dataLogin, path: currentPath }) => {
         return navigate(path);
     }
 
+    console.log(currentPath);
+
     return (
         <aside className="main-sidebar sidebar-dark-primary elevation-4">
             <a href="index3.html" className="brand-link">
@@ -39,7 +41,7 @@ export const SidebarComponents = ({ dataLogin, path: currentPath }) => {
                 <nav className="mt-2">
                     <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         {
-                            MENU_LIST.map(({id, menuName, path, icon, onClick }) => (
+                            MENU_LIST.map(({id, menuName, path, icon }) => (
                                 <li className="nav-item" key={id}>
                                     <div
                                         className={`nav-link ${currentPath === path && 'active'}`}
