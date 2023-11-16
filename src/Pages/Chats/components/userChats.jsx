@@ -16,13 +16,15 @@ const UserChats = ({
         <Card
             title={titleChat}
             type="card-primary"
-            height="660px"
+            height={!isLoading ? '660px' : '100px'}
         >
             {
                 isLoading ? (
-                    <Loading
-                        title="Memuat..."
-                    />
+                    <div className="container h-100">
+                        <div className="d-flex flex-column align-items-center justify-content-center h-100">
+                            <Loading title="Memuat..." />
+                        </div>
+                    </div>
                 )
                 : (
                     <ul className='nav nav-pills nav-sidebar flex-column chats-user-container'>

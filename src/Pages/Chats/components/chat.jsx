@@ -1,56 +1,142 @@
-import React from 'react'
+import React, { useEffect, useRef } from "react";
+
 import PropTypes from 'prop-types';
 
 import Image from '../../../components/Image';
+import Video from '../../../components/Video';
+
+import fireBaseTime from '../../../Helper/fireBaseTime';
+import { checkfileUrl } from '../../../Helper/checkFile';
 
 const Chat = ({
     titleChat,
+    dataUser: {
+        displayName: userDisplayName,
+        photoURL: userPhotoURL,
+    },
+    dataMessage: { messages },
+    dataLogin: {
+        uid: currentUid,
+        displayName: currentDisplayName,
+        photoURL: currentPhotoURL,
+    },
 }) => {
+    const ref = useRef();
+
+    useEffect(() => {
+        ref.current?.scrollIntoView({ behavior: "smooth" });
+    }, []);
+      
     return (
-        <div className="card card-primary card-outline direct-chat direct-chat-primary">
+        <div className="card card-outline direct-chat direct-chat-primary">
             <div className="card-header">
-                <h3 className="card-title">{titleChat}</h3>
+                <h3 className="card-title">
+                    {titleChat} - { userDisplayName }
+                </h3>
             </div>
             <div className="card-body">
-                <div className="direct-chat-messages">
-                    <div className="direct-chat-msg">
-                        <div className="direct-chat-infos clearfix">
-                            <span className="direct-chat-name float-left">Alexander Pierce</span>
-                            <span className="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
-                        </div>
-                        <Image
-                            className="direct-chat-img"
-                            src="https://images2.alphacoders.com/130/1301500.jpg"
-                            alt="Foto Pengguna"
-                            style={{
-                                width: '40px',
-                                height: '40px',
-                                objectFit: 'cover',
-                            }}
-                        />
-                        <div className="direct-chat-text">
-                            Is this template really for free? That's unbelievable!
-                        </div>
-                    </div>
-                    <div className="direct-chat-msg right">
-                        <div className="direct-chat-infos clearfix">
-                            <span className="direct-chat-name float-right">Sarah Bullock</span>
-                            <span className="direct-chat-timestamp float-left">23 Jan 2:05 pm</span>
-                        </div>
-                        <Image
-                            className="direct-chat-img"
-                            src="https://images5.alphacoders.com/131/1310740.png"
-                            alt="Foto Admin"
-                            style={{
-                                width: '40px',
-                                height: '40px',
-                                objectFit: 'cover',
-                            }}
-                        />
-                        <div className="direct-chat-text">
-                            You better believe it!
-                        </div>
-                    </div>
+                <div
+                    className="direct-chat-messages"
+                    style={{
+                        height: '450px',
+                    }}
+                >
+                    {
+                        messages.map((
+                            { date, id, img, senderId, text }
+                        ) => {
+                            return (
+                                <div
+                                    ref={ref}
+                                    key={id}
+                                    className={`direct-chat-msg ${senderId === currentUid && 'right' } my-4`}
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: senderId === currentUid ? ('flex-end') : ('flex-start'),
+                                    }}
+                                >
+                                <div className="direct-chat-infos clearfix">
+                                    <span
+                                        className={`direct-chat-name ${senderId === currentUid ? 'float-right' : 'float-left' }`}
+                                    >
+                                    { senderId === currentUid ? currentDisplayName : userDisplayName }
+                                    </span>
+                                </div>
+                                <div
+                                    className={`d-flex ${senderId === currentUid && 'flex-row-reverse'}`}
+                                >
+                                    <Image
+                                        className="direct-chat-img"
+                                        src={senderId === currentUid ? currentPhotoURL : userPhotoURL}
+                                        alt={senderId === currentUid ? 'Foto Pengguna' : 'Foto Admin'}
+                                        style={{
+                                            width: '40px',
+                                            height: '40px',
+                                            objectFit: 'cover',
+                                        }}
+                                    />
+                                    <div className="d-flex flex-column">
+                                        {
+                                            img && (
+                                                <div
+                                                    className="m-2"
+                                                    style={{
+                                                        float: senderId === currentUid ? 'right' : 'left',
+                                                    }}
+                                                >
+                                                    {
+                                                        checkfileUrl(img)
+                                                        ? (
+                                                            <Image
+                                                                className="my-2"
+                                                                src={img}
+                                                                alt={`messages-images-${id}`}
+                                                                style={{
+                                                                    width: '350px',
+                                                                    objectFit: 'cover',
+                                                                }}
+                                                            />
+                                                        )
+                                                        : (
+                                                            <Video
+                                                                className="my-2"
+                                                                src={img}
+                                                                style={{
+                                                                    objectFit: 'cover',
+                                                                    width: '350px',
+                                                                }}
+                                                            />
+                                                        )
+                                                    }
+                                                </div>
+                                            )
+                                        }
+                                        {
+                                            text !== '' && (
+                                                <div
+                                                    className="direct-chat-text my-2"
+                                                    style={{
+                                                        float: senderId === currentUid ? 'right' : 'left',
+                                                        margin: '0 15px',
+                                                        wordBreak: 'keep-all',
+                                                    }}
+                                                >
+                                                    {text}
+                                                </div>
+                                            )
+                                        }
+                                    </div>
+                                </div>
+                                <span
+                                    className={`direct-chat-timestamp ${senderId === currentUid ? 'float-right' : 'float-left' }`}
+                                >
+                                    {`${fireBaseTime(date).toDateString().toString("MMMM yyyy")} - ${fireBaseTime(date).toLocaleTimeString()}`}
+                                </span>
+                                </div>
+                            )
+                        })
+                    }
                 </div>
             </div>
             <div className="card-footer">
@@ -70,10 +156,20 @@ const Chat = ({
 
 Chat.propTypes = {
     titleChat: PropTypes.string,
+    data: PropTypes.shape({
+        messages: PropTypes.arrayOf(
+            PropTypes.shape({}).isRequired
+        ),
+        allow_chat: PropTypes.bool,
+    })
 };
 
 Chat.defaultProps = {
     titleChat: 'Direct Chats',
+    data: {
+        messages: [],
+        allow_chat: false,
+    }
 };
 
 export default Chat;

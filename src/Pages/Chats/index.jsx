@@ -24,6 +24,7 @@ class Chats extends Component {
             userDetails: {
                 isEmpty: true,
                 isLoading: true,
+                chatId: null,
                 userProfile: {},
                 userChatsMessage: {},
             },
@@ -39,6 +40,7 @@ class Chats extends Component {
             userDetails: {
                 isEmpty: true,
                 isLoading: true,
+                chatId: null,
                 userProfile: {},
                 userChatsMessage: {},
             },
@@ -124,6 +126,7 @@ class Chats extends Component {
             const dataChats = await OnSnapshotGetChatMessage('chats', chatId);
 
             const newData = update(userDetails, {
+                chatId: { $set: chatId },
                 userChatsMessage: { $set: dataChats },
                 isEmpty: { $set: false },
                 isLoading: { $set: false },
@@ -134,6 +137,7 @@ class Chats extends Component {
             });
         } catch (err) {
             const newData = update(userDetails, {
+                chatId: { $set: null },
                 userChatsMessage: { $set: {} },
                 isEmpty: { $set: true },
                 isLoading: { $set: false },
@@ -153,11 +157,12 @@ class Chats extends Component {
                 isLoading, list,
             },
             userDetails: {
-                isEmpty, isLoading: isLoadingUserDetails,
+                isEmpty, isLoading: isLoadingUserDetails, chatId,
                 userProfile,
                 userChatsMessage,
             },
         } = this.state;
+        const { dataLogin } = this.props;
 
         const { allow_chat: allowChat } = userChatsMessage;
 
@@ -195,15 +200,17 @@ class Chats extends Component {
                                                 <>
                                                     <UserProfile
                                                         isEmpty={isEmpty}
+                                                        chatId={chatId}
                                                         data={userProfile}
                                                         allowChat={allowChat}
                                                         userDesc="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis gravida, ante nec consectetur tempus, nisi dui dapibus eros, tempus laoreet quam tellus in justo."
-                                                        fileLength="2"
                                                     />
 
                                                     <Chat
                                                         titleChat="Direct Chats"
-                                                        data={userChatsMessage}
+                                                        dataUser={userProfile}
+                                                        dataMessage={userChatsMessage}
+                                                        dataLogin={dataLogin}
                                                     />
                                                 </>
                                             )

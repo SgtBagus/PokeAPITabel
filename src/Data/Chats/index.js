@@ -1,6 +1,6 @@
 import {
     collection, query, where, getDocs,
-    doc, getDoc,
+    doc, getDoc, updateDoc,
 } from "firebase/firestore";
 
 import { db } from "../../firebase";
@@ -38,5 +38,14 @@ export const OnSnapshotGetChatMessage = async (tableName, id) => {
     } catch (err){
         return err;
     }
-  };
+};
+
+
+export const changeAllowChatHandel = async (tableName, chatId, param) => {
+    try {
+        await updateDoc(doc(db, tableName, chatId), param);
+    } catch (err) {
+        return err;
+    }
+}
   

@@ -11,7 +11,7 @@ const Card = ({
                     {title}
                 </h3>
             </div>
-              <div
+            <div
                 className="card-body p-3"
                 style={height && {
                     height,

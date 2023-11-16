@@ -1,59 +1,76 @@
 import React from 'react'
 import PropTypes from 'prop-types';
+import { NotificationManager } from 'react-notifications';
 
 import Image from './Image';
+import { changeAllowChatHandel } from '../Data/Chats';
+
+import { catchError } from '../Helper/helper';
+
+const changeStatusMessage = async (value, chatId) => {
+    try {
+        await changeAllowChatHandel('chats', chatId, {
+            allow_chat: value,
+        });
+    } catch(err) {
+        NotificationManager.error(catchError(err), 'Terjadi Kesalahan', 5000);
+    }
+}
 
 const UserProfile = ({
-    data, userRole, userDesc, allowChat, chatLength, fileLength,
+    data: {
+        displayName, email, photoURL, uid,
+    },
+    chatId,
+    userDesc,
+    allowChat,
 }) => {
-    const { displayName, email, photoURL, uid } = data;
-
     return (
-        <div className="card card-widget widget-user">
-            <div className="widget-user-header bg-info">
-                <h3 className="widget-user-username">{displayName}</h3>
-                <h5 className="widget-user-desc">{email} - {userRole}</h5>
-            </div>
-            <div className="widget-user-image">
+        <div className="card card-widget widget-user-2">
+            <div className="widget-user-header bg-info d-flex align-items-center">
                 <Image
-                    className="img-circle elevation-2"
+                    className="img-circle img-bordered-sm mx-2"
                     src={photoURL}
                     alt={`User Profile - ${uid}`}
-                    style={{
-                        width: '100px',
-                        height: '100px',
-                        objectFit: 'cover',
-                    }}
+                    style={{ height: '85px', width: '85px', objectFit: 'cover' }}
                 />
+                <div className="mx-2">
+                    <h3 className="widget-user-username m-0 my-1">{displayName}</h3>
+                    <h5 className="widget-user-desc m-0 my-1">{email}</h5>
+
+                    <div className="my-2">
+                        <div className="btn-group">
+                            <button type="button" className="btn btn-default btn-sm" data-toggle="collapse" href="#descUser">
+                                Detail pengguna
+                            </button>
+                            <button
+                                type="button"
+                                className={`btn btn-${!allowChat ? 'primary' : 'danger' } btn-sm`}
+                                onClick={() => changeStatusMessage(!allowChat, chatId)}
+                            >
+                                {
+                                    allowChat ? "Non Aktifkan Percakapan !" : 'Aktifkan Percakapan !'
+                                }
+                                Aktifkan Percakapan !
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div className="card-footer" style={{ paddingTop: '40px' }}>
-                <div className="row my-3 text-center">
-                    <div className="col-sm-12">
+            <div className="card-footer p-0">
+                <div id="descUser" className="collapse" data-parent="#descUser">
+                    <div className="card-body">
                         {userDesc}
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-sm-6 border-right">
-                        <div className="description-block">
-                            <h5 className="description-header">{chatLength}</h5>
-                            <span className="description-text">Percakapan</span>
-                        </div>
-                    </div>
-                    <div className="col-sm-6">
-                        <div className="description-block">
-                            <h5 className="description-header">{fileLength}</h5>
-                            <span className="description-text">Total File</span>
-                        </div>
-                    </div>
-                </div>
             </div>
-      </div>
+        </div>
     )
 }
 
 UserProfile.propTypes = {
-    userRole: PropTypes.string,
     allowChat: PropTypes.bool,
+    chatId: PropTypes.string,
     data: PropTypes.shape({
       displayName: PropTypes.string,
       email: PropTypes.string,
@@ -63,8 +80,8 @@ UserProfile.propTypes = {
 };
 
 UserProfile.defaultProps = {
-    userRole: 'Pengguna',
     allowChat: false,
+    chatId: '',
     data: {
         displayName: 'Display name',
         email: 'email@gmail.com ',
