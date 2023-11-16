@@ -10,8 +10,10 @@ import ForgotPassword from "../Pages/Login/ForgotPassword";
 
 import { NotFound404 } from "../Layout/404";
 
-import { AuthContext } from "../Context/AuthContext";
+import { AuthContext } from "../context/AuthContext";
+
 import Chats from "../Pages/Chats";
+import ChatsV2 from "../Pages/ChatsV2";
 
 
 const RenderDefaultLayout = (page, pageName, currentUser, path) => (
@@ -59,6 +61,12 @@ const App = () => {
       <Route path="chats" element={
           <ProtectedRoute>
             {RenderDefaultLayout(<Chats dataLogin={currentUser} />, "Chats", currentUser, "/chats" )}
+          </ProtectedRoute>
+        }
+      />
+      <Route path="chatsV2" element={
+          <ProtectedRoute>
+            {RenderDefaultLayout(<ChatsV2 dataLogin={currentUser} />, "chatsV2", currentUser, "/chatsV2" )}
           </ProtectedRoute>
         }
       />

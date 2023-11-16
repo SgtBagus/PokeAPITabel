@@ -11,7 +11,7 @@ export const checkThisFileIsImageOrNot = ({ type }) => {
 
 const getFileExtension = (fileName) => fileName.replace(/^.*\./, '');
 
-const isIMage = (fileName) => {
+const isImage = (fileName) => {
     const fileExt = getFileExtension(fileName);
     const imagesExtension = ["png", "jpg", "jpeg"];
 
@@ -26,5 +26,5 @@ export const checkfileUrl = (urlFile) => {
     const url = new URL(urlFile);
     const fileName = url.pathname.split('/').slice(-1)[0];
 
-    return isIMage(fileName);
+    return isImage(fileName);
 } 

@@ -1,30 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types';
-import { NotificationManager } from 'react-notifications';
 
 import Image from './Image';
-import { changeAllowChatHandel } from '../Data/Chats';
-
-import { catchError } from '../Helper/helper';
-
-const changeStatusMessage = async (value, chatId) => {
-    try {
-        await changeAllowChatHandel('chats', chatId, {
-            allow_chat: value,
-        });
-    } catch(err) {
-        NotificationManager.error(catchError(err), 'Terjadi Kesalahan', 5000);
-    }
-}
+import ButonComponents from './Button';
 
 const UserProfile = ({
     data: {
         displayName, email, photoURL, uid,
     },
-    chatId,
-    userDesc,
-    allowChat,
+    chatId, userDesc, allowChat, changeStatusMessage,
 }) => {
+    const [isLoading, setIsLoading] = useState(false);
+
+    const changeAllowMessage = async () => {
+        setIsLoading(true);
+
+        await changeStatusMessage(!allowChat, chatId);
+
+        setIsLoading(false);
+    }
+
     return (
         <div className="card card-widget widget-user-2">
             <div className="widget-user-header bg-info d-flex align-items-center">
@@ -43,16 +38,17 @@ const UserProfile = ({
                             <button type="button" className="btn btn-default btn-sm" data-toggle="collapse" href="#descUser">
                                 Detail pengguna
                             </button>
-                            <button
+                            
+                            <ButonComponents
                                 type="button"
-                                className={`btn btn-${!allowChat ? 'primary' : 'danger' } btn-sm`}
-                                onClick={() => changeStatusMessage(!allowChat, chatId)}
-                            >
-                                {
-                                    allowChat ? "Non Aktifkan Percakapan !" : 'Aktifkan Percakapan !'
+                                buttonType={`btn btn-${!allowChat ? 'primary' : 'danger' } btn-sm`}
+                                buttonAction={() => changeAllowMessage()}
+                                buttonText={
+                                    isLoading ? 'Memperoses' : allowChat ? "Non Aktifkan Percakapan !" : 'Aktifkan Percakapan !'
                                 }
-                                Aktifkan Percakapan !
-                            </button>
+                                buttonIcon={isLoading && 'fas fa-sync-alt fa-spin'}
+                                disabled={isLoading}
+                            />
                         </div>
                     </div>
                 </div>
@@ -77,6 +73,7 @@ UserProfile.propTypes = {
       photoURL: PropTypes.string,
       uid: PropTypes.string,
     }),
+    changeStatusMessage: PropTypes.func.isRequired,
 };
 
 UserProfile.defaultProps = {
@@ -87,7 +84,7 @@ UserProfile.defaultProps = {
         email: 'email@gmail.com ',
         photoURL: null,
         uid: null,
-    }
+    },
 };
 
 export default UserProfile;

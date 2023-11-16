@@ -13,18 +13,24 @@ export const MENU_LIST = [
     },
     {
         id: 3,
+        menuName: 'Chats V2',
+        path: '/chatsv2',
+        icon: 'nav-icon far fa-envelope',
+    },
+    {
+        id: 4,
         menuName: 'Video Gallery',
         path: '/video-gallery',
         icon: 'nav-icon far fa-image',
     },
     {
-        id: 4,
+        id: 5,
         menuName: 'User List',
         path: '/user-list',
         icon: 'fas fa-users nav-icon',
     },
     {
-        id: 5,
+        id: 6,
         menuName: 'FAQ',
         path: '/faq',
         icon: 'nav-icon fas fa-columns',

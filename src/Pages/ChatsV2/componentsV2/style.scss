@@ -1,0 +1,35 @@
+.chats-user-list {
+    background-color: #fff;
+    cursor: pointer;
+    padding: 10px;
+
+    .username {
+        color: black;
+    };
+
+    .description {
+        color: black;
+    }
+
+    &:hover {
+        background-color: #17a2b8;
+        .username {
+            color: #fff;
+        };
+    
+        .description {
+            color: #fff;
+        }
+    }
+
+    &.active {
+        background-color: #007bff;
+        .username {
+            color: #fff;
+        };
+    
+        .description {
+            color: #fff;
+        }
+    }
+};

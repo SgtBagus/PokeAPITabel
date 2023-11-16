@@ -1,175 +1,202 @@
-import React, { useEffect, useRef } from "react";
+import React, { Component } from 'react';
+import update from "immutability-helper";
 
-import PropTypes from 'prop-types';
+import InputText from '../../../components/form/InputText';
+import Modals from '../../../components/Modals';
+import ButonComponents from '../../../components/Button';
 
-import Image from '../../../components/Image';
-import Video from '../../../components/Video';
+import MessagesComponents from './messages';
 
-import fireBaseTime from '../../../Helper/fireBaseTime';
-import { checkfileUrl } from '../../../Helper/checkFile';
+import defaultImage from './defaultImage.png';
 
-const Chat = ({
-    titleChat,
-    dataUser: {
-        displayName: userDisplayName,
-        photoURL: userPhotoURL,
-    },
-    dataMessage: { messages },
-    dataLogin: {
-        uid: currentUid,
-        displayName: currentDisplayName,
-        photoURL: currentPhotoURL,
-    },
-}) => {
-    const ref = useRef();
+class Chat extends Component {
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+            messages: [],
+            form: {
+                text: '',
+                file: null,
+            },
+            onSend: false,
+        };
+    }
 
-    useEffect(() => {
-        ref.current?.scrollIntoView({ behavior: "smooth" });
-    }, []);
-      
-    return (
-        <div className="card card-outline direct-chat direct-chat-primary">
-            <div className="card-header">
-                <h3 className="card-title">
-                    {titleChat} - { userDisplayName }
-                </h3>
-            </div>
-            <div className="card-body">
-                <div
-                    className="direct-chat-messages"
-                    style={{
-                        height: '450px',
-                    }}
-                >
-                    {
-                        messages.map((
-                            { date, id, img, senderId, text }
-                        ) => {
-                            return (
-                                <div
-                                    ref={ref}
-                                    key={id}
-                                    className={`direct-chat-msg ${senderId === currentUid && 'right' } my-4`}
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: senderId === currentUid ? ('flex-end') : ('flex-start'),
-                                    }}
-                                >
-                                <div className="direct-chat-infos clearfix">
-                                    <span
-                                        className={`direct-chat-name ${senderId === currentUid ? 'float-right' : 'float-left' }`}
-                                    >
-                                    { senderId === currentUid ? currentDisplayName : userDisplayName }
-                                    </span>
-                                </div>
-                                <div
-                                    className={`d-flex ${senderId === currentUid && 'flex-row-reverse'}`}
-                                >
-                                    <Image
-                                        className="direct-chat-img"
-                                        src={senderId === currentUid ? currentPhotoURL : userPhotoURL}
-                                        alt={senderId === currentUid ? 'Foto Pengguna' : 'Foto Admin'}
-                                        style={{
-                                            width: '40px',
-                                            height: '40px',
-                                            objectFit: 'cover',
-                                        }}
+    componentDidMount = () => {
+        const {
+            dataMessage: { messages }
+        } = this.props;
+        this.setState({
+            messages,
+        })
+    }
+
+    componentDidUpdate = ({
+        dataMessage: { messages: pMessages }
+    }) => {
+        const { dataMessage: { messages } } = this.props;
+
+        if (messages !== pMessages) {
+            this.setState({
+                messages,
+            })
+        }
+    }
+
+    handleSend = () => {
+        console.log('test');
+    }
+    
+    
+    _changeInputHandler = async (type, val, e) => {
+        const { form } = this.state;
+
+        const newForm = update(form, {
+            [type]: { $set: val },
+        });
+
+        this.setState({
+            form: newForm,
+        });
+    };
+
+    render() {
+        const {
+            titleChat,
+            dataUser: {
+                displayName: userDisplayName,
+                photoURL: userPhotoURL,
+            },
+            dataLogin: {
+                uid: currentUID,
+                displayName: currentDisplayName,
+                photoURL: currentPhotoURL,
+            },
+        } = this.props;
+
+        const {
+            messages, 
+            form: { text, file }, onSend,
+        } = this.state;
+
+        return (
+            <div className="card card-outline direct-chat direct-chat-primary">
+                <div className="card-header">
+                    <h3 className="card-title">
+                        {titleChat} - { userDisplayName }
+                    </h3>
+                </div>
+                <div className="card-body">
+                    <div
+                        className="direct-chat-messages"
+                        style={{ height: '450px' }}
+                    >
+                        {
+                            messages.map((
+                                { date, id, img, senderId, text }
+                            ) => {
+                                return (
+                                    <MessagesComponents
+                                        key={id}
+                                        id={id}
+                                        text={text}
+                                        date={date}
+                                        img={img}
+                                        senderId={senderId}
+                                        currentUID={currentUID}
+                                        currentDisplayName={currentDisplayName}
+                                        userDisplayName={userDisplayName}
+                                        currentPhotoURL={currentPhotoURL}
+                                        userPhotoURL={userPhotoURL}
                                     />
-                                    <div className="d-flex flex-column">
-                                        {
-                                            img && (
-                                                <div
-                                                    className="m-2"
-                                                    style={{
-                                                        float: senderId === currentUid ? 'right' : 'left',
+                                )
+                            })
+                        }
+                    </div>
+                </div>
+                <div className="card-footer">
+                    <div className='row'>
+                        <div className="col-md-6 col-xs-12 my-2">
+                            <InputText
+                                name="message"
+                                placeholder="Isi Pesan Anda..."
+                                value={text}
+                                changeEvent={(val, e) => this._changeInputHandler('text', val, e)}
+                                disabled={onSend}
+                            />
+                        </div>
+                        <div className="col-md-6 col-xs-12 my-2">
+                            <div className='d-flex'>
+                                <div className="d-flex align-items-center flex-column w-100 mx-2">
+                                    <Modals
+                                        buttonIcon="fas fa-file mx-2"
+                                        buttonLabel="Gambar"
+                                        className="w-100"
+                                        btnSubmitHandel={this.handleSend}
+                                        btnCancelHandel={() => this._changeInputHandler('file', null, null)}
+                                        btnSubmitText={onSend ? '' : 'Kirim'}
+                                        disabled={onSend}
+                                        buttonSubmitIcon={onSend ? "fas fa-sync-alt fa-spin" : 'fa fa-paper-plane mr-2'}
+                                        btnSubmitDisabled={onSend || (( text === '') && (file === null) )}
+                                    >
+                                        <div className="row">
+                                            <div className="col-md-12 my-2">
+                                                <img
+                                                    src={file ? URL.createObjectURL(file) : defaultImage}
+                                                    className="rounded w-100"
+                                                    style={{ objectFit: 'cover' }}
+                                                    alt=""
+                                                />
+                                                <input
+                                                    id="file"
+                                                    type="file"
+                                                    accept="image/png, image/gif, image/jpeg"
+                                                    style={{ display: "none" }}
+                                                    onChange={(e) => {
+                                                        try {
+                                                            this._changeInputHandler('file', e.target.files[0], null);
+                                                        } catch {
+                                                            this._changeInputHandler('file', null, null);
+                                                        }
                                                     }}
-                                                >
-                                                    {
-                                                        checkfileUrl(img)
-                                                        ? (
-                                                            <Image
-                                                                className="my-2"
-                                                                src={img}
-                                                                alt={`messages-images-${id}`}
-                                                                style={{
-                                                                    width: '350px',
-                                                                    objectFit: 'cover',
-                                                                }}
-                                                            />
-                                                        )
-                                                        : (
-                                                            <Video
-                                                                className="my-2"
-                                                                src={img}
-                                                                style={{
-                                                                    objectFit: 'cover',
-                                                                    width: '350px',
-                                                                }}
-                                                            />
-                                                        )
-                                                    }
-                                                </div>
-                                            )
-                                        }
-                                        {
-                                            text !== '' && (
-                                                <div
-                                                    className="direct-chat-text my-2"
-                                                    style={{
-                                                        float: senderId === currentUid ? 'right' : 'left',
-                                                        margin: '0 15px',
-                                                        wordBreak: 'keep-all',
-                                                    }}
-                                                >
-                                                    {text}
-                                                </div>
-                                            )
-                                        }
-                                    </div>
+                                                />
+                                                <label htmlFor="file" className="mt-2 w-100" style={{ marginBottom: 'unset' }}>
+                                                    <div
+                                                        className="btn btn-default w-100"
+                                                    >
+                                                        <i className="fas fa-file mr-2" />
+                                                        {!file ? "Upload File" : "Ganti File"}
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            <div className="col-md-12 my-2">
+                                                <InputText
+                                                    name="message"
+                                                    placeholder="Isi Pesan Anda..."
+                                                    value={text}
+                                                    changeEvent={(val, e) => this._changeInputHandler('text', val, e)}
+                                                    disabled={onSend}
+                                                />
+                                            </div>
+                                        </div>
+                                    </Modals>
                                 </div>
-                                <span
-                                    className={`direct-chat-timestamp ${senderId === currentUid ? 'float-right' : 'float-left' }`}
-                                >
-                                    {`${fireBaseTime(date).toDateString().toString("MMMM yyyy")} - ${fireBaseTime(date).toLocaleTimeString()}`}
-                                </span>
-                                </div>
-                            )
-                        })
-                    }
+                                <ButonComponents
+                                    type="button"
+                                    buttonType="btn-primary w-100 mx-2"
+                                    buttonAction={this.handleSend}
+                                    buttonText={onSend || 'Kirim'}
+                                    buttonIcon={onSend ? "fas fa-sync-alt fa-spin" : 'fa fa-paper-plane'}
+                                    disabled={onSend || (( text === '') && (file === null) )}
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div className="card-footer">
-                <form action="#" method="post">
-                    <div className="input-group">
-                        <input type="text" name="message" placeholder="Type Message ..." className="form-control" />
-                        <span className="input-group-append">
-                            <button type="submit" className="btn btn-primary">Send</button>
-                        </span>
-                    </div>
-                </form>
-            </div>
-        </div>
-    )
-}
-
-
-Chat.propTypes = {
-    titleChat: PropTypes.string,
-    data: PropTypes.shape({
-        messages: PropTypes.arrayOf(
-            PropTypes.shape({}).isRequired
-        ),
-        allow_chat: PropTypes.bool,
-    })
-};
-
-Chat.defaultProps = {
-    titleChat: 'Direct Chats',
-    data: {
-        messages: [],
-        allow_chat: false,
+        );
     }
-};
+}
 
 export default Chat;

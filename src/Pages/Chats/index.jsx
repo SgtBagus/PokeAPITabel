@@ -6,7 +6,7 @@ import Chat from './components/chat';
 import UserProfile from '../../components/UserProfile';
 import UserChats from './components/userChats';
 
-import { OnSnapshotGetChatMessage, OnSnapshotGetSingleUser, OnSnapshotHandel } from '../../Data/Chats/';
+import { OnSnapshotGetChatMessage, OnSnapshotGetSingleUser, OnSnapshotHandel, changeAllowChatHandel } from '../../Data/Chats/';
 
 import { catchError } from "../../Helper/helper"
 import EmptyChat from './components/EmptyChat';
@@ -150,6 +150,16 @@ class Chats extends Component {
             NotificationManager.error(catchError(err), 'Terjadi Kesalahan', 5000);
         }
     }
+
+    changeStatusMessage = async (value, chatId) => {
+        try {
+            await changeAllowChatHandel('chats', chatId, { allow_chat: value });
+
+            this.getChatMessage (chatId);
+        } catch(err) {
+            NotificationManager.error(catchError(err), 'Terjadi Kesalahan', 5000);
+        }
+    }
     
     render() {
         const {
@@ -204,12 +214,13 @@ class Chats extends Component {
                                                         data={userProfile}
                                                         allowChat={allowChat}
                                                         userDesc="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis gravida, ante nec consectetur tempus, nisi dui dapibus eros, tempus laoreet quam tellus in justo."
+                                                        changeStatusMessage={this.changeStatusMessage}
                                                     />
 
                                                     <Chat
                                                         titleChat="Direct Chats"
-                                                        dataUser={userProfile}
                                                         dataMessage={userChatsMessage}
+                                                        dataUser={userProfile}
                                                         dataLogin={dataLogin}
                                                     />
                                                 </>
