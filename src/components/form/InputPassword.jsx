@@ -48,25 +48,6 @@ class InputPassword extends Component {
                 </div>
             </div>
         </div>
-    //   <div className="form-group">
-    //     {controlLabel && <label className="control-label">{controlLabel}</label>}
-    //     <div className="input-password">
-    //       <input
-    //         type={(this.state.show) ? 'text' : 'password'}
-    //         className={`${this.props.classes} form-control`}
-    //         name={this.props.name}
-    //         onChange={this.handleChange}
-    //         placeholder={this.props.placeholder}
-    //         value={value}
-    //         maxLength={this.props.maxlength}
-    //         disabled={this.props.disabled}
-    //         required={!!this.props.required}
-    //       />
-    //       {!this.props.disabled
-    //       && <img className="toggle-show-password" src={this.state.show ? show : hide} onClick={() => this.buttonChangeHandler()} />
-    //     }
-    //     </div>
-    //   </div>
     );
   }
 }

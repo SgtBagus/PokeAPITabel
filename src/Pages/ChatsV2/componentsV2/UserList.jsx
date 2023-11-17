@@ -7,6 +7,7 @@ import { db } from "../../../firebase";
 
 import Card from "../../../components/Card";
 import Image from "../../../components/Image";
+import InputTextIcon from "../../../components/form/InputTextIcon";
 
 import fireBaseTime from '../../../Helper/fireBaseTime';
 
@@ -15,6 +16,7 @@ import Loading from "../../../components/Loading";
 
 const UserList = () => {
     const [chats, setChats] = useState([]);
+    const [textSearch, setTextSearch] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
     const { currentUser } = useContext(AuthContext);
@@ -45,78 +47,92 @@ const UserList = () => {
         <Card
             title="List Pengguna"
             type="card-primary"
-            height={!isLoading ? '660px' : '100px'}
         >
-            {
-                isLoading ? (
-                    <div className="container h-100">
-                        <div className="d-flex flex-column align-items-center justify-content-center h-100">
-                            <Loading title="Memuat..." />
+            <InputTextIcon
+                name="message"
+                placeholder="Pencarian..."
+                value={textSearch}
+                changeEvent={() => {}}
+                icon="fas fa-search"
+            />
+            <hr />
+            <div
+                style={{
+                    height: !isLoading ? '550px' : '100px',
+                    overflow: 'auto',
+                }}
+            >
+                {
+                    isLoading ? (
+                        <div className="container h-100">
+                            <div className="d-flex flex-column align-items-center justify-content-center h-100">
+                                <Loading title="Memuat..." />
+                            </div>
                         </div>
-                    </div>
-                )
-                : (
-                    <>
-                        <ul
-                            className="nav nav-pills nav-sidebar flex-column chats-user-container
-                        ">
-                            {Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date).map((chat) => {
-                                const chatId = chat[0];
-                                const {
-                                    userInfo, date, lastMessage,
-                                } = chat[1];
+                    )
+                    : (
+                        <>
+                            <ul
+                                className="nav nav-pills nav-sidebar flex-column chats-user-container
+                            ">
+                                {Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date).map((chat) => {
+                                    const chatId = chat[0];
+                                    const {
+                                        userInfo, date, lastMessage,
+                                    } = chat[1];
 
-                                const { photoURL, displayName, uid } = userInfo;
-                                const { user: { uid: selectedUid } } = data;
+                                    const { photoURL, displayName, uid } = userInfo;
+                                    const { user: { uid: selectedUid } } = data;
 
-                                return (
-                                    <li
-                                        className="nav-item"
-                                        key={chatId}
-                                        onClick={() => handleSelect(userInfo)}
-                                    >
-                                        <div
-                                            className={`nav-link chats-user-list ${uid === selectedUid && 'active'}`}
+                                    return (
+                                        <li
+                                            className="nav-item"
+                                            key={chatId}
+                                            onClick={() => handleSelect(userInfo)}
                                         >
-                                            <div className="user-block" style={{ float: "unset" }}>
-                                                <Image
-                                                    className="img-circle img-bordered-sm"
-                                                    src={photoURL}
-                                                    alt={`User Photo - ${uid}`}
-                                                />
-                                                <span className="username">{displayName}</span>
-                                                <span className="description">
+                                            <div
+                                                className={`nav-link chats-user-list ${uid === selectedUid && 'active'}`}
+                                            >
+                                                <div className="user-block" style={{ float: "unset" }}>
+                                                    <Image
+                                                        className="img-circle img-bordered-sm"
+                                                        src={photoURL}
+                                                        alt={`User Photo - ${uid}`}
+                                                    />
+                                                    <span className="username">{displayName}</span>
+                                                    <span className="description">
+                                                        {
+                                                            lastMessage && (
+                                                                <>
+                                                                    {lastMessage.text.length > 35 ? `${lastMessage.text.substring(0, 35)}...` : lastMessage.text}
+                                                                </>
+                                                            )
+                                                        }
+                                                    <br />
                                                     {
-                                                        lastMessage && (
+                                                        date && (
                                                             <>
-                                                                {lastMessage.text.length > 35 ? `${lastMessage.text.substring(0, 35)}...` : lastMessage.text}
+                                                            {
+                                                                `${fireBaseTime(date).toDateString().toString("MMMM yyyy")}
+                                                                ${' '}
+                                                                -
+                                                                ${' '}
+                                                                ${fireBaseTime(date).toLocaleTimeString()}`
+                                                            }
                                                             </>
                                                         )
                                                     }
-                                                <br />
-                                                {
-                                                    date && (
-                                                        <>
-                                                        {
-                                                            `${fireBaseTime(date).toDateString().toString("MMMM yyyy")}
-                                                            ${' '}
-                                                            -
-                                                            ${' '}
-                                                            ${fireBaseTime(date).toLocaleTimeString()}`
-                                                        }
-                                                        </>
-                                                    )
-                                                }
-                                                </span>
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </>
-                )
-            }
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </>
+                    )
+                }
+            </div>
         </Card>
     );
 };
