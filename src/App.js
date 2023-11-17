@@ -1,9 +1,8 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import { NotificationContainer } from 'react-notifications';
 
 import { AuthContextProvider } from "./context/AuthContext";
-
 
 import 'react-notifications/lib/notifications.css';
 
@@ -13,11 +12,11 @@ function App() {
   return (
     <AuthContextProvider>
       <React.StrictMode>
-        <BrowserRouter>
+        <HashRouter>
           <Routes />
 
           <NotificationContainer />
-        </BrowserRouter>
+        </HashRouter>
       </React.StrictMode>
     </AuthContextProvider>
   );

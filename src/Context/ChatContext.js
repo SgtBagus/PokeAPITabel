@@ -10,21 +10,28 @@ export const ChatContextProvider = ({ children }) => {
   const INITIAL_STATE = {
     chatId: 'null',
     user: {
-      uid: null,
-      photoURL: null,
-      displayName: null,
+      date: null,
+      lastMessage: null,
+      userInfo: {
+        uid: null,
+        displayName: null,
+        photoURL: null,
+      },
     },
   };
 
   const chatReducer = (state, action) => {
-    switch (action.type) {
+    const { type, payload } = action;
+    const { userInfo: { uid: selectedUid } } = payload;
+
+    switch (type) {
       case "CHANGE_USER":
         return {
           user: action.payload,
           chatId:
-            currentUser.uid > action.payload.uid
-            ? currentUser.uid + action.payload.uid
-            : action.payload.uid + currentUser.uid,
+            currentUser.uid > selectedUid
+            ? currentUser.uid + selectedUid
+            : selectedUid + currentUser.uid,
         };
 
       default:
