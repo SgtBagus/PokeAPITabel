@@ -9,7 +9,11 @@ export const ChatContextProvider = ({ children }) => {
   const { currentUser } = useContext(AuthContext);
   const INITIAL_STATE = {
     chatId: 'null',
-    user: {},
+    user: {
+      uid: null,
+      photoURL: null,
+      displayName: null,
+    },
   };
 
   const chatReducer = (state, action) => {

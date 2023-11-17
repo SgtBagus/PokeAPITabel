@@ -4,6 +4,7 @@ import { ChatContextProvider } from "../../context/ChatContext";
 
 import UserList from './componentsV2/UserList';
 import Chat from './componentsV2/Chat';
+import UserProfile from './componentsV2/UserProfile';
 
 const ChatV2 = () =>  {
     return (
@@ -16,7 +17,8 @@ const ChatV2 = () =>  {
                             <div className="col-4">
                                 <UserList />
                             </div>
-                            <div className="col-8"> 
+                            <div className="col-8">
+                                <UserProfile />
                                 <Chat titleChat="Kirim Pesan Ke" />
                             </div>
                         </div>
