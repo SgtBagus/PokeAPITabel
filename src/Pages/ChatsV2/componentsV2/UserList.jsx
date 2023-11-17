@@ -16,6 +16,8 @@ import Loading from "../../../components/Loading";
 
 const UserList = () => {
     const [chats, setChats] = useState([]);
+    const [chatsFilter, setChatsFilter] = useState([]);
+
     const [textSearch, setTextSearch] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
@@ -27,7 +29,10 @@ const UserList = () => {
 
         const getChats = async () => {
             const unsub = await onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
-                setChats(doc.data());
+                const arrayOfObject = (chatId, userInfo) => ({ chatId, userInfo });
+                const dataToArray = Object.entries(doc.data()).map(x => arrayOfObject(x[0], x[1]));
+
+                setChats(dataToArray);
                 setIsLoading(false);
             });
 
@@ -43,6 +48,19 @@ const UserList = () => {
         dispatch({ type: "CHANGE_USER", payload: u });
     };
 
+    const searchUserHandel = (val) => {
+        setTextSearch(val);
+        
+        const filterValue = chats.filter((data) => {
+            const userName = data.userInfo.userInfo.displayName.toLowerCase();
+            return userName.match(val.toLowerCase());
+        });
+
+        setChatsFilter(filterValue)
+    }
+
+    const renderChats = textSearch !== '' ? chatsFilter : chats;
+
     return (
         <Card
             title="List Pengguna"
@@ -52,7 +70,7 @@ const UserList = () => {
                 name="message"
                 placeholder="Pencarian..."
                 value={textSearch}
-                changeEvent={() => {}}
+                changeEvent={(val, e) => searchUserHandel(val)}
                 icon="fas fa-search"
             />
             <hr />
@@ -75,59 +93,65 @@ const UserList = () => {
                             <ul
                                 className="nav nav-pills nav-sidebar flex-column chats-user-container
                             ">
-                                {Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date).map((chat) => {
-                                    const chatId = chat[0];
-                                    const {
-                                        userInfo, date, lastMessage,
-                                    } = chat[1];
+                                {
+                                    renderChats.sort((a, b) => b.userInfo.date - a.userInfo.date ).map(({ chatId, userInfo }) => {
+                                        const {
+                                            date,
+                                            lastMessage,
+                                            userInfo: {
+                                                displayName,
+                                                photoURL,
+                                                uid,
+                                            }
+                                        } = userInfo;
 
-                                    const { photoURL, displayName, uid } = userInfo;
-                                    const { user: { uid: selectedUid } } = data;
+                                        const { user: { uid: selectedUid } } = data;
 
-                                    return (
-                                        <li
-                                            className="nav-item"
-                                            key={chatId}
-                                            onClick={() => handleSelect(userInfo)}
-                                        >
-                                            <div
-                                                className={`nav-link chats-user-list ${uid === selectedUid && 'active'}`}
+                                        return (
+                                            <li
+                                                className="nav-item"
+                                                key={chatId}
+                                                onClick={() => handleSelect(userInfo)}
                                             >
-                                                <div className="user-block" style={{ float: "unset" }}>
-                                                    <Image
-                                                        className="img-circle img-bordered-sm"
-                                                        src={photoURL}
-                                                        alt={`User Photo - ${uid}`}
-                                                    />
-                                                    <span className="username">{displayName}</span>
-                                                    <span className="description">
+                                                <div
+                                                    className={`nav-link chats-user-list ${uid === selectedUid && 'active'}`}
+                                                >
+                                                    <div className="user-block" style={{ float: "unset" }}>
+                                                        <Image
+                                                            className="img-circle img-bordered-sm"
+                                                            src={photoURL}
+                                                            alt={`User Photo - ${uid}`}
+                                                        />
+                                                        <span className="username">{displayName}</span>
+                                                        <span className="description">
+                                                            {
+                                                                lastMessage && (
+                                                                    <>
+                                                                        {lastMessage.text.length > 35 ? `${lastMessage.text.substring(0, 35)}...` : lastMessage.text}
+                                                                    </>
+                                                                )
+                                                            }
+                                                        <br />
                                                         {
-                                                            lastMessage && (
+                                                            date && (
                                                                 <>
-                                                                    {lastMessage.text.length > 35 ? `${lastMessage.text.substring(0, 35)}...` : lastMessage.text}
+                                                                {
+                                                                    `${fireBaseTime(date).toDateString().toString("MMMM yyyy")}
+                                                                    ${' '}
+                                                                    -
+                                                                    ${' '}
+                                                                    ${fireBaseTime(date).toLocaleTimeString()}`
+                                                                }
                                                                 </>
                                                             )
                                                         }
-                                                    <br />
-                                                    {
-                                                        date && (
-                                                            <>
-                                                            {
-                                                                `${fireBaseTime(date).toDateString().toString("MMMM yyyy")}
-                                                                ${' '}
-                                                                -
-                                                                ${' '}
-                                                                ${fireBaseTime(date).toLocaleTimeString()}`
-                                                            }
-                                                            </>
-                                                        )
-                                                    }
-                                                    </span>
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                    );
-                                })}
+                                            </li>
+                                        );
+                                    })
+                                }
                             </ul>
                         </>
                     )
