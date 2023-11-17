@@ -12,7 +12,6 @@ import { NotFound404 } from "../Layout/404";
 
 import { AuthContext } from "../context/AuthContext";
 
-import Chats from "../Pages/Chats";
 import ChatsV2 from "../Pages/ChatsV2";
 
 
@@ -60,13 +59,7 @@ const App = () => {
       />
       <Route path="chats" element={
           <ProtectedRoute>
-            {RenderDefaultLayout(<Chats dataLogin={currentUser} />, "Chats", currentUser, "/chats" )}
-          </ProtectedRoute>
-        }
-      />
-      <Route path="chatsV2" element={
-          <ProtectedRoute>
-            {RenderDefaultLayout(<ChatsV2 dataLogin={currentUser} />, "chatsV2", currentUser, "/chatsV2" )}
+            {RenderDefaultLayout(<ChatsV2 dataLogin={currentUser} />, "chats", currentUser, "/chats" )}
           </ProtectedRoute>
         }
       />

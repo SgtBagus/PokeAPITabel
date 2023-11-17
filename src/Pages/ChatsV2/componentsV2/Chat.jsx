@@ -15,9 +15,6 @@ import { AuthContext } from "../../../context/AuthContext";
 
 import { db } from "../../../firebase";
 
-import MessagesComponents from "./MessagesComponents";
-import EmptyChat from "../../Chats/components/EmptyChat";
-
 import InputText from "../../../components/form/InputText";
 import Modals from "../../../components/Modals";
 import ButonComponents from "../../../components/Button";
@@ -30,6 +27,9 @@ import { catchError } from "../../../Helper/helper";
 import defaultImage from "./defaultImage.png";
 import Image from "../../../components/Image";
 import Video from "../../../components/Video";
+
+import MessagesComponents from "./MessagesComponents";
+import EmptyChat from "./EmptyChat";
 
 const Chat = ({ titleChat }) => {
   const [messages, setMessages] = useState([]);
