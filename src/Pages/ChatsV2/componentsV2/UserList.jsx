@@ -18,7 +18,7 @@ const UserList = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     const { currentUser } = useContext(AuthContext);
-    const { dispatch } = useContext(ChatContext);
+    const { dispatch, data } = useContext(ChatContext);
 
     useEffect(() => {
         setIsLoading(true);
@@ -56,58 +56,65 @@ const UserList = () => {
                     </div>
                 )
                 : (
-                    <ul className="nav nav-pills nav-sidebar flex-column chats-user-container">
-                        {Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date).map((chat) => {
-                            const chatId = chat[0];
-                            const {
-                                userInfo, date, lastMessage,
-                            } = chat[1];
+                    <>
+                        <ul
+                            className="nav nav-pills nav-sidebar flex-column chats-user-container
+                        ">
+                            {Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date).map((chat) => {
+                                const chatId = chat[0];
+                                const {
+                                    userInfo, date, lastMessage,
+                                } = chat[1];
 
-                            const { photoURL, displayName, uid } = userInfo;
+                                const { photoURL, displayName, uid } = userInfo;
+                                const { user: { uid: selectedUid } } = data;
 
-                            return (
-                                <li
-                                    className="nav-item"
-                                    key={chatId}
-                                    onClick={() => handleSelect(userInfo)}
-                                >
-                                    <div className="nav-link chats-user-list">
-                                        <div className="user-block" style={{ float: "unset" }}>
-                                            <Image
-                                                className="img-circle img-bordered-sm"
-                                                src={photoURL}
-                                                alt={`User Photo - ${uid}`}
-                                            />
-                                            <span className="username">{displayName}</span>
-                                            <span className="description">
+                                return (
+                                    <li
+                                        className="nav-item"
+                                        key={chatId}
+                                        onClick={() => handleSelect(userInfo)}
+                                    >
+                                        <div
+                                            className={`nav-link chats-user-list ${uid === selectedUid && 'active'}`}
+                                        >
+                                            <div className="user-block" style={{ float: "unset" }}>
+                                                <Image
+                                                    className="img-circle img-bordered-sm"
+                                                    src={photoURL}
+                                                    alt={`User Photo - ${uid}`}
+                                                />
+                                                <span className="username">{displayName}</span>
+                                                <span className="description">
+                                                    {
+                                                        lastMessage && (
+                                                            <>
+                                                                {lastMessage.text.length > 35 ? `${lastMessage.text.substring(0, 35)}...` : lastMessage.text}
+                                                            </>
+                                                        )
+                                                    }
+                                                <br />
                                                 {
-                                                    lastMessage && (
+                                                    date && (
                                                         <>
-                                                            {lastMessage.text.length > 35 ? `${lastMessage.text.substring(0, 35)}...` : lastMessage.text}
+                                                        {
+                                                            `${fireBaseTime(date).toDateString().toString("MMMM yyyy")}
+                                                            ${' '}
+                                                            -
+                                                            ${' '}
+                                                            ${fireBaseTime(date).toLocaleTimeString()}`
+                                                        }
                                                         </>
                                                     )
                                                 }
-                                            <br />
-                                            {
-                                                date && (
-                                                    <>
-                                                    {
-                                                        `${fireBaseTime(date).toDateString().toString("MMMM yyyy")}
-                                                        ${' '}
-                                                        -
-                                                        ${' '}
-                                                        ${fireBaseTime(date).toLocaleTimeString()}`
-                                                    }
-                                                    </>
-                                                )
-                                            }
-                                            </span>
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </li>
-                            );
-                        })}
-                    </ul>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </>
                 )
             }
         </Card>
