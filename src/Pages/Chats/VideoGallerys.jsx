@@ -3,10 +3,11 @@ import React, { StrictMode } from 'react';
 import { ChatContextProvider } from "../../context/ChatContext";
 
 import UserList from './components/UserList';
-import Chat from './components/Chat';
 import UserProfile from './components/UserProfile';
 
-const ChatPages = () =>  {
+import VideoComponents from './components/VideoComponents';
+
+const VideoGallerys = () =>  {
     return (
         <ChatContextProvider>
             <StrictMode>
@@ -18,7 +19,7 @@ const ChatPages = () =>  {
                             </div>
                             <div className="col-8">
                                 <UserProfile />
-                                <Chat titleChat="Kirim Pesan Ke" />
+                                <VideoComponents />
                             </div>
                         </div>
                     </div>
@@ -28,4 +29,4 @@ const ChatPages = () =>  {
     );
 }
 
-export default ChatPages;
+export default VideoGallerys;

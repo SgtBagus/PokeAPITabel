@@ -22,6 +22,13 @@ const isImage = (fileName) => {
     }
 }
 
+export const checkFileUrlName = (urlFile) => {
+    const url = new URL(urlFile);
+    const filePart = url.pathname.split('/').slice(-1)[0];
+
+    return filePart.split('%2F')[2];
+}
+
 export const checkfileUrl = (urlFile) => {
     const url = new URL(urlFile);
     const fileName = url.pathname.split('/').slice(-1)[0];

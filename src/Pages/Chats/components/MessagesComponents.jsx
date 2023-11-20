@@ -66,8 +66,9 @@ const MessagesComponents = ({ message }) => {
                                             src={img}
                                             alt={`messages-images-${id}`}
                                             style={{
-                                                width: "350px",
+                                                width: "280px",
                                                 objectFit: "cover",
+                                                borderRadius: '25px',
                                             }}
                                         />
                                     )
@@ -76,8 +77,9 @@ const MessagesComponents = ({ message }) => {
                                             className="my-2"
                                             src={img}
                                             style={{
+                                                width: "280px",
                                                 objectFit: "cover",
-                                                width: "350px",
+                                                borderRadius: '25px',
                                             }}
                                         />
                                     )
