@@ -37,7 +37,7 @@ export const SidebarComponents = ({ dataLogin, path: currentPath }) => {
                     </div>
                 </div>
                 <nav className="mt-2">
-                    <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
                         {
                             MENU_LIST.map(({id, menuName, path, icon }) => (
                                 <li className="nav-item" key={id}>

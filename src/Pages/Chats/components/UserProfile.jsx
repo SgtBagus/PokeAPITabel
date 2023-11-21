@@ -24,7 +24,8 @@ const UserProfile = () => {
         displayName: 'Username',
         photoURL: defaultImage,
         uid: 'null',
-        email: 'useremail@gmail.com'
+        email: 'useremail@gmail.com',
+        userDesc: 'Desc',
     });
 
     const { data } = useContext(ChatContext);
@@ -57,8 +58,9 @@ const UserProfile = () => {
         }
     }, [data]);
     
-    const { displayName, photoURL, uid, email } = dataUser;
-    const userDesc = 'User Deskripsi Comming Soon';
+    const {
+        displayName, photoURL, uid, email, userDesc,
+    } = dataUser;
     
     const changeStatusMessage = async (value) => {
         const { chatId } = data;
@@ -119,7 +121,9 @@ const UserProfile = () => {
                         <div className="card-footer p-0">
                             <div id="descUser" className="collapse" data-parent="#descUser">
                                 <div className="card-body">
-                                    {userDesc}
+                                    {
+                                        userDesc ? userDesc : 'Belum ada Dekripsi Pengguna !'
+                                    }
                                 </div>
                             </div>
                         </div>
