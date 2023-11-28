@@ -16,15 +16,21 @@ export const MENU_LIST = [
         menuName: 'Video Gallery',
         path: '/video-gallery',
         icon: 'nav-icon far fa-image',
-            },
+    },
     {
         id: 4,
+        menuName: 'Reveral Code',
+        path: '/reveral-code',
+        icon: 'nav-icon fas fa-code',
+    },
+    {
+        id: 5,
         menuName: 'Settings',
         path: '/settings',
         icon: 'nav-icon fas fa-cog',
     },
     {
-        id: 5,
+        id: 6,
         menuName: 'Change Logs',
         path: '/change-logs',
         icon: 'nav-icon fas fa-history',

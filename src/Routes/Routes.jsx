@@ -14,6 +14,7 @@ import { AuthContext } from "../context/AuthContext";
 
 import ChatPages from "../Pages/Chats";
 import VideoGallerys from "../Pages/Chats/VideoGallerys";
+import ReveralCode from "../Pages/ReveralCode/";
 
 
 const RenderDefaultLayout = (page, pageName, currentUser, path) => (
@@ -70,6 +71,15 @@ const App = () => {
           </ProtectedRoute>
         }
       />
+      <Route path="reveral-code" element={
+          <ProtectedRoute>
+            {RenderDefaultLayout(<ReveralCode dataLogin={currentUser} />, "Reveral Code", currentUser, "/reveral-code" )}
+          </ProtectedRoute>
+        }
+      />
+
+
+      
 
       <Route path="login" element={
           <HasRoute>

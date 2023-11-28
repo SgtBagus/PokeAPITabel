@@ -6,3 +6,7 @@ export  const catchError = (e) => {
   if (Object.prototype.hasOwnProperty.call(e, 'msg') && typeof e.msg === 'string') ({ msg: message } = e);
   return message;
 };
+
+export const CapitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
