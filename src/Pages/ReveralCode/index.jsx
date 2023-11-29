@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { collection, query, getDocs } from "firebase/firestore";
 import { NotificationManager } from 'react-notifications';
 
+import FormReveralCode from './components/FormReveralCode';
+
 import Tabel from '../../components/Tabel';
 import Loading from '../../components/Loading';
+
+import { ButtonContext } from "../../context/ButtonContext";
 
 import { db } from "../../firebase";
 import { catchError } from '../../Helper/helper';
@@ -13,9 +17,21 @@ import { TABEL_META } from './config';
 const ReveralCode = () => {
     const [dataMeta, setDataMeta] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const { dispatch } = useContext(ButtonContext);
 
     useEffect(() => {
         setIsLoading(true);
+        dispatch({
+            typeSwtich: "CHANGE_BUTTON",
+            dataButtonList: [
+                {
+                    id: 1,
+                    customButton: (
+                        <FormReveralCode />
+                    )
+                },
+            ]
+        });
 
         const getData = async () => {
             try {
@@ -23,9 +39,9 @@ const ReveralCode = () => {
                 const data = await getDocs(res);
                 
                 const getDataTable = data.docs.map((x) => {
-                    const { code, desc, discValue, id, statusValue, userId } = x.data();
+                    const { code, desc, discValue, statusValue, userId } = x.data();
                     return {
-                        code, desc, discValue, id, statusValue, userId,
+                        code, desc, discValue, statusValue, userId,
                     };
                 });
 
@@ -41,8 +57,8 @@ const ReveralCode = () => {
         };
         
         getData();
-    }, []);
-    
+    }, [dispatch]);
+
     return (
         <div className="row">
             <div className="col-12">

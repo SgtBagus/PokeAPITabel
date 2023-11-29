@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import update from "immutability-helper";
 import { FieldFeedback, FieldFeedbacks } from 'react-form-with-constraints';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { NotificationManager } from 'react-notifications';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
@@ -182,8 +182,6 @@ class Login extends Component {
                         </div>
                     </div>
                 </div>
-                
-                <NotificationContainer />
             </div>
         );
     }

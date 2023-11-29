@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const Modals = ({
     buttonLabel, idModal, typeModal, children, className, disabled,
     btnSubmitText, btnCancelText, btnSubmitHandel, btnCancelHandel,
-    buttonIcon, buttonSubmitIcon, btnSubmitDisabled,
+    buttonIcon, buttonSubmitIcon, btnSubmitDisabled, style, modalLarge,
 }) => {
     return (
         <>
@@ -14,6 +14,7 @@ const Modals = ({
                 data-toggle="modal"
                 data-target={`#${idModal}`}
                 disabled={disabled}
+                style={style}
             >
                 {
                     buttonIcon && (
@@ -24,7 +25,7 @@ const Modals = ({
             </button>
 
             <div className="modal fade" id={idModal}>
-                <div className="modal-dialog">
+                <div className={`modal-dialog ${modalLarge && 'modal-lg'}`}>
                     <div className="modal-content">
                         <div className="modal-body">
                             {children}
@@ -78,6 +79,8 @@ Modals.propTypes = {
     buttonSubmitIcon: PropTypes.string,
     btnSubmitDisabled: PropTypes.bool,
     disabled: PropTypes.bool,
+    style: PropTypes.shape(),
+    modalLarge: PropTypes.bool,
 };
 
 Modals.defaultProps = {    
@@ -94,6 +97,8 @@ Modals.defaultProps = {
     buttonSubmitIcon: null,
     btnSubmitDisabled: false,
     disabled: false,
+    style: {},
+    modalLarge: false,
 };
 
 export default Modals;

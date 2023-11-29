@@ -3,10 +3,6 @@ import UserProfile from './components/UserProfile';
 
 export const TABEL_META = [
     {
-        key: 'id',
-        title: 'Id',
-    },
-    {
         key: 'code',
         title: 'Code Revelal',
     },
@@ -17,6 +13,7 @@ export const TABEL_META = [
     {
         key: 'discValue',
         title: 'Diskon',
+        Cell: (val) => (<>{val} %</>)
     },
     {
         key: 'statusValue',

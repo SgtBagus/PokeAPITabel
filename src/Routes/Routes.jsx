@@ -54,27 +54,27 @@ const App = () => {
   return (
     <Routes>
       <Route path="" element={
-          <ProtectedRoute>
-            {RenderDefaultLayout(<Home dataLogin={currentUser} />, "Home", currentUser, "/" )}
-          </ProtectedRoute>
+        <ProtectedRoute>
+          {RenderDefaultLayout(<Home dataLogin={currentUser} />, "Home", currentUser, "/" )}
+        </ProtectedRoute>
         }
       />
       <Route path="chats" element={
-          <ProtectedRoute>
-            {RenderDefaultLayout(<ChatPages dataLogin={currentUser} />, "Chats", currentUser, "/chats" )}
-          </ProtectedRoute>
+        <ProtectedRoute>
+          {RenderDefaultLayout(<ChatPages dataLogin={currentUser} />, "Chats", currentUser, "/chats" )}
+        </ProtectedRoute>
         }
       />
       <Route path="video-gallery" element={
-          <ProtectedRoute>
-            {RenderDefaultLayout(<VideoGallerys dataLogin={currentUser} />, "Video Gallery", currentUser, "/video-gallery" )}
-          </ProtectedRoute>
+        <ProtectedRoute>
+          {RenderDefaultLayout(<VideoGallerys dataLogin={currentUser} />, "Video Gallery", currentUser, "/video-gallery" )}
+        </ProtectedRoute>
         }
       />
       <Route path="reveral-code" element={
-          <ProtectedRoute>
-            {RenderDefaultLayout(<ReveralCode dataLogin={currentUser} />, "Reveral Code", currentUser, "/reveral-code" )}
-          </ProtectedRoute>
+        <ProtectedRoute>
+          {RenderDefaultLayout(<ReveralCode dataLogin={currentUser} />, "Reveral Code", currentUser, "/reveral-code" )}
+        </ProtectedRoute>
         }
       />
 
