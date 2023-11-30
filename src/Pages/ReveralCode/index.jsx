@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { collection, query, getDocs } from "firebase/firestore";
 import { NotificationManager } from 'react-notifications';
+import { useNavigate } from 'react-router-dom';
 
 import FormReveralCode from './components/FormReveralCode';
 
@@ -8,6 +9,7 @@ import Tabel from '../../components/Tabel';
 import Loading from '../../components/Loading';
 
 import { ButtonContext } from "../../context/ButtonContext";
+import { AuthContext } from "../../context/AuthContext";
 
 import { db } from "../../firebase";
 import { catchError } from '../../Helper/helper';
@@ -17,7 +19,10 @@ import { TABEL_META } from './config';
 const ReveralCode = () => {
     const [dataMeta, setDataMeta] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+
+    const navigate = useNavigate();
     const { dispatch } = useContext(ButtonContext);
+    const { currentUser } = useContext(AuthContext);
 
     useEffect(() => {
         setIsLoading(true);
@@ -27,7 +32,7 @@ const ReveralCode = () => {
                 {
                     id: 1,
                     customButton: (
-                        <FormReveralCode />
+                        <FormReveralCode dataLogin={currentUser} />
                     )
                 },
             ]
@@ -39,9 +44,9 @@ const ReveralCode = () => {
                 const data = await getDocs(res);
                 
                 const getDataTable = data.docs.map((x) => {
-                    const { code, desc, discValue, statusValue, userId } = x.data();
+                    const { id, code, desc, discValue, statusValue, userId } = x.data();
                     return {
-                        code, desc, discValue, statusValue, userId,
+                        id, code, desc, discValue, statusValue, userId,
                     };
                 });
 
@@ -57,7 +62,11 @@ const ReveralCode = () => {
         };
         
         getData();
-    }, [dispatch]);
+    }, [currentUser, dispatch]);
+
+    const handelNavigate = (path) => {
+        return navigate(path);
+    }
 
     return (
         <div className="row">
@@ -77,8 +86,8 @@ const ReveralCode = () => {
                                 view: { enabled: false },
                                 edit: {
                                     enabled: true,
-                                    onClick: (data) => {
-                                        console.log(data);
+                                    onClick: ({id}) => {
+                                        handelNavigate(id);
                                     },
                                 },
                                 delete: {

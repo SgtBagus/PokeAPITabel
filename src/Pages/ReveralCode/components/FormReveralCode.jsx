@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import update from "immutability-helper";
+import { v4 as uuid } from "uuid";
 import { FieldFeedback, FieldFeedbacks } from 'react-form-with-constraints';
 import { collection, query, getDocs } from "firebase/firestore";
-import { v4 as uuid } from "uuid";
 import { doc, setDoc } from "firebase/firestore";
 import { NotificationManager } from 'react-notifications';
 
@@ -67,16 +67,20 @@ class FormReveralCode extends Component {
         this.form.validateInput(target);
     };
 
-    generateString = async (key, length) => {
+    generateString = (key, length) => {
         const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-        let result = ' ';
+        let result = '';
         const charactersLength = characters.length;
         for ( let i = 0; i < length; i++ ) {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
 
-        this._changeInputHandler(key, result, null)
+        if (key) {
+            this._changeInputHandler(key, result, null)
+        }
+
+        return result;
     }
 
     _changeInputHandler = async (type, val, e) => {
@@ -134,20 +138,21 @@ class FormReveralCode extends Component {
                 codeReveal, desc, discount, userId, status,
             },
         } = this.state;
+        const { dataLogin: { uid } } = this.props;
+
+        const combinedId = `${uid}${this.generateString(null, 5)}${uuid()}`;
 
         try {
-            await setDoc(doc(db, "reveralCode", uuid()), {
+            await setDoc(doc(db, "reveralCode", combinedId), {
                 code: codeReveal,
                 desc,
                 discValue: discount,
-                id: uuid(),
                 statusValue: status,
                 userId,
+                id: combinedId,
             });
 
-            NotificationManager.success('Data Telah Terseimpan!, halaman ini akan segera di refresh', 'Success', 5000); 
-            this.resetForm();
-
+            NotificationManager.success('Data Telah Terseimpan!, halaman ini akan segera di refresh', 'Success', 5000);
             setTimeout(() => { window.location.reload() }, 3000);
         } catch (err) {
             NotificationManager.warning(catchError(err), 'Terjadi Kesalahan', 5000);
@@ -175,7 +180,7 @@ class FormReveralCode extends Component {
                 btnCancelHandel={() => { this.resetForm(); }}
                 btnSubmitText={!onSend ? "Simpan" : "Menyimpan"}
                 buttonSubmitIcon={ onSend ? "fas fa-sync-alt fa-spin mx-2" : ""}
-                disabled={onSend}
+                btnSubmitDisabled={onSend}
                 modalLarge={true}
             >
                 <div className="row">

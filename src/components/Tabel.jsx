@@ -40,28 +40,38 @@ const RenderActionButton = (actionButton, data) => {
 }
 
 const RenderTableData = (tabelHead, coloumnData, actionButton) => {
-    return coloumnData.map((x, idx) => {
+    if (coloumnData.length === 0) {
         return (
-            <tr key={idx}>
-                {
-                    tabelHead.map(({key, Cell}, indexColoumn) => (
-                        <td key={indexColoumn}>
-                            {
-                                Cell ? (
-                                    Cell(x[key])
-                                ) : (
-                                    x[key]
-                                )
-                            }
-                        </td>
-                    ))
-                }
-                {
-                    actionButton && RenderActionButton(actionButton, x)
-                }
+            <tr>
+                <td colSpan={tabelHead.length + 1} className='text-center'>
+                    Data masih Kosong !
+                </td>
             </tr>
-        )
-    })
+        );
+    } else {
+        return coloumnData.map((x, idx) => {
+            return (
+                <tr key={idx}>
+                    {
+                        tabelHead.map(({key, Cell}, indexColoumn) => (
+                            <td key={indexColoumn}>
+                                {
+                                    Cell ? (
+                                        Cell(x[key])
+                                    ) : (
+                                        x[key]
+                                    )
+                                }
+                            </td>
+                        ))
+                    }
+                    {
+                        actionButton && RenderActionButton(actionButton, x)
+                    }
+                </tr>
+            )
+        })
+    }
 }
 
 const Tabel = ({
