@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { collection, query, getDocs } from "firebase/firestore";
+import { collection, query, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { NotificationManager } from 'react-notifications';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 import FormReveralCode from './components/FormReveralCode';
 
@@ -26,6 +27,7 @@ const ReveralCode = () => {
 
     useEffect(() => {
         setIsLoading(true);
+          
         dispatch({
             typeSwtich: "CHANGE_BUTTON",
             dataButtonList: [
@@ -68,6 +70,39 @@ const ReveralCode = () => {
         return navigate(path);
     }
 
+    const confirmDeleteHandel = (data) => {
+        const { code, id } = data;
+
+        Swal.fire({
+            title: "Apakah anda yakin akan menghapus Data ini",
+            text: `Code Reveral Code - ${code}`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Iya, Hapus data ini!",
+            showLoaderOnConfirm: true,
+            preConfirm: async () => {
+                try {
+                    await deleteDoc(doc(db, "reveralCode", id));
+                } catch (error) {
+                    Swal.showValidationMessage(`Request failed: ${error}`);
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+          }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Success",
+                    text: "Berhasil Menghapus data, halaman ini akan di mulai ulang",
+                    icon: "success"
+                });
+                
+                setTimeout(() => { window.location.reload() }, 3000);
+            }
+        });
+    }
+
     return (
         <div className="row">
             <div className="col-12">
@@ -93,7 +128,7 @@ const ReveralCode = () => {
                                 delete: {
                                     enabled: true,
                                     onClick: (data) => {
-                                        console.log(data);
+                                        confirmDeleteHandel(data);
                                     },
                                 },
                             }}
