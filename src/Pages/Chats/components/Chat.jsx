@@ -62,7 +62,7 @@ const Chat = ({ titleChat }) => {
         const thisFileisImage = checkThisFileIsImageOrNot(file);
         const uploadImage = await uploadFile(
           file,
-          thisFileisImage ? "message/images/" : "message/video"
+          thisFileisImage ? "message/images/" : "message/videos"
         );
 
         await updateDoc(doc(db, "chats", chatId), {
