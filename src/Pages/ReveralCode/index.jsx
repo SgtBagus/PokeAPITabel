@@ -11,6 +11,7 @@ import Loading from '../../components/Loading';
 
 import { ButtonContext } from "../../context/ButtonContext";
 import { AuthContext } from "../../context/AuthContext";
+import { LoadingContext } from '../../context/LoadingContext';
 
 import { db } from "../../firebase";
 import { catchError } from '../../Helper/helper';
@@ -24,6 +25,7 @@ const ReveralCode = () => {
     const navigate = useNavigate();
     const { dispatch } = useContext(ButtonContext);
     const { currentUser } = useContext(AuthContext);
+    const { dispatchLoading } = useContext(LoadingContext);
 
     useEffect(() => {
         setIsLoading(true);
@@ -61,10 +63,12 @@ const ReveralCode = () => {
               } catch (err) {
                 NotificationManager.error(catchError(err), 'Terjadi Kesalahan', 5000);
             }
+    
+            dispatchLoading(false);
         };
         
         getData();
-    }, [currentUser, dispatch]);
+    }, [currentUser, dispatch, dispatchLoading]);
 
     const handelNavigate = (path) => {
         return navigate(path);

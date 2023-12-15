@@ -2,7 +2,14 @@ import React, { Component } from 'react';
 
 import Accordion from '../../components/Accordion';
 
+import { withHocks } from '../../context/WithParams';
+
 class Dashboard extends Component {
+  componentDidMount = () => {
+    const { loadingParam: { dispatchLoading } } = this.props;
+    dispatchLoading(false);
+  }
+
   render() {
     return (
       <div className="row">
@@ -38,4 +45,4 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+export default withHocks(Dashboard);

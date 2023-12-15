@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
 
+import ButonComponents from '../../components/Button';
+
 import { ButtonContext } from "../../context/ButtonContext";
 
 export const HeaderPageComponent = ({
@@ -18,24 +20,28 @@ export const HeaderPageComponent = ({
                             <div className="col-sm-8 d-flex justify-content-end">
                                 {
                                     dataButtonList.map(({
-                                        id, type, className, onClick, buttonText, iconButton, customButton,
-                                    }) => (
-                                        <div key={id} className='mx-2'>
-                                            {
-                                                customButton ? customButton
-                                                : (
-                                                    <button
-                                                        type={type}
-                                                        className={className}
-                                                        onClick={onClick}
-                                                    >
-                                                        <i className={`${iconButton} mr-2`} />
-                                                        {buttonText}
-                                                    </button>
-                                                )
-                                            }
-                                        </div>
-                                    ))
+                                        type, className, disabled, style, onClick, buttonText, iconButton,
+                                        customButton,
+                                    }, idx) => {
+                                        return (
+                                            <div key={idx} className='mx-2'>
+                                                {
+                                                    customButton ? customButton
+                                                    : (
+                                                        <ButonComponents
+                                                            label={buttonText}
+                                                            buttonIcon={iconButton}
+                                                            className={className}
+                                                            type={type}
+                                                            disabled={disabled}
+                                                            style={style}
+                                                            onClick={onClick}
+                                                        />
+                                                    )
+                                                }
+                                            </div>
+                                        )
+                                    })
                                 }
                             </div>
                         )

@@ -1,12 +1,19 @@
-import React, { StrictMode } from 'react';
+import React, { StrictMode, useContext, useEffect } from 'react';
 
 import { ChatContextProvider } from "../../context/ChatContext";
+import { LoadingContext } from '../../context/LoadingContext';
 
 import UserList from './components/UserList';
 import Chat from './components/Chat';
 import UserProfile from './components/UserProfile';
 
 const ChatPages = () =>  {
+    const { dispatchLoading } = useContext(LoadingContext);
+
+    useEffect(() => {
+        dispatchLoading(false);
+    }, [dispatchLoading]);
+
     return (
         <ChatContextProvider>
             <StrictMode>

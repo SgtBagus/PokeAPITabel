@@ -7,9 +7,10 @@ import { FooterComponents } from './components/Footer';
 import { HeaderPageComponent } from './components/HeaderPageComponent';
 
 import { ButtonContextProvider } from "../context/ButtonContext";
+import { LoadingContextProvider } from "../context/LoadingContext";
 
 export const LayoutDefault = ({ dataLogin, children, pageName, path }) => (
-    <>
+    <LoadingContextProvider>
         {
             dataLogin && (
                 <>
@@ -27,5 +28,5 @@ export const LayoutDefault = ({ dataLogin, children, pageName, path }) => (
                 </>
             )
         }
-    </>
+    </LoadingContextProvider>
 );

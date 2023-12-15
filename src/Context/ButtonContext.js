@@ -11,9 +11,16 @@ export const ButtonContextProvider = ({ children }) => {
         switch (typeSwtich) {
             case "CHANGE_BUTTON":
                 const buttonMaping = dataButtonList.map(({
-                    id, type, className, onClick, buttonText, iconButton, customButton = null,
+                    type = 'button',
+                    className = 'btn btn-primary',
+                    onClick = () => {},
+                    buttonText = 'Button',
+                    iconButton = null,
+                    disabled = false,
+                    style = null,
+                    customButton = null,
                 }) => ({
-                    id, type, className, onClick, buttonText, iconButton, customButton,
+                    type, className, onClick, buttonText, iconButton, disabled, style, customButton,
                 }))
 
                 return buttonMaping;

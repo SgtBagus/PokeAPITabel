@@ -18,6 +18,7 @@ import VideoGallerys from "../Pages/Chats/VideoGallerys";
 import ReveralCode from "../Pages/ReveralCode/";
 import EditFormReveralCode from "../Pages/ReveralCode/components/EditFormReveralCode";
 
+import UsersTodo from "../Pages/UsersTodo/";
 
 const RenderDefaultLayout = (page, pageName, currentUser, path) => (
   <LayoutDefault
@@ -87,6 +88,12 @@ const App = () => {
         }
       />
 
+      <Route path="users-todo" element={
+        <ProtectedRoute>
+          {RenderDefaultLayout(<UsersTodo />, "Users Todo", currentUser, "/users-todo" )}
+        </ProtectedRoute>
+        }
+      />
       
 
       <Route path="login" element={
