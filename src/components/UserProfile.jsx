@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types';
 
 import Image from './Image';
-import ButonComponents from './Button';
+import ButtonComponents from './Button';
 
 const UserProfile = ({
     data: {
@@ -38,15 +38,12 @@ const UserProfile = ({
                             <button type="button" className="btn btn-default btn-sm" data-toggle="collapse" href="#descUser">
                                 Detail pengguna
                             </button>
-                            
-                            <ButonComponents
+                            <ButtonComponents
                                 type="button"
-                                buttonType={`btn btn-${!allowChat ? 'primary' : 'danger' } btn-sm`}
-                                buttonAction={() => changeAllowMessage()}
-                                buttonText={
-                                    isLoading ? 'Memperoses' : allowChat ? "Non Aktifkan Percakapan !" : 'Aktifkan Percakapan !'
-                                }
+                                label={isLoading ? 'Memperoses' : allowChat ? "Non Aktifkan Percakapan !" : 'Aktifkan Percakapan !'}
+                                className={`btn btn-${!allowChat ? 'primary' : 'danger' } btn-sm`}
                                 buttonIcon={isLoading && 'fas fa-sync-alt fa-spin'}
+                                onClick={() => { this.changeAllowMessage(); }}
                                 disabled={isLoading}
                             />
                         </div>

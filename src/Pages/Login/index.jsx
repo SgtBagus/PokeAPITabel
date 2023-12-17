@@ -10,7 +10,7 @@ import { auth, db } from "../../firebase";
 import FormValidation from "../../components/FormValidation";
 import InputEmail from "../../components/form/InputEmail";
 import InputPassword from "../../components/form/InputPassword";
-import ButonComponents from '../../components/Button';
+import ButtonComponents from '../../components/Button';
 
 import { GENERATE_ERROR_MESSAGE, validateEmail } from "../../Helper/error";
 import { catchError } from "../../Helper/helper"
@@ -83,7 +83,7 @@ class Login extends Component {
 
             if (isAdmin) {
                 await signInWithEmailAndPassword(auth, loginEmail, password).then(() => {
-                    window.location.href = "#/";
+                    window.location.href = "/";
                 }).catch((err) => {
                     throw new Error('Email dan Password Anda Salah')
                 });
@@ -115,7 +115,7 @@ class Login extends Component {
                 <div className="login-box">
                     <div
                         className="login-logo" 
-                        onClick={() => window.location.href = "#/" }
+                        onClick={() => window.location.href = "/" }
                         style={{ cursor: 'pointer' }}
                     >
                         <b>Admin</b>LTE
@@ -161,12 +161,11 @@ class Login extends Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-12">
-                                        <ButonComponents
-                                            type="button"
-                                            buttonType="btn btn-primary btn-block"
-                                            buttonAction={() => { this.submitHandel(); }}
-                                            buttonText={loading ? 'Memperoses' : 'Silakan Masuk'}
+                                        <ButtonComponents
+                                            label={loading ? 'Memperoses' : 'Silakan Masuk'}
+                                            className="btn btn-primary btn-block"
                                             buttonIcon={loading ? 'fas fa-sync-alt fa-spin' : 'fas fa-sign-in-alt'}
+                                            onClick={() => this.submitHandel() }
                                             disabled={loading}
                                         />
                                     </div>
@@ -174,7 +173,7 @@ class Login extends Component {
                             </FormValidation>
                             <p
                                 className="m-2 text-center" 
-                                onClick={() => window.location.href = "#/lupa-password" }
+                                onClick={() => window.location.href = "/lupa-password" }
                                 style={{ cursor: 'pointer' }}
                             >
                                 Lupa Password

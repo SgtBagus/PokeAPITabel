@@ -1,4 +1,4 @@
-import React from "react";
+import React, { StrictMode } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { NotificationContainer } from "react-notifications";
 
@@ -11,13 +11,13 @@ import Routes from "./Routes/Routes";
 function App() {
   return (
     <AuthContextProvider>
-      <React.StrictMode>
+      <StrictMode>
         <BrowserRouter basename="/">
           <Routes />
 
           <NotificationContainer />
         </BrowserRouter>
-      </React.StrictMode>
+      </StrictMode>
     </AuthContextProvider>
   );
 }

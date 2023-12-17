@@ -8,7 +8,7 @@ import { db } from "../../../firebase";
 
 import Loading from "../../../components/Loading";
 import Image from '../../../components/Image';
-import ButonComponents from '../../../components/Button';
+import ButtonComponents from '../../../components/Button';
 
 import defaultImage from './defaultImage.png';
 
@@ -104,14 +104,13 @@ const UserProfile = () => {
                                             Detail pengguna
                                         </button>
                                         
-                                        <ButonComponents
-                                            type="button"
-                                            buttonType={`btn btn-${!allowChat ? 'primary' : 'danger' } btn-sm`}
-                                            buttonAction={() => changeStatusMessage(!allowChat)}
-                                            buttonText={
+                                        <ButtonComponents
+                                            label={
                                                 isLoadingAllowChat ? 'Memperoses' : allowChat ? "Non Aktifkan Percakapan !" : 'Aktifkan Percakapan !'
                                             }
+                                            className={`btn btn-${!allowChat ? 'primary' : 'danger' } btn-sm`}
                                             buttonIcon={isLoadingAllowChat && 'fas fa-sync-alt fa-spin'}
+                                            onClick={() => changeStatusMessage(!allowChat)}
                                             disabled={isLoadingAllowChat}
                                         />
                                     </div>

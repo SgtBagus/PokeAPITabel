@@ -6,18 +6,18 @@ import { collection, query, getDocs } from "firebase/firestore";
 import { doc, setDoc } from "firebase/firestore";
 import { NotificationManager } from 'react-notifications';
 
-import Modals from "../../../components/Modals";
-import FormValidation from "../../../components/FormValidation";
-import ButonComponents from "../../../components/Button";
-
-import InputText from "../../../components/form/InputText";
-import InputPercent from "../../../components/form/InputPercent";
-
 import { db } from "../../../firebase";
 
+import Modals from "../../../components/Modals";
+import FormValidation from "../../../components/FormValidation";
+import ButtonComponents from "../../../components/Button";
+import InputText from "../../../components/form/InputText";
+import InputPercent from "../../../components/form/InputPercent";
 import InputTextArea from "../../../components/form/InputTextArea";
 import InputSelect from "../../../components/form/InputSelect";
 import InputSwitch from "../../../components/form/InputSwitch";
+
+import { withHocks } from '../../../context/WithParams';
 
 import { catchError } from "../../../Helper/helper";
 import { GENERATE_ERROR_MESSAGE } from "../../../Helper/error";
@@ -208,13 +208,13 @@ class FormReveralCode extends Component {
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-3">
-                                        <ButonComponents
-                                            type="button"
-                                            buttonType='btn btn-primary btn-block'
-                                            buttonAction={() => this.generateString('codeReveal', 10)}
-                                            buttonText="Generate Code"
+                                    <div className="col-md-3">                                        
+                                        <ButtonComponents
+                                            label="Generate Code"
                                             buttonIcon="fas fa-random"
+                                            className="btn btn-primary btn-block"
+                                            onClick={() => this.generateString('codeReveal', 10)}
+                                            disabled={onSend}
                                         />
                                     </div>
                                 </div>
@@ -298,4 +298,4 @@ class FormReveralCode extends Component {
     }
 };
 
-export default FormReveralCode;
+export default withHocks(FormReveralCode);

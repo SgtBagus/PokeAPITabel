@@ -9,7 +9,7 @@ import { auth } from "../../firebase";
 
 import FormValidation from "../../components/FormValidation";
 import InputEmail from "../../components/form/InputEmail";
-import ButonComponents from '../../components/Button';
+import ButtonComponents from '../../components/Button';
 
 import { GENERATE_ERROR_MESSAGE, validateEmail } from "../../Helper/error";
 import { catchError } from "../../Helper/helper"
@@ -98,7 +98,7 @@ class ForgotPassword extends Component {
                 <div className="login-box">
                     <div
                         className="login-logo" 
-                        onClick={() => window.location.href = "#/" }
+                        onClick={() => window.location.href = "/" }
                         style={{ cursor: 'pointer' }}
                     >
                         <b>Admin</b>LTE
@@ -130,12 +130,11 @@ class ForgotPassword extends Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-12">
-                                        <ButonComponents
-                                            type="button"
-                                            buttonType="btn btn-primary btn-block"
-                                            buttonAction={() => { this.submitHandel(); }}
-                                            buttonText={loading ? '' : 'Kirim Email'}
+                                        <ButtonComponents
+                                            label={loading ? '' : 'Kirim Email'}
                                             buttonIcon={loading && 'fas fa-sync-alt fa-spin'}
+                                            className="btn btn-primary btn-block"
+                                            onClick={() => { this.submitHandel(); }}
                                             disabled={loading}
                                         />
                                     </div>
@@ -144,18 +143,11 @@ class ForgotPassword extends Component {
 
                             <p
                                 className="m-2 text-center" 
-                                onClick={() => window.location.href = "#/Login" }
+                                onClick={() => window.location.href = "/Login" }
                                 style={{ cursor: 'pointer' }}
                             >
                                 Kembali Login
-                            </p>   
-                            <p
-                                className="m-2 text-center" 
-                                onClick={() => window.location.href = "#/register" }
-                                style={{ cursor: 'pointer' }}
-                            >
-                                Daftar Menjadi Pengguna
-                            </p>    
+                            </p>
                         </div>
                     </div>
                 </div>
