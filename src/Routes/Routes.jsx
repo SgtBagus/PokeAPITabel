@@ -19,6 +19,7 @@ import ReveralCode from "../Pages/ReveralCode/";
 import EditFormReveralCode from "../Pages/ReveralCode/components/EditFormReveralCode";
 
 import UsersTodo from "../Pages/UsersTodo/";
+import Client from "../Pages/Clients";
 
 const RenderDefaultLayout = (page, pageName, currentUser, path) => (
   <LayoutDefault
@@ -91,6 +92,13 @@ const App = () => {
       <Route path="users-todo" element={
         <ProtectedRoute>
           {RenderDefaultLayout(<UsersTodo />, "Users Todo", currentUser, "/users-todo" )}
+        </ProtectedRoute>
+        }
+      />
+
+      <Route path="client" element={
+        <ProtectedRoute>
+          {RenderDefaultLayout(<Client />, "Client", currentUser, "/client" )}
         </ProtectedRoute>
         }
       />

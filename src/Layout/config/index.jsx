@@ -31,12 +31,18 @@ export const MENU_LIST = [
     },
     {
         id: 6,
+        menuName: 'Client',
+        path: '/client',
+        icon: 'nav-icon fas fa-users',
+    },
+    {
+        id: 7,
         menuName: 'Settings',
         path: '/settings',
         icon: 'nav-icon fas fa-cog',
     },
     {
-        id: 7,
+        id: 8,
         menuName: 'Change Logs',
         path: '/change-logs',
         icon: 'nav-icon fas fa-history',
