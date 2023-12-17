@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types';
 
 import Image from './Image';
-import ButtonComponents from './Button';
+import Button from './Button';
 
 const UserProfile = ({
     data: {
@@ -38,7 +38,7 @@ const UserProfile = ({
                             <button type="button" className="btn btn-default btn-sm" data-toggle="collapse" href="#descUser">
                                 Detail pengguna
                             </button>
-                            <ButtonComponents
+                            <Button
                                 type="button"
                                 label={isLoading ? 'Memperoses' : allowChat ? "Non Aktifkan Percakapan !" : 'Aktifkan Percakapan !'}
                                 className={`btn btn-${!allowChat ? 'primary' : 'danger' } btn-sm`}

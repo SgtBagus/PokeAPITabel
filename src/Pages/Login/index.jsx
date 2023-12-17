@@ -10,7 +10,7 @@ import { auth, db } from "../../firebase";
 import FormValidation from "../../components/FormValidation";
 import InputEmail from "../../components/form/InputEmail";
 import InputPassword from "../../components/form/InputPassword";
-import ButtonComponents from '../../components/Button';
+import Button from '../../components/Button';
 
 import { GENERATE_ERROR_MESSAGE, validateEmail } from "../../Helper/error";
 import { catchError } from "../../Helper/helper"
@@ -161,7 +161,7 @@ class Login extends Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-12">
-                                        <ButtonComponents
+                                        <Button
                                             label={loading ? 'Memperoses' : 'Silakan Masuk'}
                                             className="btn btn-primary btn-block"
                                             buttonIcon={loading ? 'fas fa-sync-alt fa-spin' : 'fas fa-sign-in-alt'}

@@ -9,7 +9,7 @@ import { auth } from "../../firebase";
 
 import FormValidation from "../../components/FormValidation";
 import InputEmail from "../../components/form/InputEmail";
-import ButtonComponents from '../../components/Button';
+import Button from '../../components/Button';
 
 import { GENERATE_ERROR_MESSAGE, validateEmail } from "../../Helper/error";
 import { catchError } from "../../Helper/helper"
@@ -130,7 +130,7 @@ class ForgotPassword extends Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-12">
-                                        <ButtonComponents
+                                        <Button
                                             label={loading ? '' : 'Kirim Email'}
                                             buttonIcon={loading && 'fas fa-sync-alt fa-spin'}
                                             className="btn btn-primary btn-block"

@@ -3,7 +3,7 @@ import React from 'react';
 import { signOut } from "firebase/auth"
 import { useNavigate } from 'react-router-dom';
 
-import ButtonComponents from '../../components/Button';
+import Button from '../../components/Button';
 
 import { auth } from '../../firebase';
 
@@ -53,7 +53,7 @@ export const SidebarComponents = ({ dataLogin, path: currentPath }) => {
                             ))
                         }
                         <li className="nav-item">
-                            <ButtonComponents                                         
+                            <Button                                         
                                 className="btn btn-danger btn-block my-2" 
                                 label="Logout"
                                 onClick={() => signOut(auth)}

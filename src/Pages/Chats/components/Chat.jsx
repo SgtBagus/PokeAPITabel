@@ -17,7 +17,7 @@ import { db } from "../../../firebase";
 
 import InputText from "../../../components/form/InputText";
 import Modals from "../../../components/Modals";
-import ButtonComponents from "../../../components/Button";
+import Button from "../../../components/Button";
 
 import { uploadFile } from "../../../Data/uploadFile";
 
@@ -233,7 +233,7 @@ const Chat = ({ titleChat }) => {
                     </Modals>
                   </div>
 
-                  <ButtonComponents
+                  <Button
                     label={onSend || "Kirim"}
                     className="btn-primary w-100 mx-2"
                     buttonIcon={ onSend ? "fas fa-sync-alt fa-spin" : "fa fa-paper-plane" }

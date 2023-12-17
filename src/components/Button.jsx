@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 
-const ButtonComponents = ({
+const Button = ({
     className, label, onClick,
     style, disabled, type,
     buttonIcon,
@@ -24,7 +24,7 @@ const ButtonComponents = ({
     )
 }
 
-ButtonComponents.propTypes = {
+Button.propTypes = {
     label: PropTypes.string,
     buttonIcon: PropTypes.string,
     className: PropTypes.string,
@@ -37,7 +37,7 @@ ButtonComponents.propTypes = {
     onClick: PropTypes.func,
 };
 
-ButtonComponents.defaultProps = {
+Button.defaultProps = {
     label: 'Button',
     buttonIcon: null,
     className: 'btn btn-primary',
@@ -50,4 +50,4 @@ ButtonComponents.defaultProps = {
     onClick: () => {},
 };
 
-export default ButtonComponents
+export default Button

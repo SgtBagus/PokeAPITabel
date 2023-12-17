@@ -10,7 +10,7 @@ import { db } from "../../../firebase";
 
 import Modals from "../../../components/Modals";
 import FormValidation from "../../../components/FormValidation";
-import ButtonComponents from "../../../components/Button";
+import Button from "../../../components/Button";
 import InputText from "../../../components/form/InputText";
 import InputPercent from "../../../components/form/InputPercent";
 import InputTextArea from "../../../components/form/InputTextArea";
@@ -209,7 +209,7 @@ class FormReveralCode extends Component {
                                         />
                                     </div>
                                     <div className="col-md-3">                                        
-                                        <ButtonComponents
+                                        <Button
                                             label="Generate Code"
                                             buttonIcon="fas fa-random"
                                             className="btn btn-primary btn-block"

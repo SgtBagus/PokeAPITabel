@@ -14,7 +14,7 @@ import InputTextArea from '../../../components/form/InputTextArea';
 import InputPercent from '../../../components/form/InputPercent';
 import InputSwitch from '../../../components/form/InputSwitch';
 import InputSelect from '../../../components/form/InputSelect';
-import ButtonComponents from '../../../components/Button';
+import Button from '../../../components/Button';
 import Loading from '../../../components/Loading';
 
 import { db } from "../../../firebase";
@@ -215,7 +215,7 @@ class EditFormReveralCode extends Component {
                                                 />
                                             </div>
                                             <div className="col-md-3">
-                                                <ButtonComponents
+                                                <Button
                                                     label="Generate Code"
                                                     className="btn btn-primary btn-block"
                                                     buttonIcon="fas fa-random"
@@ -299,12 +299,12 @@ class EditFormReveralCode extends Component {
                                     <div className="row">
                                         <div className="col-12">
                                             <div className='d-flex justify-content-end'>
-                                                <ButtonComponents
+                                                <Button
                                                     label="Kembali"
                                                     className="btn btn-default mx-2"
                                                     onClick={() => this.handelNavigate('reveral-code')}
                                                 />
-                                                <ButtonComponents
+                                                <Button
                                                     label={onSend ? 'Memperoses' : 'Simpan'}
                                                     buttonIcon={onSend ? 'fas fa-sync-alt fa-spin' : 'fas fa-save'}
                                                     className="btn btn-primary mx-2"

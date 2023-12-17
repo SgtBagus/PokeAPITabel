@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-import ButtonComponents from '../../components/Button';
+import Button from '../../components/Button';
 
 import { ButtonContext } from "../../context/ButtonContext";
 
@@ -28,7 +28,7 @@ export const HeaderPageComponent = ({
                                                 {
                                                     customButton ? customButton
                                                     : (
-                                                        <ButtonComponents
+                                                        <Button
                                                             label={buttonText}
                                                             buttonIcon={iconButton}
                                                             className={className}

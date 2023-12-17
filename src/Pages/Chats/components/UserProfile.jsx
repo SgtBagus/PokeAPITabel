@@ -8,7 +8,7 @@ import { db } from "../../../firebase";
 
 import Loading from "../../../components/Loading";
 import Image from '../../../components/Image';
-import ButtonComponents from '../../../components/Button';
+import Button from '../../../components/Button';
 
 import defaultImage from './defaultImage.png';
 
@@ -104,7 +104,7 @@ const UserProfile = () => {
                                             Detail pengguna
                                         </button>
                                         
-                                        <ButtonComponents
+                                        <Button
                                             label={
                                                 isLoadingAllowChat ? 'Memperoses' : allowChat ? "Non Aktifkan Percakapan !" : 'Aktifkan Percakapan !'
                                             }
