@@ -9,49 +9,42 @@ import MessagesComponents from "./Components/MessagesComponents";
 import Loading from "../../../../Components/Loading";
 import FormComponents from "./Components/FormComponents";
 
-const Chat = ({ titleChat }) => {
+const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const {
-    data: { chatId },
-  } = useContext(ChatContext);
+  const { data: { chatId } } = useContext(ChatContext);
 
   useEffect(() => {
     setIsLoading(true);
-    const unSub = onSnapshot(doc(db, "chats", chatId), (doc) => {
-      doc.exists() && setMessages(doc.data().messages);
+  
+    if (chatId) {
+      const unSub = onSnapshot(doc(db, "chats", chatId), (doc) => {
+        doc.exists() && setMessages(doc.data().messages);
+  
+        setIsLoading(false);
+      });
 
-      setIsLoading(false);
-    });
-
-    return () => {
-      unSub();
-    };
+      return () => { unSub() };
+    }
   }, [chatId]);
 
   return (
-    <div className="row">
-      <div className="col-md-12">
+    <>
         {isLoading ? (
-          <div className="overlay" style={{ height: "450px" }}>
+          <div className="overlay position-relative" style={{ height: "400px" }}>
             <Loading />
           </div>
         ) : (
-          <div className="row">
-            <div className="col-md-12">
-              <div className="direct-chat-messages" style={{ height: "450px" }}>
+          <>
+              <div className="direct-chat-messages" style={{ height: "400px" }}>
                 {messages.map((m) => (
                   <MessagesComponents message={m} key={m.id} />
                 ))}
               </div>
-            </div>
-            <div className="col-md-12">
               <FormComponents />
-            </div>
-          </div>
+          </>
         )}
-      </div>
-    </div>
+    </>
   );
 };
 

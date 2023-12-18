@@ -42,7 +42,7 @@ const Tabs = ({
                             }
                         </ul>
                     </div>
-                    <div className="card-body">
+                    <div className="card-body h-100">
                         <div className="tab-content" id={idTabsContent}>
                             {
                                 contentBody.map(({ id, tabKey, children, active }) => (

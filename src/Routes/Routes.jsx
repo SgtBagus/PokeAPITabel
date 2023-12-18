@@ -13,9 +13,6 @@ import { NotFound404 } from "../Layout/404";
 import { AuthContext } from "../Context/AuthContext";
 import { ChatContextProvider } from '../Context/ChatContext';
 
-import ChatPages from "../Pages/Chats";
-import VideoGallerys from "../Pages/Chats/VideoGallerys";
-
 import ReveralCode from "../Pages/ReveralCode/";
 import EditFormReveralCode from "../Pages/ReveralCode/Components/EditFormReveralCode";
 
@@ -64,15 +61,16 @@ const App = () => {
         </ProtectedRoute>
         }
       />
-      <Route path="chats" element={
+      <Route path="client" element={
         <ProtectedRoute>
-          {RenderDefaultLayout(<ChatPages dataLogin={currentUser} />, "Chats", currentUser, "/chats" )}
-        </ProtectedRoute>
-        }
-      />
-      <Route path="video-gallery" element={
-        <ProtectedRoute>
-          {RenderDefaultLayout(<VideoGallerys dataLogin={currentUser} />, "Video Gallery", currentUser, "/video-gallery" )}
+          {
+            RenderDefaultLayout(
+              <ChatContextProvider>
+                <Client />
+              </ChatContextProvider>,
+              "Client", currentUser, "/client"
+            )
+          }
         </ProtectedRoute>
         }
       />
@@ -93,22 +91,6 @@ const App = () => {
       <Route path="users-todo" element={
         <ProtectedRoute>
           {RenderDefaultLayout(<UsersTodo />, "Users Todo", currentUser, "/users-todo" )}
-        </ProtectedRoute>
-        }
-      />
-
-      <Route path="client" element={
-        <ProtectedRoute>
-          {
-            RenderDefaultLayout(
-              <ChatContextProvider>
-                <Client />
-              </ChatContextProvider>,
-              "Client",
-              currentUser,
-              "/client"
-            )
-          }
         </ProtectedRoute>
         }
       />

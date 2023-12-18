@@ -109,7 +109,7 @@ const UserProfile = () => {
                                                 isLoadingAllowChat ? 'Memperoses' : allowChat ? "Non Aktifkan Percakapan !" : 'Aktifkan Percakapan !'
                                             }
                                             className={`btn btn-${!allowChat ? 'primary' : 'danger' } btn-sm`}
-                                            buttonIcon={isLoadingAllowChat && 'fas fa-sync-alt fa-spin'}
+                                            buttonIcon={isLoadingAllowChat ? 'fas fa-sync-alt fa-spin' : ''}
                                             onClick={() => changeStatusMessage(!allowChat)}
                                             disabled={isLoadingAllowChat}
                                         />

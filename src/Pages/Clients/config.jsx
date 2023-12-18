@@ -1,4 +1,6 @@
 import Chat from "./Components/Chats";
+import Gallery from "./Components/Gallery";
+import Todo from "./Components/Todo";
 
 export const TABS_LIST = {
     titleHeader: [
@@ -32,12 +34,12 @@ export const TABS_LIST = {
         {
             id: 2,
             tabKey: 'list-todo',
-            children: <div>Todo</div>,
+            children: <Todo />,
         },
         {
             id: 3,
             tabKey: 'gallery',
-            children: <div>Gallery</div>,
+            children: <Gallery />,
         },
     ],
 }

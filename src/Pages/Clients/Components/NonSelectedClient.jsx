@@ -1,6 +1,6 @@
 import React from 'react'
 
-const EmptyChat = () => {
+const NonSelectedClient = () => {
     return (
         <div className="container h-100">
             <div className="d-flex flex-column align-items-center justify-content-center h-100">
@@ -13,4 +13,4 @@ const EmptyChat = () => {
     )
 }
 
-export default EmptyChat;
+export default NonSelectedClient;
