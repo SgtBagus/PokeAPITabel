@@ -7,10 +7,10 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 
 import { auth, db } from "../../firebase";
 
-import FormValidation from "../../components/FormValidation";
-import InputEmail from "../../components/form/InputEmail";
-import InputPassword from "../../components/form/InputPassword";
-import Button from '../../components/Button';
+import FormValidation from "../../Components/FormValidation";
+import InputEmail from "../../Components/form/InputEmail";
+import InputPassword from "../../Components/form/InputPassword";
+import Button from '../../Components/Button';
 
 import { GENERATE_ERROR_MESSAGE, validateEmail } from "../../Helper/error";
 import { catchError } from "../../Helper/helper"

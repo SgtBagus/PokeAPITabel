@@ -1,5 +1,5 @@
-import Badge from '../../components/Badge';
-import UserProfile from './components/UserProfile';
+import Badge from '../../Components/Badge';
+import UserProfile from './Components/UserProfile';
 
 export const TABEL_META = [
     {

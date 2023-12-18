@@ -1,15 +1,21 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from "react";
 
-import UserList from './Components/UserList';
+import Tabs from "../../Components/Tabs";
 
-import { LoadingContext } from '../../context/LoadingContext';
-import { ChatContextProvider } from '../../context/ChatContext';
+import EmptyChat from "./Components/EmptyChat";
+import UserList from "./Components/UserList";
+import UserProfile from "./Components/UserProfile";
 
-import './style.scss';
-import Tabs from '../../components/Tabs';
+import { LoadingContext } from "../../Context/LoadingContext";
+import { ChatContext } from "../../Context/ChatContext";
 
-const Client = () =>  {
+import { TABS_LIST } from "./config";
+
+import "./style.scss";
+
+const Client = () => {
     const { dispatchLoading } = useContext(LoadingContext);
+    const { data: { chatId } } = useContext(ChatContext);
 
     useEffect(() => {
         dispatchLoading(false);
@@ -18,19 +24,26 @@ const Client = () =>  {
     return (
         <div className="row">
             <div className="col-12">
-                <ChatContextProvider>
-                    <div className="row">
-                        <div className="col-4">
-                            <UserList />
-                        </div>
-                        <div className="col-8">
-                            <Tabs />
-                        </div>
+                <div className="row">
+                    <div className="col-4">
+                        <UserList />
                     </div>
-                </ChatContextProvider>
+                    <div className="col-8">
+                        {
+                            chatId !== "null" ? (
+                                <>
+                                    <UserProfile />
+                                    <Tabs data={TABS_LIST} />
+                                </>
+                            ) : (
+                                <EmptyChat />
+                            )
+                        }
+                    </div>
+                </div>
             </div>
         </div>
     );
-}
+};
 
 export default Client;

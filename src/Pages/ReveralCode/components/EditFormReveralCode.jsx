@@ -6,22 +6,22 @@ import {
     collection, query, getDocs, where, doc, updateDoc,
 } from "firebase/firestore";
 
-import FormValidation from '../../../components/FormValidation';
-import Card from '../../../components/Card';
+import FormValidation from '../../../Components/FormValidation';
+import Card from '../../../Components/Card';
 
-import InputText from '../../../components/form/InputText';
-import InputTextArea from '../../../components/form/InputTextArea';
-import InputPercent from '../../../components/form/InputPercent';
-import InputSwitch from '../../../components/form/InputSwitch';
-import InputSelect from '../../../components/form/InputSelect';
-import Button from '../../../components/Button';
-import Loading from '../../../components/Loading';
+import InputText from '../../../Components/form/InputText';
+import InputTextArea from '../../../Components/form/InputTextArea';
+import InputPercent from '../../../Components/form/InputPercent';
+import InputSwitch from '../../../Components/form/InputSwitch';
+import InputSelect from '../../../Components/form/InputSelect';
+import Button from '../../../Components/Button';
+import Loading from '../../../Components/Loading';
 
 import { db } from "../../../firebase";
 
 import { catchError } from "../../../Helper/helper";
 import { GENERATE_ERROR_MESSAGE } from '../../../Helper/error';
-import { withHocks } from '../../../context/WithParams';
+import { withHocks } from '../../../Context/WithParams';
 
 class EditFormReveralCode extends Component {
     constructor(props) {

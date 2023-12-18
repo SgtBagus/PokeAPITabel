@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import Accordion from '../../components/Accordion';
+import Accordion from '../../Components/Accordion';
 
-import { withHocks } from '../../context/WithParams';
+import { withHocks } from '../../Context/WithParams';
 
 class Dashboard extends Component {
   componentDidMount = () => {

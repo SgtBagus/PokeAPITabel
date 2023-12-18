@@ -3,14 +3,14 @@ import { doc, onSnapshot } from "firebase/firestore";
 
 import { db } from "../../../firebase";
 
-import { AuthContext } from "../../../context/AuthContext";
-import { ChatContext } from "../../../context/ChatContext";
+import { AuthContext } from "../../../Context/AuthContext";
+import { ChatContext } from "../../../Context/ChatContext";
 
-import Card from "../../../components/Card";
-import Image from "../../../components/Image";
-import Loading from "../../../components/Loading";
+import Card from "../../../Components/Card";
+import Image from "../../../Components/Image";
+import Loading from "../../../Components/Loading";
 
-import InputTextIcon from "../../../components/form/InputTextIcon";
+import InputTextIcon from "../../../Components/form/InputTextIcon";
 
 import fireBaseTime from '../../../Helper/fireBaseTime';
 

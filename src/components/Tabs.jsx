@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const Tabs = ({
     idTabs, idTabsContent, data: {
-        title, content,
+        titleHeader, contentBody,
     },
 }) => {
     return (
@@ -13,8 +13,8 @@ const Tabs = ({
                     <div className="card-header p-0 pt-1">
                         <ul className="nav nav-tabs" id={idTabs} role="tablist">
                             {
-                                title.map(({
-                                    id, title, active, icon = null,
+                                titleHeader.map(({
+                                    id, title, active, tabKey, icon = null,
                                 }) => (
                                         <li
                                             className="nav-item"
@@ -22,15 +22,16 @@ const Tabs = ({
                                         >
                                             <a
                                                 className={`nav-link ${active ? 'active' : '' }`}
+                                                id={`${tabKey}-tab`}
                                                 data-toggle="pill"
-                                                href="#custom-tabs-five-normal"
+                                                href={`#${tabKey}-${id}`}
                                                 role="tab"
-                                                aria-controls="custom-tabs-five-normal"
-                                                aria-selected="false"
+                                                aria-controls={`#${tabKey}-${id}`}
+                                                aria-selected={active ? 'true' : 'false'}
                                             >
                                                 {
                                                     icon && (
-                                                        <i className={icon} /> 
+                                                        <i className={`${icon} mr-2`} /> 
                                                     )
                                                 }
                                                 {title}
@@ -44,12 +45,13 @@ const Tabs = ({
                     <div className="card-body">
                         <div className="tab-content" id={idTabsContent}>
                             {
-                                content.map(({ id, children, active }) => (
+                                contentBody.map(({ id, tabKey, children, active }) => (
                                     <div
-                                        className="tab-pane fade show active"
-                                        id={id}
+                                        className={`tab-pane fade ${active ? 'show active' : '' }`}
+                                        id={`${tabKey}-${id}`}
                                         role="tabpanel"
-                                        aria-labelledby="custom-tabs-five-overlay-tab"
+                                        aria-labelledby={`${tabKey}-tab`}
+                                        key={id}
                                     >
                                         <div className="overlay-wrapper">
                                             {children}
@@ -69,17 +71,19 @@ Tabs.propTypes = {
     idTabs: PropTypes.string,
     idTabsContent: PropTypes.string,
     data: PropTypes.shape({
-        title: PropTypes.arrayOf(
+        titleHeader: PropTypes.arrayOf(
             PropTypes.shape({
                 id: PropTypes.number,
                 title: PropTypes.string,
                 icon: PropTypes.string,
+                tabKey: PropTypes.string,
                 active: PropTypes.bool,
             })
         ),
-        content: PropTypes.arrayOf(
+        contentBody: PropTypes.arrayOf(
             PropTypes.shape({
                 id: PropTypes.number,
+                tabKey: PropTypes.string,
                 children: PropTypes.node,
                 active: PropTypes.bool,
             })
@@ -91,7 +95,7 @@ Tabs.defaultProps = {
     idTabs: 'id-tabs-1',
     idTabsContent: 'id-tabsContent-1',
     data: {
-        title: [
+        titleHeader: [
             {
                 id: 1,
                 title: 'test',
@@ -99,10 +103,10 @@ Tabs.defaultProps = {
                 active: true,
             }
         ],
-        content: [
+        contentBody: [
             {
                 id: 1,
-                children: undefined,
+                children: <div>test</div>,
                 active: true,
             }
         ]

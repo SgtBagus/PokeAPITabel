@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 
-import { ChatContext } from "../../../context/ChatContext";
+import { ChatContext } from "../../../Context/ChatContext";
 
 import { db } from "../../../firebase";
 
-import Loading from "../../../components/Loading";
-import Image from "../../../components/Image";
-import Video from "../../../components/Video";
-import Card from "../../../components/Card";
+import Loading from "../../../Components/Loading";
+import Image from "../../../Components/Image";
+import Video from "../../../Components/Video";
+import Card from "../../../Components/Card";
 
 import EmptyGallery from "./EmptyGallery";
 

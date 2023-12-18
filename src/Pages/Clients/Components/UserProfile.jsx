@@ -10,9 +10,9 @@ import Loading from "../../../Components/Loading";
 import Image from '../../../Components/Image';
 import Button from '../../../Components/Button';
 
-import defaultImage from './defaultImage.png';
-
 import { catchError } from "../../../Helper/helper"
+
+import { DEFAULT_IMAGE } from "../../../Enum/DefaultValue";
 
 const UserProfile = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +22,7 @@ const UserProfile = () => {
 
     const [dataUser, setDataUser] = useState({
         displayName: 'Username',
-        photoURL: defaultImage,
+        photoURL: DEFAULT_IMAGE,
         uid: 'null',
         email: 'useremail@gmail.com',
         userDesc: 'Desc',

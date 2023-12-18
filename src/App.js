@@ -2,7 +2,7 @@ import React, { StrictMode } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { NotificationContainer } from "react-notifications";
 
-import { AuthContextProvider } from "./context/AuthContext";
+import { AuthContextProvider } from "./Context/AuthContext";
 
 import "react-notifications/lib/notifications.css";
 

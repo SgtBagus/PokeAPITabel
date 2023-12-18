@@ -1,12 +1,12 @@
 import React, { StrictMode, useContext, useEffect } from 'react';
 
-import { ChatContextProvider } from "../../context/ChatContext";
+import { ChatContextProvider } from "../../Context/ChatContext";
 
-import UserList from './components/UserList';
-import UserProfile from './components/UserProfile';
-import VideoComponents from './components/VideoComponents';
+import UserList from './Components/UserList';
+import UserProfile from './Components/UserProfile';
+import VideoComponents from './Components/VideoComponents';
 
-import { LoadingContext } from '../../context/LoadingContext';
+import { LoadingContext } from '../../Context/LoadingContext';
 
 const VideoGallerys = () =>  {
     const { dispatchLoading } = useContext(LoadingContext);

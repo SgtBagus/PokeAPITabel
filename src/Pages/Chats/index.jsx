@@ -1,11 +1,11 @@
 import React, { StrictMode, useContext, useEffect } from 'react';
 
-import { ChatContextProvider } from "../../context/ChatContext";
-import { LoadingContext } from '../../context/LoadingContext';
+import { ChatContextProvider } from "../../Context/ChatContext";
+import { LoadingContext } from '../../Context/LoadingContext';
 
-import UserList from './components/UserList';
-import Chat from './components/Chat';
-import UserProfile from './components/UserProfile';
+import UserList from './Components/UserList';
+import Chat from './Components/Chat';
+import UserProfile from './Components/UserProfile';
 
 const ChatPages = () =>  {
     const { dispatchLoading } = useContext(LoadingContext);

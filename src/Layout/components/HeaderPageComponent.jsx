@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 
-import Button from '../../components/Button';
+import Button from '../../Components/Button';
 
-import { ButtonContext } from "../../context/ButtonContext";
+import { ButtonContext } from "../../Context/ButtonContext";
 
 export const HeaderPageComponent = ({
     pageName,

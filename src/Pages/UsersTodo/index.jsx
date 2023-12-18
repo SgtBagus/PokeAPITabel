@@ -5,10 +5,10 @@ import { collection, getDocs, query } from "firebase/firestore";
 
 import { db } from "../../firebase";
 
-import { LoadingContext } from "../../context/LoadingContext";
-import { ButtonContext } from "../../context/ButtonContext";
+import { LoadingContext } from "../../Context/LoadingContext";
+import { ButtonContext } from "../../Context/ButtonContext";
 
-import Tabel from "../../components/Tabel";
+import Tabel from "../../Components/Tabel";
 
 import { TABEL_META } from "./config";
 

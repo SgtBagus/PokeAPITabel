@@ -10,14 +10,14 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-import { ChatContext } from "../../../context/ChatContext";
-import { AuthContext } from "../../../context/AuthContext";
+import { ChatContext } from "../../../Context/ChatContext";
+import { AuthContext } from "../../../Context/AuthContext";
 
 import { db } from "../../../firebase";
 
-import InputText from "../../../components/form/InputText";
-import Modals from "../../../components/Modals";
-import Button from "../../../components/Button";
+import InputText from "../../../Components/form/InputText";
+import Modals from "../../../Components/Modals";
+import Button from "../../../Components/Button";
 
 import { uploadFile } from "../../../Data/uploadFile";
 
@@ -25,8 +25,8 @@ import { checkThisFileIsImageOrNot } from "../../../Helper/checkFile";
 import { catchError } from "../../../Helper/helper";
 
 import defaultImage from "./defaultImage.png";
-import Image from "../../../components/Image";
-import Video from "../../../components/Video";
+import Image from "../../../Components/Image";
+import Video from "../../../Components/Video";
 
 import MessagesComponents from "./MessagesComponents";
 import EmptyChat from "./EmptyChat";

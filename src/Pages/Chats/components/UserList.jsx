@@ -1,18 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 
-import { AuthContext } from "../../../context/AuthContext";
-import { ChatContext } from "../../../context/ChatContext";
+import { AuthContext } from "../../../Context/AuthContext";
+import { ChatContext } from "../../../Context/ChatContext";
 import { db } from "../../../firebase";
 
-import Card from "../../../components/Card";
-import Image from "../../../components/Image";
-import InputTextIcon from "../../../components/form/InputTextIcon";
+import Card from "../../../Components/Card";
+import Image from "../../../Components/Image";
+import InputTextIcon from "../../../Components/form/InputTextIcon";
 
 import fireBaseTime from '../../../Helper/fireBaseTime';
 
 import './style.scss';
-import Loading from "../../../components/Loading";
+import Loading from "../../../Components/Loading";
 
 const UserList = () => {
     const [chats, setChats] = useState([]);

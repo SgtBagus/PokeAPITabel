@@ -8,16 +8,16 @@ import { NotificationManager } from 'react-notifications';
 
 import { db } from "../../../firebase";
 
-import Modals from "../../../components/Modals";
-import FormValidation from "../../../components/FormValidation";
-import Button from "../../../components/Button";
-import InputText from "../../../components/form/InputText";
-import InputPercent from "../../../components/form/InputPercent";
-import InputTextArea from "../../../components/form/InputTextArea";
-import InputSelect from "../../../components/form/InputSelect";
-import InputSwitch from "../../../components/form/InputSwitch";
+import Modals from "../../../Components/Modals";
+import FormValidation from "../../../Components/FormValidation";
+import Button from "../../../Components/Button";
+import InputText from "../../../Components/form/InputText";
+import InputPercent from "../../../Components/form/InputPercent";
+import InputTextArea from "../../../Components/form/InputTextArea";
+import InputSelect from "../../../Components/form/InputSelect";
+import InputSwitch from "../../../Components/form/InputSwitch";
 
-import { withHocks } from '../../../context/WithParams';
+import { withHocks } from '../../../Context/WithParams';
 
 import { catchError } from "../../../Helper/helper";
 import { GENERATE_ERROR_MESSAGE } from "../../../Helper/error";

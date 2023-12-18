@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useRef } from "react";
 
-import { AuthContext } from "../../../Context/AuthContext";
-import { ChatContext } from "../../../Context/ChatContext";
+import { AuthContext } from "../../../../../Context/AuthContext";
+import { ChatContext } from "../../../../../Context/ChatContext";
 
-import Image from "../../../Components/Image";
-import Video from "../../../Components/Video";
+import Image from "../../../../../Components/Image";
+import Video from "../../../../../Components/Video";
 
-import fireBaseTime from "../../../Helper/fireBaseTime";
+import fireBaseTime from "../../../../../Helper/fireBaseTime";
 
-import { checkfileUrl } from "../../../Helper/checkFile";
+import { checkfileUrl } from "../../../../../Helper/checkFile";
 
 const MessagesComponents = ({ message }) => {
     const { currentUser } = useContext(AuthContext);

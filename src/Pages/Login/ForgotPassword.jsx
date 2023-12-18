@@ -7,9 +7,9 @@ import { sendPasswordResetEmail } from "firebase/auth";
 
 import { auth } from "../../firebase";
 
-import FormValidation from "../../components/FormValidation";
-import InputEmail from "../../components/form/InputEmail";
-import Button from '../../components/Button';
+import FormValidation from "../../Components/FormValidation";
+import InputEmail from "../../Components/form/InputEmail";
+import Button from '../../Components/Button';
 
 import { GENERATE_ERROR_MESSAGE, validateEmail } from "../../Helper/error";
 import { catchError } from "../../Helper/helper"

@@ -10,13 +10,14 @@ import ForgotPassword from "../Pages/Login/ForgotPassword";
 
 import { NotFound404 } from "../Layout/404";
 
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../Context/AuthContext";
+import { ChatContextProvider } from '../Context/ChatContext';
 
 import ChatPages from "../Pages/Chats";
 import VideoGallerys from "../Pages/Chats/VideoGallerys";
 
 import ReveralCode from "../Pages/ReveralCode/";
-import EditFormReveralCode from "../Pages/ReveralCode/components/EditFormReveralCode";
+import EditFormReveralCode from "../Pages/ReveralCode/Components/EditFormReveralCode";
 
 import UsersTodo from "../Pages/UsersTodo/";
 import Client from "../Pages/Clients";
@@ -98,7 +99,16 @@ const App = () => {
 
       <Route path="client" element={
         <ProtectedRoute>
-          {RenderDefaultLayout(<Client />, "Client", currentUser, "/client" )}
+          {
+            RenderDefaultLayout(
+              <ChatContextProvider>
+                <Client />
+              </ChatContextProvider>,
+              "Client",
+              currentUser,
+              "/client"
+            )
+          }
         </ProtectedRoute>
         }
       />

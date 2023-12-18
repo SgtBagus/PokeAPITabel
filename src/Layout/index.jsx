@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { HeaderComponents } from './components/Header';
-import { SidebarComponents } from './components/Sidebar';
-import { FooterComponents } from './components/Footer';
+import { HeaderComponents } from './Components/Header';
+import { SidebarComponents } from './Components/Sidebar';
+import { FooterComponents } from './Components/Footer';
 
-import { HeaderPageComponent } from './components/HeaderPageComponent';
+import { HeaderPageComponent } from './Components/HeaderPageComponent';
 
-import { ButtonContextProvider } from "../context/ButtonContext";
-import { LoadingContextProvider } from "../context/LoadingContext";
+import { ButtonContextProvider } from "../Context/ButtonContext";
+import { LoadingContextProvider } from "../Context/LoadingContext";
 
 export const LayoutDefault = ({ dataLogin, children, pageName, path }) => (
     <LoadingContextProvider>

@@ -4,14 +4,14 @@ import { NotificationManager } from 'react-notifications';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-import FormReveralCode from './components/FormReveralCode';
+import FormReveralCode from './Components/FormReveralCode';
 
-import Tabel from '../../components/Tabel';
-import Loading from '../../components/Loading';
+import Tabel from '../../Components/Tabel';
+import Loading from '../../Components/Loading';
 
-import { ButtonContext } from "../../context/ButtonContext";
-import { AuthContext } from "../../context/AuthContext";
-import { LoadingContext } from '../../context/LoadingContext';
+import { ButtonContext } from "../../Context/ButtonContext";
+import { AuthContext } from "../../Context/AuthContext";
+import { LoadingContext } from '../../Context/LoadingContext';
 
 import { db } from "../../firebase";
 import { catchError } from '../../Helper/helper';
