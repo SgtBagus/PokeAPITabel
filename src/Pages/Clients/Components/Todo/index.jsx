@@ -13,6 +13,7 @@ import { ChatContext } from "../../../../Context/ChatContext";
 
 import { catchError } from '../../../../Helper/helper';
 import fireBaseTime from '../../../../Helper/fireBaseTime';
+import Button from "../../../../Components/Button";
 
 const Todo = () => {
     const [dataTask, setDataTask] = useState([]);
@@ -49,56 +50,68 @@ const Todo = () => {
 
     return (
         <div className="row">
-            <div className="col-md-12" style={{ height: "450px", overflow: 'auto' }}>
+            <div className="col-md-12" style={{ height: "450px" }}>
                 {
                     isLoading ? (
                         <div className="overlay position-relative" style={{ height: "400px" }}>
                             <Loading />
                         </div>
                     ) : (
-                        <>
-                            {
-                                dataTask.length > 0 ? (
-                                    <div className="row">
-                                        {
-                                            dataTask.map((data) => {
-                                                const { title, id, note, createdDate, statusFinish, updatedDate, progressNote } = data;
+                        <div className="row">
+                            <div className="col-md-12 my-2">
+                                <Button
+                                    className="btn btn-block btn-primary"
+                                    label="Tambah To Do Client"
+                                    onClick={() => {
+                                        return navigate(`to-do/create`);
+                                    }}
+                                    buttonIcon="fa fa-plus"
+                                />
+                            </div>
+                            <div className="col-md-12" style={{ height: "395px", overflow: 'auto' }}>
+                                {
+                                    dataTask.length > 0 ? (
+                                        <div className="row">
+                                            {
+                                                dataTask.map((data) => {
+                                                    const { title, id, note, createdDate, statusFinish, updatedDate, progressNote } = data;
 
-                                                return (
-                                                    <div className="col-md-6" key={id}>
-                                                        <Widgets
-                                                            borderClass="border-primary"
-                                                            icon="fa fa-tasks"
-                                                            title={title}
-                                                            subTitle={note}
-                                                            descWidgets={progressNote}
-                                                            ribbonStyle={statusFinish ? { title: 'Ribbon', bgStyle: 'bg-success' } : null}
-                                                            buttonStyle={{
-                                                                label: "Lihat Lebih Lengkap",
-                                                                className: "btn-primary w-100 my-2 rounded",
-                                                                buttonIcon: "fa fa-eye",
-                                                                onHandel: () => {
-                                                                    return navigate(`to-do/${id}`);
-                                                                },
-                                                            }}
-                                                        >
-                                                        <span className="d-flex text-align-center">
-                                                            <i className="fa fa-calendar mr-2" /> Dibuat Pada: {fireBaseTime(createdDate).toDateString().toString("MMMM yyyy")}
-                                                        </span>
-                                                        <span className="d-flex text-align-center">
-                                                            <i className="fa fa-calendar mr-2" /> Diupdate Pada: {fireBaseTime(updatedDate).toDateString().toString("MMMM yyyy")}
-                                                        </span>
-                                                        </Widgets>
-                                                    </div>
-                                                )}
-                                            )
-                                        }
-                                    </div>
-                                ) : (
-                                    <EmptyTodo />
-                                )
-                            }
-                        </>
+                                                    return (
+                                                        <div className="col-md-6" key={id}>
+                                                            <Widgets
+                                                                borderClass="border-primary"
+                                                                icon="fa fa-tasks"
+                                                                title={title}
+                                                                subTitle={note}
+                                                                descWidgets={progressNote}
+                                                                ribbonStyle={statusFinish ? { title: 'Ribbon', bgStyle: 'bg-success' } : null}
+                                                                buttonStyle={{
+                                                                    label: "Lihat Lebih Lengkap",
+                                                                    className: "btn-primary w-100 my-2 rounded",
+                                                                    buttonIcon: "fa fa-eye",
+                                                                    onHandel: () => {
+                                                                        return navigate(`to-do/${id}`);
+                                                                    },
+                                                                }}
+                                                            >
+                                                                <span className="d-flex text-align-center">
+                                                                    <i className="fa fa-calendar mr-2" /> Dibuat Pada: {fireBaseTime(createdDate).toDateString().toString("MMMM yyyy")}
+                                                                </span>
+                                                                <span className="d-flex text-align-center">
+                                                                    <i className="fa fa-calendar mr-2" /> Diupdate Pada: {fireBaseTime(updatedDate).toDateString().toString("MMMM yyyy")}
+                                                                </span>
+                                                            </Widgets>
+                                                        </div>
+                                                    )}
+                                                )
+                                            }
+                                        </div>
+                                    ) : (
+                                        <EmptyTodo />
+                                    )
+                                }
+                            </div>
+                        </div>
                     )
                 }
             </div>
