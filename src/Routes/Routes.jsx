@@ -18,6 +18,7 @@ import EditFormReveralCode from "../Pages/ReveralCode/Components/EditFormReveral
 
 import UsersTodo from "../Pages/UsersTodo/";
 import Client from "../Pages/Clients";
+import TodoLists from "../Pages/TodoLists";
 
 const RenderDefaultLayout = (page, pageName, currentUser, path) => (
   <LayoutDefault
@@ -61,19 +62,31 @@ const App = () => {
         </ProtectedRoute>
         }
       />
-      <Route path="client" element={
-        <ProtectedRoute>
-          {
-            RenderDefaultLayout(
-              <ChatContextProvider>
-                <Client />
-              </ChatContextProvider>,
-              "Client", currentUser, "/client"
-            )
+      <Route path="client">
+        <Route
+          index
+          element={
+            <ProtectedRoute>
+              {
+                RenderDefaultLayout(
+                  <ChatContextProvider>
+                    <Client />
+                  </ChatContextProvider>,
+                  "Client", currentUser, "/client"
+                )
+              }
+            </ProtectedRoute>
           }
-        </ProtectedRoute>
-        }
-      />
+        />
+        <Route
+          path="to-do/:type"
+          element={
+            <ProtectedRoute>
+              {RenderDefaultLayout(<TodoLists />, "Todo Client", currentUser, "/client" )}
+            </ProtectedRoute>
+          }
+        />
+      </Route>
 
       <Route path="reveral-code" element={
         <ProtectedRoute>

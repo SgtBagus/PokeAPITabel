@@ -14,6 +14,7 @@ import { ChatContext } from "../../../../Context/ChatContext";
 import { catchError } from '../../../../Helper/helper';
 import fireBaseTime from '../../../../Helper/fireBaseTime';
 import Button from "../../../../Components/Button";
+import { FORM_TYPES } from "../../../../Enum/form";
 
 const Todo = () => {
     const [dataTask, setDataTask] = useState([]);
@@ -63,7 +64,7 @@ const Todo = () => {
                                     className="btn btn-block btn-primary"
                                     label="Tambah To Do Client"
                                     onClick={() => {
-                                        return navigate(`to-do/create`);
+                                        return navigate(`to-do/${FORM_TYPES.CREATE}`);
                                     }}
                                     buttonIcon="fa fa-plus"
                                 />

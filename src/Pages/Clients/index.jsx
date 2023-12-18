@@ -49,7 +49,7 @@ const Client = () => {
         };
 
         currentUser.uid && getChats();
-    }, [currentUser.uid, dispatchLoading]);
+    }, [currentUser.uid, dispatch, dispatchLoading]);
 
     return (
         <div className="row">
