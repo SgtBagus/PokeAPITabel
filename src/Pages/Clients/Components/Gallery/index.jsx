@@ -37,14 +37,14 @@ const Gallery = () => {
     }, [chatId]);
 
     return (
-        <>
+        <div style={{ height: "450px", overflow: 'auto' }}>
             {
                 isLoading ? (
-                    <div className="overlay position-relative" style={{ height: "450px" }}>
+                    <div className="overlay position-relative">
                         <Loading />
                     </div>
                 ) : (
-                    <div className="d-flex flex-wrap" style={{ height: "450px", overflow: 'auto' }}>
+                    <div className="d-flex flex-wrap justify-content-between">
                         {
                             fileData.length > 0
                             ? (
@@ -58,9 +58,9 @@ const Gallery = () => {
                                                         src={x}
                                                         alt={`messages-gallery-${idx}`}
                                                         style={{
-                                                            width: "280px",
+                                                            width: "350px",
                                                             objectFit: "cover",
-                                                            borderRadius: "25px",
+                                                            borderRadius: "15px",
                                                         }}
                                                     />
                                                 ) : (
@@ -69,8 +69,8 @@ const Gallery = () => {
                                                         src={x}
                                                         style={{
                                                             objectFit: "cover",
-                                                            width: "280px",
-                                                            borderRadius: "25px",
+                                                            width: "350px",
+                                                            borderRadius: "15px",
                                                         }}
                                                     />
                                                 )}
@@ -95,7 +95,7 @@ const Gallery = () => {
                     </div>
                 )
             }
-        </>
+        </div>
     );
 };
 

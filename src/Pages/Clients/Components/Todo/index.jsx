@@ -1,66 +1,106 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
-import { collection, getDocs, query } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 
 import { db } from "../../../../firebase";
 
-import { LoadingContext } from "../../../../Context/LoadingContext";
-import { ButtonContext } from "../../../../Context/ButtonContext";
+import EmptyTodo from "./Components/EmptyTodo";
+import Widgets from "../../../../Components/Widgets";
+import Loading from "../../../../Components/Loading";
 
-import Tabel from "../../../../Components/Tabel";
+import { ChatContext } from "../../../../Context/ChatContext";
 
-import { TABEL_META } from "./config";
-
-import { catchError } from "../../../../Helper/helper";
+import { catchError } from '../../../../Helper/helper';
+import fireBaseTime from '../../../../Helper/fireBaseTime';
 
 const Todo = () => {
-    const { dispatch } = useContext(ButtonContext);
-    const { dispatchLoading } = useContext(LoadingContext);
+    const [dataTask, setDataTask] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const { data: { user: { userInfo: { uid } }} } = useContext(ChatContext);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        const getData = async () => {
-            try {
-                const res = query(collection(db, "toDoLists"));
-                const data = await getDocs(res);
+        setIsLoading(true);
+      
+        if (uid) {
+          const unSub = onSnapshot(doc(db, "toDoLists", uid), (doc) => {
+            if (doc.exists()) {
+                const getData = Object.entries(doc.data()) || [];
+                const res = getData.map(x => x[1]);
+                const sortingList = res.sort(({ createdDate: pCreatedDate}, { createdDate }) => (
+                    new Date(pCreatedDate.seconds * 1000 + pCreatedDate.nanoseconds/1000000) - new Date(createdDate.seconds * 1000 + createdDate.nanoseconds/1000000)
+                ));
                 
-                const getDataTable = data.docs.map((x) => (x.data()));
-
-                console.log(getDataTable);
-            } catch (err) {
-                NotificationManager.error(catchError(err), 'Terjadi Kesalahan', 5000);
-            } finally {
-                dispatchLoading(false);
+                setDataTask(sortingList);
+            } else {
+                setDataTask([]);
             }
-        };
-        
-        getData();
-    }, [dispatch, dispatchLoading, navigate]);
+
+            setIsLoading(false);
+          }, (error) => {
+            NotificationManager.error(catchError(error), 'Terjadi Kesalahan', 5000);
+          });
+    
+          return () => { unSub() };
+        }
+    }, [uid]);
 
     return (
         <div className="row">
-            <div className="col-md-12">
-                <div className="info-box bg-primary">
-                    <span className="info-box-icon">
-                        <i className="fa fa-tasks"></i>
-                    </span>
-                    <div className="info-box-content">
-                        <span className="info-box-text">
-                            Judul Tugas nya
-                            <br className="m-0"/>
-                            <small>Task nya disini</small>
-                        </span>
-                        <span className="info-box-number">Jumlah Tasknya nanti disini - 70%</span>
-                        <div className="progress">
-                            <div className="progress-bar" style={{ width: '50%' }}></div>
+            <div className="col-md-12" style={{ height: "450px", overflow: 'auto' }}>
+                {
+                    isLoading ? (
+                        <div className="overlay position-relative" style={{ height: "400px" }}>
+                            <Loading />
                         </div>
-                        <span className="progress-description">
-                            Progress Note nya disini
-                        </span>
-                    </div>
-                </div>
+                    ) : (
+                        <>
+                            {
+                                dataTask.length > 0 ? (
+                                    <div className="row">
+                                        {
+                                            dataTask.map((data) => {
+                                                const { title, id, note, createdDate, statusFinish, updatedDate, progressNote } = data;
+
+                                                return (
+                                                    <div className="col-md-6" key={id}>
+                                                        <Widgets
+                                                            borderClass="border-primary"
+                                                            icon="fa fa-tasks"
+                                                            title={title}
+                                                            subTitle={note}
+                                                            descWidgets={progressNote}
+                                                            ribbonStyle={statusFinish ? { title: 'Ribbon', bgStyle: 'bg-success' } : null}
+                                                            buttonStyle={{
+                                                                label: "Lihat Lebih Lengkap",
+                                                                className: "btn-primary w-100 my-2 rounded",
+                                                                buttonIcon: "fa fa-eye",
+                                                                onHandel: () => {
+                                                                    return navigate(`to-do/${id}`);
+                                                                },
+                                                            }}
+                                                        >
+                                                        <span className="d-flex text-align-center">
+                                                            <i className="fa fa-calendar mr-2" /> Dibuat Pada: {fireBaseTime(createdDate).toDateString().toString("MMMM yyyy")}
+                                                        </span>
+                                                        <span className="d-flex text-align-center">
+                                                            <i className="fa fa-calendar mr-2" /> Diupdate Pada: {fireBaseTime(updatedDate).toDateString().toString("MMMM yyyy")}
+                                                        </span>
+                                                        </Widgets>
+                                                    </div>
+                                                )}
+                                            )
+                                        }
+                                    </div>
+                                ) : (
+                                    <EmptyTodo />
+                                )
+                            }
+                        </>
+                    )
+                }
             </div>
         </div>
     );
