@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 
 import { LoadingContext } from "../../Context/LoadingContext";
 
+import Card from '../../Components/Card';
+
 const TodoLists = () => {
     const { dispatchLoading } = useContext(LoadingContext);
 
@@ -13,9 +15,13 @@ const TodoLists = () => {
     console.log(useParams());
 
     return (
-        <div className="row">
-            test
-        </div>
+        <Card title="To Do Client">
+            <div className="row">
+                <div className="col-md-12">
+                    sdsd
+                </div>
+            </div>
+        </Card>
     );
 }
 
