@@ -27,12 +27,12 @@ const renderButton = (ribbon) => {
 
 const Widgets = ({
     borderClass, icon, title, subTitle, descWidgets, ribbonStyle, buttonStyle,
-    children,
+    children, iconClass,
 }) => {
     return (
         <div className={`info-box border ${borderClass}`}>
             <span className="info-box-icon align-items-baseline">
-                <div className="bg-primary p-3 rounded-lg">
+                <div className={`${iconClass} p-3 rounded-lg`}>
                     <i className={icon} />
                 </div>
             </span>
@@ -64,6 +64,7 @@ const Widgets = ({
 
 Widgets.propTypes = {
     borderClass: PropTypes.string,
+    iconClass: PropTypes.string,
     icon: PropTypes.string,
     title: PropTypes.string,
     subTitle: PropTypes.string,
@@ -83,6 +84,7 @@ Widgets.propTypes = {
 
 Widgets.defaultProps = {
     borderClass: 'border-primary',
+    iconClass: 'border-primary',
     icon: 'fa fa-user',
     title: 'Title Widgets',
     subTitle: null,

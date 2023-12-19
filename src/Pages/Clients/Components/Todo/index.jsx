@@ -8,12 +8,12 @@ import { db } from "../../../../firebase";
 import EmptyTodo from "./Components/EmptyTodo";
 import Widgets from "../../../../Components/Widgets";
 import Loading from "../../../../Components/Loading";
+import Button from "../../../../Components/Button";
 
 import { ChatContext } from "../../../../Context/ChatContext";
 
 import { catchError } from '../../../../Helper/helper';
 import fireBaseTime from '../../../../Helper/fireBaseTime';
-import Button from "../../../../Components/Button";
 
 import { FORM_TYPES } from "../../../../Enum/Form";
 
@@ -92,7 +92,7 @@ const Todo = () => {
                                                                     className: "btn-primary w-100 my-2 rounded",
                                                                     buttonIcon: "fa fa-eye",
                                                                     onHandel: () => {
-                                                                        return navigate(`to-do/${id}`);
+                                                                        return navigate(`to-do/${FORM_TYPES.EDIT}/${uid}/${id}`);
                                                                     },
                                                                 }}
                                                             >
