@@ -118,6 +118,7 @@ class TodoForm extends Component {
             headerTitle,
         } = this.props;
 
+        console.log(statusFinish);
         return (
                 <Modals
                     idModal={idModal}
