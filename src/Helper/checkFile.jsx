@@ -26,7 +26,7 @@ export const checkFileUrlName = (urlFile) => {
     const url = new URL(urlFile);
     const filePart = url.pathname.split('/').slice(-1)[0];
 
-    return filePart.split('%2F')[2];
+    return filePart;
 }
 
 export const checkfileUrl = (urlFile) => {

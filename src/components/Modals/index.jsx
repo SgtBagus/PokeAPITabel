@@ -5,6 +5,7 @@ const Modals = ({
     buttonLabel, idModal, typeModal, children, className, disabled,
     btnSubmitText, btnCancelText, btnSubmitHandel, btnCancelHandel,
     buttonIcon, buttonSubmitIcon, btnSubmitDisabled, style, modalLarge,
+    headerTitle,
 }) => {
     return (
         <>
@@ -27,6 +28,16 @@ const Modals = ({
             <div className="modal fade" id={idModal}>
                 <div className={`modal-dialog ${modalLarge && 'modal-lg'}`}>
                     <div className="modal-content">
+                        {
+                            headerTitle && (
+                                <div className="modal-header">
+                                    <h4 className="modal-title">{headerTitle}</h4>
+                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                            )
+                        }
                         <div className="modal-body">
                             {children}
                         </div>
@@ -70,6 +81,10 @@ Modals.propTypes = {
     idModal: PropTypes.string,
     typeModal: PropTypes.string,
     children: PropTypes.node,
+    headerTitle: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.node,
+    ]),
     btnSubmitText: PropTypes.string,
     btnCancelText: PropTypes.string,
     btnSubmitHandel: PropTypes.func,
@@ -88,6 +103,7 @@ Modals.defaultProps = {
     idModal: 'defaultModal',
     typeModal: 'default',
     children: 'One fine body...',
+    headerTitle: null,
     btnSubmitText: 'Save changes',
     btnCancelText: 'Cancel',
     btnSubmitHandel: null,

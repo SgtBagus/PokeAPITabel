@@ -17,20 +17,6 @@ const TabelTodoList = ({
                         tabelHead: TABEL_META,
                         coloumnData: data,
                     }}
-                    actionButton={{
-                        view: {
-                            enabled: true,
-                            onClick: ({id}) => { console.log(id) },
-                        },
-                        edit: {
-                            enabled: true,
-                            onClick: ({id}) => { console.log(id) },
-                        },
-                        delete: {
-                            enabled: true,
-                            onClick: ({id}) => { console.log(id) },
-                        },
-                    }}
                 />
             </div>
             <div className="col-12">

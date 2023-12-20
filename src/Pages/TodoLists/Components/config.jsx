@@ -1,3 +1,5 @@
+import TodoForm from "./TodoForm";
+
 import Badge from "../../../Components/Badge";
 
 export const STATUS_LIST = [
@@ -30,5 +32,12 @@ export const TABEL_META = [
     {
         title: 'Urutan',
         key: 'orderNumber',
+    },
+    {
+        title: 'Action',
+        AllData: true,
+        Cell: (val) => (
+            <TodoForm data={val} />
+        )
     },
 ];

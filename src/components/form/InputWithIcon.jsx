@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const InputText = (props) => {
+const InputWithIcon = (props) => {
     const {
         value, classes, name, changeEvent, placeholder, required, disabled, maxlength, readonly, title, spellCheck,
-        type,
+        type, icon,
     } = props;
 
     let inputStyleClass = 'form-control';
@@ -14,29 +14,37 @@ const InputText = (props) => {
     }
 
     return (
-        <input
-            type={type}
-            className={inputStyleClass}
-            name={name}
-            onChange={e => changeEvent(e.target.value, e)}
-            placeholder={placeholder}
-            value={value}
-            required={!!required}
-            disabled={disabled}
-            maxLength={maxlength}
-            readOnly={readonly}
-            title={title}
-            spellCheck={spellCheck}
-            autoComplete="off"
-        />
+        <div className="input-group mb-3">
+            <div className="input-group-prepend">
+                <span className="input-group-text">
+                    <i className={icon} />
+                </span>
+            </div>
+            <input
+                type={type}
+                className={inputStyleClass}
+                name={name}
+                onChange={e => changeEvent(e.target.value, e)}
+                placeholder={placeholder}
+                value={value}
+                required={!!required}
+                disabled={disabled}
+                maxLength={maxlength}
+                readOnly={readonly}
+                title={title}
+                spellCheck={spellCheck}
+                autoComplete="off"
+            />
+        </div>
     );
 };
 
-InputText.propTypes = {
+InputWithIcon.propTypes = {
     label: PropTypes.string,
     classes: PropTypes.string,
     type: PropTypes.string,
     name: PropTypes.string,
+    icon: PropTypes.string,
     placeholder: PropTypes.string,
     maxlength: PropTypes.string,
     value: PropTypes.oneOfType([
@@ -63,10 +71,11 @@ InputText.propTypes = {
     ]),
 };
 
-InputText.defaultProps = {
+InputWithIcon.defaultProps = {
     label: '',
     classes: undefined,
     name: undefined,
+    icon: 'fa fa-circle',
     type: 'text',
     placeholder: '',
     maxlength: '',
@@ -78,4 +87,4 @@ InputText.defaultProps = {
     spellCheck: false,
 };
 
-export default InputText;
+export default InputWithIcon;

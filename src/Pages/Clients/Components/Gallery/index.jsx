@@ -11,7 +11,7 @@ import Image from "../../../../Components/Image";
 import Video from "../../../../Components/Video";
 import Loading from "../../../../Components/Loading";
 
-import { checkFileUrlName, checkfileUrl } from "../../../../Helper/checkFile";
+import { checkfileUrl } from "../../../../Helper/checkFile";
 
 const Gallery = () => {
     const [fileData, setFileData] = useState([]);
@@ -74,15 +74,6 @@ const Gallery = () => {
                                                         }}
                                                     />
                                                 )}
-                                                <span
-                                                    style={{
-                                                        width: "280px",
-                                                        wordBreak: "break-all",
-                                                        textAlign: "center",
-                                                    }}
-                                                >
-                                                    {checkFileUrlName(x)}
-                                                </span>
                                             </div>
                                         ))
                                     }

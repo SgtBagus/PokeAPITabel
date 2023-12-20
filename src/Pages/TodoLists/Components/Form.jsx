@@ -145,7 +145,7 @@ class Form extends Component {
                     ) : (
                         <FormValidation ref={(c) => { this.form = c; }}>
                             <div
-                                className="p-1"
+                                className="p-1 m-1"
                                 style={{
                                     height: '70vh', overflowY: 'auto', overflowX: 'hidden',
                                 }}
@@ -292,11 +292,11 @@ class Form extends Component {
                                     onClick={() => { this.redirectLink('/client') }}
                                 />
                                 <Button
-                                label={onSend ? "Memperoses !" : 'Simpan'}
-                                className="btn btn-primary"
-                                buttonIcon={ onSend ? "fas fa-sync-alt fa-spin" : "fa fa-save" }
-                                onClick={() => {}}
-                                disabled={onSend}
+                                    label={onSend ? "Memperoses !" : 'Simpan'}
+                                    className="btn btn-primary"
+                                    buttonIcon={ onSend ? "fas fa-sync-alt fa-spin" : "fa fa-save" }
+                                    onClick={() => {}}
+                                    disabled={onSend}
                                 />
                             </div>
                         </FormValidation>

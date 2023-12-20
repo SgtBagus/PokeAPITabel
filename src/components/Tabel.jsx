@@ -53,17 +53,21 @@ const RenderTableData = (tabelHead, coloumnData, actionButton) => {
             return (
                 <tr key={idx}>
                     {
-                        tabelHead.map(({key, Cell}, indexColoumn) => (
-                            <td key={indexColoumn}>
-                                {
-                                    Cell ? (
-                                        Cell(x[key])
-                                    ) : (
-                                        x[key]
-                                    )
-                                }
-                            </td>
-                        ))
+                        tabelHead.map((data, indexColoumn) => {
+                            const { key, Cell } = data;
+
+                            return (
+                                <td key={indexColoumn}>
+                                    {
+                                        Cell ? (
+                                            data.AllData ? Cell(x) : Cell(x[key])
+                                        ) : (
+                                            x[key]
+                                        )
+                                    }
+                                </td>
+                            )
+                        })
                     }
                     {
                         actionButton && RenderActionButton(actionButton, x)
@@ -140,26 +144,31 @@ Tabel.defaultProps = {
                 key: 'ID',
                 title: 'Id',
                 Cell: () => {},
+                AllData: false,
             },
             {
                 key: 'User',
                 title: 'User',
                 Cell: () => {},
+                AllData: false,
             },
             {
                 key: 'Date',
                 title: 'Date',
                 Cell: () => {},
+                AllData: false,
             },
             {
                 key: 'Status',
                 title: 'Status',
                 Cell: () => {},
+                AllData: false,
             },
             {
                 key: 'Reason',
                 title: 'Reason',
                 Cell: () => {},
+                AllData: false,
             },
         ],
         coloumnData: [

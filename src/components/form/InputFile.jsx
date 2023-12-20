@@ -1,0 +1,90 @@
+import React from "react";
+import PropTypes from "prop-types";
+
+import Image from "../Image";
+import Video from "../Video";
+
+import { checkThisFileIsImageOrNot, checkfileUrl } from "../../Helper/checkFile";
+
+import { DEFAULT_IMAGE } from "../../Enum/DefaultValue";
+
+const srcImageRender = (value) => {
+    try {
+        const valueSrcRender = URL.createObjectURL(value);
+
+        return ({ valueSrcRender, isNew: true });
+    } catch {
+        return ({ valueSrcRender: value, isNew: false });
+    }
+}
+
+const renderFile = (isNew, value, rawFile = null) => {
+    const isFileIsImage = isNew ? checkThisFileIsImageOrNot(rawFile) : checkfileUrl(value);
+
+    return isFileIsImage ? (
+        <Image
+            src={value}
+            className="rounded w-100"
+            style={{ objectFit: "cover", height: '200px' }}
+            alt="Preview Image"
+        />
+    ) : (
+        <Video
+            src={value}
+            className="rounded w-100"
+            style={{ objectFit: "cover", height: '200px' }}
+            alt="Preview Image"
+        />
+    )
+}
+
+const InputFile = ({ value, changeEvent, placeHolder }) => {
+    const { valueSrcRender, isNew } = srcImageRender(value);
+
+    return (
+        <div className="input-group">
+            {
+                value ? (
+                    renderFile(isNew, valueSrcRender, value)
+                ) : (
+                    <Image
+                        src={DEFAULT_IMAGE}
+                        className="rounded w-100"
+                        style={{ objectFit: "cover", height: '200px' }}
+                        alt="Preview Image"
+                    />
+                )
+            }
+            <div className="custom-file mt-2">
+                <input
+                    type="file"
+                    className="custom-file-input"
+                    id="exampleInputFile"
+                    onChange={(e) => {
+                        try {
+                            changeEvent(e.target.files[0])
+                        } catch {
+                            changeEvent(null)
+                        }
+                    }}
+                />
+                <label className="custom-file-label" htmlFor="exampleInputFile">
+                    {placeHolder}
+                </label>
+            </div>
+        </div>
+    );
+};
+
+InputFile.propTypes = {
+    value: PropTypes.string,
+    placeHolder: PropTypes.string,
+    changeEvent: PropTypes.func.isRequired,
+};
+
+InputFile.defaultProps = {
+    value: null,
+    placeHolder: 'Pilih File'
+};
+
+export default InputFile;
