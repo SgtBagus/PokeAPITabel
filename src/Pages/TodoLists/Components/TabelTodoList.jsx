@@ -1,9 +1,11 @@
 import React from 'react';
 
+import TodoForm from './TodoForm';
 import Tabel from '../../../Components/Tabel';
-import Modals from '../../../Components/Modals';
 
 import { TABEL_META } from './config';
+
+import { FORM_TYPES } from '../../../Enum/Form';
 
 const TabelTodoList = ({
     title, data,
@@ -20,23 +22,16 @@ const TabelTodoList = ({
                 />
             </div>
             <div className="col-12">
-                <Modals
-                    buttonIcon="fas fa-plus mx-2"
+                <TodoForm
+                    idModal="modal-create-todo"
+                    buttonIcon="fas fa-plus fa-xs mr-2"
                     buttonLabel="Tambah Kegiatan"
-                    className="w-100"
-                    btnSubmitHandel={() => {}}
-                    btnCancelHandel={() => {}}
-                    btnSubmitText="Simpan"
-                    buttonSubmitIcon="fa fa-save mr-2"
+                    btnSubmitText="Tambah"
                     typeModal="primary"
-                    modalLarge
-                >
-                    <div className="row">
-                        <div className="col-md-12 my-2">
-                            asdsa
-                        </div>
-                    </div>
-                </Modals>
+                    className="btn-block"
+                    headerTitle="Tambah Kegiatan"
+                    type={FORM_TYPES.CREATE }
+                />
             </div>
         </div>
     );

@@ -17,6 +17,7 @@ import fireBaseTime from '../../../Helper/fireBaseTime';
 import { GENERATE_ERROR_MESSAGE } from '../../../Helper/error';
 
 import { STATUS_LIST } from './config';
+import { FORM_TYPES } from '../../../Enum/Form';
 
 class TodoForm extends Component {
     constructor(props) {
@@ -26,7 +27,7 @@ class TodoForm extends Component {
             form: {
                 id: '',
                 title: '',
-                icon: '',
+                icon: 'fas fa-solid fa-circle',
                 note: '',
                 orderNumber: '',
                 task: '',
@@ -42,11 +43,13 @@ class TodoForm extends Component {
     }
 
     componentDidMount = () => {
-        const { data } = this.props;
+        const { data, type } = this.props;
 
-        this.setState({
-            form: data,
-        })
+        if (type === FORM_TYPES.EDIT) {
+            this.setState({
+                form: data,
+            })
+        }
     }
     
     _onInputChangeValidate = ({ target }) => {
@@ -105,27 +108,26 @@ class TodoForm extends Component {
     render() {
         const {
             form: {
-                id, title, icon, task, orderNumber, statusFinish,
+                title, icon, task, orderNumber, statusFinish,
                 note, attact,
                 createdDate, finishDate, updatedDate,
             }
         } = this.state;
+        const {
+            idModal, buttonIcon, btnSubmitText, typeModal, buttonLabel, className,
+            headerTitle,
+        } = this.props;
 
         return (
-            <div className="btn-group">
                 <Modals
-                    idModal={`modal-${id}`}
-                    buttonIcon="fas fa-edit fa-xs"
-                    btnSubmitText="Simpan"
+                    idModal={idModal}
+                    buttonIcon={buttonIcon}
+                    typeModal={typeModal}
+                    className={className}
+                    btnSubmitText={btnSubmitText}
                     buttonSubmitIcon="fa fa-save mr-2"
-                    typeModal="info"
-                    buttonLabel=""
-                    headerTitle={(
-                        <>
-                            <i className={`${icon} mr-2`} />
-                            Detail Kegiatan - {title}
-                        </>
-                    )}
+                    buttonLabel={buttonLabel}
+                    headerTitle={headerTitle}
                     btnSubmitHandel={() => { this.submitHandel(); }}
                     modalLarge
                 >
@@ -259,7 +261,7 @@ class TodoForm extends Component {
                         </div>
                         
                         {
-                            statusFinish && (
+                            statusFinish ? (
                                 <div className="form-group">
                                     <label>Di Selesaikan Pada</label>
                                     <InputText
@@ -270,8 +272,11 @@ class TodoForm extends Component {
                                         disabled
                                     />
                                 </div>
+                            ) : (
+                                <></>
                             )
                         }
+
                         <div className="row">
                             <div className="col-md-6">
                                 <div className="form-group">
@@ -300,11 +305,6 @@ class TodoForm extends Component {
                         </div>
                     </FormValidation>
                 </Modals>
-                
-                <button type="button" className="btn btn-danger" onClick={() => {}}>
-                    <i className="fas fa-trash fa-xs" />
-                </button>
-            </div>
         );
     };
 };
