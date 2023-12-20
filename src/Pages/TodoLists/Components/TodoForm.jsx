@@ -189,7 +189,7 @@ class TodoForm extends Component {
                                 <label>File</label>
                                 <InputFile                           
                                     value={attact}
-                                    // placeHolder={attact ? checkFileUrlName(attact) : 'Choose File'}
+                                    placeHolder="Pilih File"
                                     changeEvent={(val) => this.setImage(val)}
                                 />
                             </div>

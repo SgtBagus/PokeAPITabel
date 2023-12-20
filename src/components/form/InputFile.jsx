@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Image from "../Image";
 import Video from "../Video";
 
-import { checkThisFileIsImageOrNot, checkfileUrl } from "../../Helper/checkFile";
+import { checkFileUrlName, checkThisFileIsImageOrNot, checkfileUrl } from "../../Helper/checkFile";
 
 import { DEFAULT_IMAGE } from "../../Enum/DefaultValue";
 
@@ -38,6 +38,20 @@ const renderFile = (isNew, value, rawFile = null) => {
     )
 }
 
+const renderPlaceHolder = (isNew, value, placeHolder) => {
+    let newPlaceHolder = placeHolder
+
+    if (!isNew && value) {
+        newPlaceHolder = checkFileUrlName(value);
+    } else if (isNew && value) {
+        const { name } = value;
+
+        newPlaceHolder = name;
+    }
+
+    return newPlaceHolder;
+}
+
 const InputFile = ({ value, changeEvent, placeHolder }) => {
     const { valueSrcRender, isNew } = srcImageRender(value);
 
@@ -69,7 +83,7 @@ const InputFile = ({ value, changeEvent, placeHolder }) => {
                     }}
                 />
                 <label className="custom-file-label" htmlFor="exampleInputFile">
-                    {placeHolder}
+                    {renderPlaceHolder(isNew, value, placeHolder)}
                 </label>
             </div>
         </div>
@@ -77,8 +91,14 @@ const InputFile = ({ value, changeEvent, placeHolder }) => {
 };
 
 InputFile.propTypes = {
-    value: PropTypes.string,
-    placeHolder: PropTypes.string,
+    value: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.shape(),
+    ]),
+    placeHolder: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.func,
+    ]),
     changeEvent: PropTypes.func.isRequired,
 };
 
