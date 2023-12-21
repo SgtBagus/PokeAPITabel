@@ -21,7 +21,7 @@ import InputFile from '../../../Components/form/InputFile';
 import fireBaseTime from '../../../Helper/fireBaseTime';
 import { GENERATE_ERROR_MESSAGE } from '../../../Helper/error';
 import { checkThisFileIsImageOrNot } from '../../../Helper/checkFile';
-import { catchError } from '../../../Helper/helper';
+import { GenerateString, catchError } from '../../../Helper/helper';
 
 import { STATUS_LIST } from './config';
 import { FORM_TYPES } from '../../../Enum/Form';
@@ -102,8 +102,51 @@ class TodoForm extends Component {
           isFormSubmitted: true,
         });
     }
+
+    handleSubmit = () => {
+        const { type } = this.props;
+
+        if (type === FORM_TYPES.EDIT) {
+            this.handelEdit();
+        } else {
+            this.handelCreate();
+        }
+    }
+
+    handelCreate = async () => {
+        const { params: { id: mainDoctId } } = this.props;
+        const { 
+            form: {
+                title, icon, task, orderNumber, statusFinish, note, attact,
+            }
+        } = this.state;
+
+        try {
+            const randomID = `${mainDoctId}${GenerateString(20)}`;
+
+            if (attact) {
+                const uploadImage = await this.uploadImage(attact);
+
+                await this.updateDoc(mainDoctId, randomID, uploadImage, icon, note, orderNumber, statusFinish, task, title);
+
+                this.setState({
+                    onSend: false,
+                }, () => {
+                    NotificationManager.success('Berhasil Merubah Data', "Success !", 5000);
+                });
+            } else {
+                await this.updateDoc(mainDoctId, randomID, null, icon, note, orderNumber, statusFinish, task, title);
+            }
+        } catch (err) {
+            this.setState({
+                onSend: false,
+            }, () => {
+                NotificationManager.error(catchError(err), "Terjadi Kesalahan", 5000);
+            });
+        }
+    }
     
-    handleSubmit = async () => {
+    handelEdit = async () => {
         const { params: { id: mainDoctId } } = this.props;
         const {
             form: {
@@ -114,30 +157,11 @@ class TodoForm extends Component {
 
         try {
             if (attact && ( attact !== currentImage)) {
-                const thisFileisImage = checkThisFileIsImageOrNot(attact);
-                const uploadImage = await uploadFile( attact, thisFileisImage ? "to-do/images/" : "to-do/videos" );
-        
-                await updateDoc(doc(db, "toDoTaskLists", mainDoctId), {
-                    [id + ".attact"]: uploadImage,
-                    [id + ".icon"]: icon,
-                    [id + ".note"]: note,
-                    [id + ".orderNumber"]: orderNumber,
-                    [id + ".statusFinish"]: statusFinish,
-                    [id + ".task"]: task,
-                    [id + ".title"]: title,
-                    [id + ".updatedDate"]: serverTimestamp(),
-                });
+                const uploadImage = await this.uploadImage(attact);
+
+                await this.updateDoc(mainDoctId, id, uploadImage, icon, note, orderNumber, statusFinish, task, title);
             } else {
-                await updateDoc(doc(db, "toDoTaskLists", mainDoctId), {
-                    [id + ".attact"]: null,
-                    [id + ".icon"]: icon,
-                    [id + ".note"]: note,
-                    [id + ".orderNumber"]: orderNumber,
-                    [id + ".statusFinish"]: statusFinish,
-                    [id + ".task"]: task,
-                    [id + ".title"]: title,
-                    [id + ".updatedDate"]: serverTimestamp(),
-                });
+                await this.updateDoc(mainDoctId, id, null, icon, note, orderNumber, statusFinish, task, title);
             }
             this.setState({
                 onSend: false,
@@ -148,9 +172,47 @@ class TodoForm extends Component {
             this.setState({
                 onSend: false,
             }, () => {
+                console.log(err);
                 NotificationManager.error(catchError(err), "Terjadi Kesalahan", 5000);
             });
         }
+    }
+
+    uploadImage = async (val) => {
+        const thisFileisImage = checkThisFileIsImageOrNot(val);
+        const uploadImage = await uploadFile(val, thisFileisImage ? "to-do/images/" : "to-do/videos" );
+
+        return uploadImage;
+    }
+
+    updateDoc = async (
+        mainDoctId, id, attact, icon, note, orderNumber, statusFinish, task, title,
+    ) => {
+        const { type } = this.props;
+
+        let timeStamp = {
+            [id + ".createdDate"]: serverTimestamp(),
+            [id + ".updatedDate"]: serverTimestamp(),
+        }
+
+        if (type === FORM_TYPES.EDIT) {
+            timeStamp = {
+                [id + ".updatedDate"]: serverTimestamp(),
+            }
+        }
+
+        await updateDoc(doc(db, "toDoTaskLists", mainDoctId), {
+            [id + ".id"]: id,
+            [id + ".attact"]: attact,
+            [id + ".icon"]: icon,
+            [id + ".note"]: note,
+            [id + ".orderNumber"]: orderNumber,
+            [id + ".statusFinish"]: statusFinish,
+            [id + ".task"]: task,
+            [id + ".title"]: title,
+            [id + ".finishDate"]: statusFinish ? serverTimestamp() : null,
+            ...timeStamp,
+        });
     }
 
     setImage = (val) => {
@@ -175,7 +237,7 @@ class TodoForm extends Component {
         } = this.state;
         const {
             idModal, buttonIcon, btnSubmitText, typeModal, buttonLabel, className,
-            headerTitle,
+            headerTitle, type,
         } = this.props;
 
         return (
@@ -320,50 +382,55 @@ class TodoForm extends Component {
                                 </div>
                             </div>
                         </div>
-                        
                         {
-                            statusFinish ? (
-                                <div className="form-group">
-                                    <label>Di Selesaikan Pada</label>
-                                    <InputText
-                                        name="finishDate"
-                                        value={
-                                            `${fireBaseTime(finishDate).toDateString().toString("MMMM yyyy")} - ${fireBaseTime(finishDate).toLocaleTimeString()}`
-                                        }
-                                        disabled
-                                    />
-                                </div>
-                            ) : (
-                                <></>
+                            type === FORM_TYPES.EDIT && (
+                                <>
+                                    {
+                                        statusFinish ? (
+                                            <div className="form-group">
+                                                <label>Di Selesaikan Pada</label>
+                                                <InputText
+                                                    name="finishDate"
+                                                    value={
+                                                        `${fireBaseTime(finishDate).toDateString().toString("MMMM yyyy")} - ${fireBaseTime(finishDate).toLocaleTimeString()}`
+                                                    }
+                                                    disabled
+                                                />
+                                            </div>
+                                        ) : (
+                                            <></>
+                                        )
+                                    }
+
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label>Di Buat Pada</label>
+                                                <InputText
+                                                    name="createdDate"
+                                                    value={
+                                                        `${fireBaseTime(createdDate).toDateString().toString("MMMM yyyy")} - ${fireBaseTime(createdDate).toLocaleTimeString()}`
+                                                    }
+                                                    disabled
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label>Di Ubah Pada</label>
+                                                <InputText
+                                                    name="updatedDate"
+                                                    value={
+                                                        `${fireBaseTime(updatedDate).toDateString().toString("MMMM yyyy")} - ${fireBaseTime(updatedDate).toLocaleTimeString()}`
+                                                    }
+                                                    disabled
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
                             )
                         }
-
-                        <div className="row">
-                            <div className="col-md-6">
-                                <div className="form-group">
-                                    <label>Di Buat Pada</label>
-                                    <InputText
-                                        name="createdDate"
-                                        value={
-                                            `${fireBaseTime(createdDate).toDateString().toString("MMMM yyyy")} - ${fireBaseTime(createdDate).toLocaleTimeString()}`
-                                        }
-                                        disabled
-                                    />
-                                </div>
-                            </div>
-                            <div className="col-md-6">
-                                <div className="form-group">
-                                    <label>Di Ubah Pada</label>
-                                    <InputText
-                                        name="updatedDate"
-                                        value={
-                                            `${fireBaseTime(updatedDate).toDateString().toString("MMMM yyyy")} - ${fireBaseTime(updatedDate).toLocaleTimeString()}`
-                                        }
-                                        disabled
-                                    />
-                                </div>
-                            </div>
-                        </div>
                     </FormValidation>
                 </Modals>
         );

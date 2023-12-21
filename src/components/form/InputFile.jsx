@@ -42,7 +42,7 @@ const renderPlaceHolder = (isNew, value, placeHolder) => {
     let newPlaceHolder = placeHolder
 
     if (!isNew && value) {
-        newPlaceHolder = checkFileUrlName(value);
+        newPlaceHolder = checkFileUrlName(value).split('%2F').pop();
     } else if (isNew && value) {
         const { name } = value;
 

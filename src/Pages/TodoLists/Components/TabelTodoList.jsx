@@ -25,6 +25,7 @@ const TabelTodoList = ({
             await updateDoc(doc(db, "toDoTaskLists", mainDoctId), {
                 [id + ".statusFinish"]: val,
                 [id + ".updatedDate"]: serverTimestamp(),
+                [id + ".finishDate"]: val ? serverTimestamp() : null,
             });
             
             setOnSend(false);
@@ -59,7 +60,7 @@ const TabelTodoList = ({
                     typeModal="primary"
                     className="btn-block"
                     headerTitle="Tambah Kegiatan"
-                    type={FORM_TYPES.CREATE }
+                    type={FORM_TYPES.CREATE}
                 />
             </div>
         </div>
