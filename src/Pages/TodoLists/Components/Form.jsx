@@ -51,10 +51,10 @@ class Form extends Component {
         const { loadingParam: { dispatchLoading } } = this.props;
 
         dispatchLoading(true);
-        this.getTaskDetail();
+        this.getData();
     }
 
-    getTaskDetail = async () => {
+    getData = async () => {
         const { params: { id: selectedId }, mainTask } = this.props;
 
         await onSnapshot(doc(db, "toDoLists", mainTask), (doc) => {
@@ -210,10 +210,7 @@ class Form extends Component {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <TabelTodoList
-                                        title="Kegiatan List"
-                                        data={dataDetails}
-                                    />
+                                    <TabelTodoList title="Kegiatan List" data={dataDetails} />
                                 </div>
                                 <div className="form-group">
                                     <label>Progress Kegiatan</label>

@@ -1,20 +1,27 @@
 import React, { Component } from 'react';
 import { FieldFeedback, FieldFeedbacks } from "react-form-with-constraints";
 import update from "immutability-helper";
+import { serverTimestamp, doc, updateDoc } from 'firebase/firestore';
+import { NotificationManager } from 'react-notifications';
+
+import { db } from '../../../firebase';
 
 import { withHocks } from '../../../Context/WithParams';
+
+import { uploadFile } from '../../../Data/uploadFile';
 
 import FormValidation from '../../../Components/FormValidation';
 import Modals from '../../../Components/Modals';
 import InputText from '../../../Components/form/InputText';
 import InputWithIcon from '../../../Components/form/InputWithIcon';
-
 import InputSelect from '../../../Components/form/InputSelect';
 import InputTextArea from '../../../Components/form/InputTextArea';
 import InputFile from '../../../Components/form/InputFile';
 
 import fireBaseTime from '../../../Helper/fireBaseTime';
 import { GENERATE_ERROR_MESSAGE } from '../../../Helper/error';
+import { checkThisFileIsImageOrNot } from '../../../Helper/checkFile';
+import { catchError } from '../../../Helper/helper';
 
 import { STATUS_LIST } from './config';
 import { FORM_TYPES } from '../../../Enum/Form';
@@ -28,6 +35,7 @@ class TodoForm extends Component {
                 id: '',
                 title: '',
                 icon: 'fas fa-solid fa-circle',
+                attact: null,
                 note: '',
                 orderNumber: '',
                 task: '',
@@ -36,6 +44,7 @@ class TodoForm extends Component {
                 finishDate: null,
                 updatedDate: null,
             },
+            currentImage: null,
             isFormSubmitted: false,
             onSend: false,
             isLoading: true,
@@ -48,6 +57,7 @@ class TodoForm extends Component {
         if (type === FORM_TYPES.EDIT) {
             this.setState({
                 form: data,
+                currentImage: data.attact,
             })
         }
     }
@@ -92,6 +102,56 @@ class TodoForm extends Component {
           isFormSubmitted: true,
         });
     }
+    
+    handleSubmit = async () => {
+        const { params: { id: mainDoctId } } = this.props;
+        const {
+            form: {
+                id, title, icon, task, orderNumber, statusFinish,
+                note, attact,
+            }, currentImage,
+        } = this.state;
+
+        try {
+            if (attact && ( attact !== currentImage)) {
+                const thisFileisImage = checkThisFileIsImageOrNot(attact);
+                const uploadImage = await uploadFile( attact, thisFileisImage ? "to-do/images/" : "to-do/videos" );
+        
+                await updateDoc(doc(db, "toDoTaskLists", mainDoctId), {
+                    [id + ".attact"]: uploadImage,
+                    [id + ".icon"]: icon,
+                    [id + ".note"]: note,
+                    [id + ".orderNumber"]: orderNumber,
+                    [id + ".statusFinish"]: statusFinish,
+                    [id + ".task"]: task,
+                    [id + ".title"]: title,
+                    [id + ".updatedDate"]: serverTimestamp(),
+                });
+            } else {
+                await updateDoc(doc(db, "toDoTaskLists", mainDoctId), {
+                    [id + ".attact"]: null,
+                    [id + ".icon"]: icon,
+                    [id + ".note"]: note,
+                    [id + ".orderNumber"]: orderNumber,
+                    [id + ".statusFinish"]: statusFinish,
+                    [id + ".task"]: task,
+                    [id + ".title"]: title,
+                    [id + ".updatedDate"]: serverTimestamp(),
+                });
+            }
+            this.setState({
+                onSend: false,
+            }, () => {
+                NotificationManager.success('Berhasil Merubah Data', "Success !", 5000);
+            });
+        } catch (err) {
+            this.setState({
+                onSend: false,
+            }, () => {
+                NotificationManager.error(catchError(err), "Terjadi Kesalahan", 5000);
+            });
+        }
+    }
 
     setImage = (val) => {
         const { form } = this.state;
@@ -111,25 +171,25 @@ class TodoForm extends Component {
                 title, icon, task, orderNumber, statusFinish,
                 note, attact,
                 createdDate, finishDate, updatedDate,
-            }
+            }, onSend,
         } = this.state;
         const {
             idModal, buttonIcon, btnSubmitText, typeModal, buttonLabel, className,
             headerTitle,
         } = this.props;
 
-        console.log(statusFinish);
         return (
                 <Modals
                     idModal={idModal}
                     buttonIcon={buttonIcon}
                     typeModal={typeModal}
                     className={className}
-                    btnSubmitText={btnSubmitText}
-                    buttonSubmitIcon="fa fa-save mr-2"
                     buttonLabel={buttonLabel}
                     headerTitle={headerTitle}
                     btnSubmitHandel={() => { this.submitHandel(); }}
+                    btnSubmitText={onSend ? "Memperoses" : btnSubmitText}
+                    buttonSubmitIcon={onSend ? "fas fa-sync-alt fa-spin mr-2" : "fa fa-save mr-2"}
+                    btnSubmitDisabled={onSend}
                     modalLarge
                 >
                     <FormValidation ref={(c) => { this.formDetail = c; }}>

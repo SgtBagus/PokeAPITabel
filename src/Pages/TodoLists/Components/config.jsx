@@ -1,8 +1,10 @@
 import TodoForm from "./TodoForm";
 
 import Badge from "../../../Components/Badge";
+import Button from "../../../Components/Button";
 
 import { FORM_TYPES } from '../../../Enum/Form';
+import fireBaseTime from "../../../Helper/fireBaseTime";
 
 export const STATUS_LIST = [
     {
@@ -15,7 +17,14 @@ export const STATUS_LIST = [
     },
 ]
 
-export const TABEL_META = [
+export const TABEL_META = (onSend, changeStatus) => [
+    {
+        title: 'No',
+        key: 'orderNumber',
+        Cell: (val) => (
+            <h5 className="text-center">{val}</h5>
+        )
+    },
     {
         title: 'Judul',
         key: 'title',
@@ -26,14 +35,42 @@ export const TABEL_META = [
     },
     {
         title: 'Status',
-        key: 'statusFinish',
+        AllData: true,
         Cell: (val) => {
-            return val ? <Badge className="badge bg-primary" label="Selesai" /> : <Badge className="badge bg-danger" label="Belum Selesai" />
+            const { id, statusFinish } = val;
+
+            return (
+                <div className="d-flex align-items-center justify-content-between">
+                    {statusFinish ? <Badge className="badge bg-primary" label="Selesai" /> : <Badge className="badge bg-danger" label="Belum Selesai" />}
+
+                    <Button
+                        label= {
+                            onSend ? "Memperoses" : "Ubah Status"
+                        }
+                        className="btn btn-warning btn-sm mx-2 rounded"
+                        buttonIcon={
+                            onSend ? "fas fa-sync-alt fa-spin" : "fa fa-edit"
+                        }
+                        onClick={() => changeStatus(id, !statusFinish)}
+                        disabled={onSend}
+                    />
+                </div>
+            )
         }
     },
     {
-        title: 'Urutan',
-        key: 'orderNumber',
+        title: 'Dibuat Pada',
+        key: 'createdDate',
+        Cell: (val) => (
+            `${fireBaseTime(val).toDateString().toString("MMMM yyyy")}`
+        )
+    },
+    {
+        title: 'Di update Pada',
+        key: 'updatedDate',
+        Cell: (val) => (
+            `${fireBaseTime(val).toDateString().toString("MMMM yyyy")}`
+        )
     },
     {
         title: 'Action',
@@ -50,7 +87,7 @@ export const TABEL_META = [
                         btnSubmitText="Simpan"
                         buttonLabel=""
                         typeModal="info"
-                        type={FORM_TYPES.EDIT }
+                        type={FORM_TYPES.EDIT}
                         headerTitle={(
                             <>
                                 <i className={`${icon} mr-2`} />
@@ -63,6 +100,6 @@ export const TABEL_META = [
                     </button>
                 </div>
             )
-    }
+        }
     },
 ];
