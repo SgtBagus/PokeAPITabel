@@ -15,7 +15,7 @@ import { catchError } from '../../../Helper/helper';
 import Swal from 'sweetalert2';
 
 const TabelTodoList = ({
-    title, data,
+    title, data, mainId,
 }) => {
     const [onSend, setOnSend] = useState(false);
     const { id: mainDoctId } = useParams();
@@ -78,6 +78,7 @@ const TabelTodoList = ({
                     dataMeta={{
                         tabelHead: TABEL_META(
                             onSend,
+                            data.length,
                             (id, val) => updateStatus(id, val),
                             (id, title) => deleteData(id, title),
                         ),
@@ -95,6 +96,8 @@ const TabelTodoList = ({
                     className="btn-block"
                     headerTitle="Tambah Kegiatan"
                     type={FORM_TYPES.CREATE}
+                    mainId={mainId}
+                    dataLength={data.length}
                 />
             </div>
         </div>

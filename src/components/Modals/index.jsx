@@ -26,7 +26,6 @@ const Modals = ({
                 {buttonLabel}
             </button>
 
-            
             {
                 createPortal(
                     <div className="modal fade" id={idModal}>

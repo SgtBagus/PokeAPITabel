@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const Button = ({
     className, label, onClick,
     style, disabled, type,
-    buttonIcon,
+    buttonIcon, props,
 }) => {
     return (
         <button

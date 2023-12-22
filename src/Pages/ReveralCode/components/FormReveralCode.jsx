@@ -152,7 +152,7 @@ class FormReveralCode extends Component {
                 id: combinedId,
             });
 
-            NotificationManager.success('Data Telah Terseimpan!, halaman ini akan segera di refresh', 'Success', 5000);
+            NotificationManager.success('Data Telah Tersimpan!, halaman ini akan segera di refresh', 'Success', 5000);
             setTimeout(() => { window.location.reload() }, 3000);
         } catch (err) {
             NotificationManager.warning(catchError(err), 'Terjadi Kesalahan', 5000);

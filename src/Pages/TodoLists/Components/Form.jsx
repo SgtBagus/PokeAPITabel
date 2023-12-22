@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import update from "immutability-helper";
 import { FieldFeedback, FieldFeedbacks } from "react-form-with-constraints";
 import { NotificationManager } from "react-notifications";
-import { collection, deleteDoc, doc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
+import { deleteDoc, doc, onSnapshot, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 
 import { db } from "../../../firebase";
 
@@ -46,6 +46,7 @@ class Form extends Component {
                 createdDate: null,
                 updatedDate: null,
             },
+            taskListId: null,
             dataDetails: [],
             isFormSubmitted: false,
             onSend: false,
@@ -70,38 +71,47 @@ class Form extends Component {
     }
 
     getData = async () => {
-        const { params: { id: selectedId } } = this.props;
+        const { params: { id } } = this.props;
 
         try {
-            const data = await query(collection(db, "toDoLists"), where("id", "==", selectedId));
-            const res = await getDocs(data);
-            const formDetail = res.docs.map(doc => doc.data())[0];
-            const {
-                id, isActive, updatedDate, task, note, finishDate, progressNote, createdDate, title, statusFinish,
-            } = formDetail;
-            
-            this.setState({
-                form: {
-                    id, title, task, note, progressNote, statusFinish, finishDate, createdDate, updatedDate, isActive,
-                }
-            }, () => {
-                this.getDetailTask(id);
-            })
+            onSnapshot(doc(db, "toDoLists", id), (doc) => {
+                const {
+                    id, isActive, updatedDate, task, note, finishDate, progressNote, createdDate, title, statusFinish,
+                    taskListId,
+                } = doc.data();
+          
+                this.setState({
+                    form: {
+                        id, title, task, note, progressNote, statusFinish, finishDate, createdDate, updatedDate, isActive,
+                    },
+                    taskListId,
+                }, () => {
+                    this.getDetailTask(taskListId);
+                })
+            });
         } catch (error) {
             NotificationManager.error(catchError(error), 'Terjadi Kesalahan', 5000);
         }
     }
 
-    getDetailTask = async (id) => {
+    getDetailTask = async (taskListId) => {
         try {
-            const data = await query(collection(db, "toDoTaskLists"), where("id", "==", id));
-            const res = await getDocs(data);
-            const dataDetails = res.docs.map(doc => doc.data());
+            onSnapshot(doc(db, "toDoTaskLists", taskListId), (doc) => {
+                let getData = [];
 
-            this.setState({
-                dataDetails,
-                isLoading: false,
-            })
+                Object.entries(doc.data().data).forEach(x => {
+                    console.log(x[1]);
+                    const data = Object.entries(x[1]).map(x => (x[1]));
+
+                    return getData.push(data[0]);
+                });
+                const dataDetails = getData.sort((a, b) => a.orderNumber - b.orderNumber);
+
+                this.setState({
+                    dataDetails,
+                    isLoading: false,
+                })
+            });
         } catch (error) {
             this.setState({
                 isLoading: false,
@@ -202,10 +212,12 @@ class Form extends Component {
 
         try {
             const combinedId = `${uid}${GenerateString(10)}`;
+            const taskListId = `${combinedId}${GenerateString(10)}`;
 
             await setDoc(doc(db, "toDoLists", combinedId), {
                 id: combinedId,
                 uid,
+                taskListId,
                 title,
                 task,
                 note,
@@ -220,7 +232,7 @@ class Form extends Component {
             this.setState({
                 onSend: false,
             }, () => {
-                NotificationManager.success('Data Telah Terseimpan!', 'Success', 5000);
+                NotificationManager.success('Data Telah Tersimpan!', 'Success', 5000);
 
                 setTimeout(() => {
                     return navigate(`/client/to-do/edit/${uid}/${combinedId}`);
@@ -257,7 +269,7 @@ class Form extends Component {
             this.setState({
                 onSend: false,
             }, () => {
-                NotificationManager.success('Data Telah Terseimpan!', 'Success', 5000);
+                NotificationManager.success('Data Telah Tersimpan!', 'Success', 5000);
             });
         } catch (err) {
             this.setState({
@@ -305,7 +317,7 @@ class Form extends Component {
                 id, title, task, note, progressNote, statusFinish, finishDate, createdDate, updatedDate,
                 isActive,
             },
-            onSend, dataDetails, isLoading, 
+            onSend, dataDetails, isLoading, taskListId,
         } = this.state;
         const { params: { type } } = this.props;
 
@@ -406,7 +418,7 @@ class Form extends Component {
                                                 />
                                             </div>
                                             <div className="form-group">
-                                                <TabelTodoList title="Kegiatan List" data={dataDetails} />
+                                                <TabelTodoList title="Kegiatan List" mainId={taskListId} data={dataDetails} />
                                             </div>
                                             <div className="form-group">
                                                 <label>
