@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
-import { doc, onSnapshot } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 import { db } from "../../../../firebase";
 
@@ -26,28 +26,25 @@ const Todo = () => {
 
     useEffect(() => {
         setIsLoading(true);
-      
-        if (uid) {
-          const unSub = onSnapshot(doc(db, "toDoLists", uid), (doc) => {
-            if (doc.exists()) {
-                const getData = Object.entries(doc.data()) || [];
-                const res = getData.map(x => x[1]);
-                const sortingList = res.sort(({ createdDate: pCreatedDate}, { createdDate }) => (
-                    new Date(pCreatedDate.seconds * 1000 + pCreatedDate.nanoseconds/1000000) - new Date(createdDate.seconds * 1000 + createdDate.nanoseconds/1000000)
-                ));
-                
-                setDataTask(sortingList);
-            } else {
-                setDataTask([]);
-            }
-
-            setIsLoading(false);
-          }, (error) => {
-            NotificationManager.error(catchError(error), 'Terjadi Kesalahan', 5000);
-          });
+        (
+            async () => {
+                try {
+                    const data = await query(collection(db, "toDoLists"), where("uid", "==", uid));
+                    const userData = await getDocs(data);
+                    const findData = userData.docs.map(doc => doc.data());
+                    const sortingList = findData.sort(({ createdDate: pCreatedDate}, { createdDate }) => (
+                        new Date(pCreatedDate.seconds * 1000 + pCreatedDate.nanoseconds/1000000) - new Date(createdDate.seconds * 1000 + createdDate.nanoseconds/1000000)
+                    ));
     
-          return () => { unSub() };
-        }
+                    setDataTask(sortingList);
+                    setIsLoading(false);
+    
+                } catch (err) {
+                    NotificationManager.error(catchError(err), 'Terjadi Kesalahan', 5000);
+                    setIsLoading(false);
+                }
+            }
+        )();
     }, [uid]);
 
     return (
@@ -65,7 +62,7 @@ const Todo = () => {
                                     className="btn btn-block btn-primary"
                                     label="Tambah To Do Client"
                                     onClick={() => {
-                                        return navigate(`to-do/${FORM_TYPES.CREATE}`);
+                                        return navigate(`to-do/${FORM_TYPES.CREATE}/${uid}`);
                                     }}
                                     buttonIcon="fa fa-plus"
                                 />

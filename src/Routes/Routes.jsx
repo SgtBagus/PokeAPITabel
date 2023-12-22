@@ -79,7 +79,7 @@ const App = () => {
           }
         />
         <Route
-          path="to-do/:type/:docsId"
+          path="to-do/:type/"
           element={
             <ProtectedRoute>
               {RenderDefaultLayout(<TodoLists />, "Todo Client", currentUser, "/client" )}
@@ -87,7 +87,15 @@ const App = () => {
           }
         />
         <Route
-          path="to-do/:type/:docsId/:id"
+          path="to-do/:type/:uid"
+          element={
+            <ProtectedRoute>
+              {RenderDefaultLayout(<TodoLists />, "Todo Client", currentUser, "/client" )}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="to-do/:type/:uid/:id"
           element={
             <ProtectedRoute>
               {RenderDefaultLayout(<TodoLists />, "Todo Client", currentUser, "/client" )}

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import update from "immutability-helper";
 import { FieldFeedback, FieldFeedbacks } from "react-form-with-constraints";
 import { NotificationManager } from "react-notifications";
-import { doc, onSnapshot } from "firebase/firestore";
+import { collection, doc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
 
 import { db } from "../../../firebase";
 
@@ -18,10 +18,13 @@ import InputSelect from "../../../Components/form/InputSelect";
 import Button from "../../../Components/Button";
 import Progress from "../../../Components/ProgressBar";
 import Loading from "../../../Components/Loading";
+import InputToggle from "../../../Components/form/InputToggle";
 
 import { GENERATE_ERROR_MESSAGE } from "../../../Helper/error";
-import { catchError } from '../../../Helper/helper';
+import { GenerateString, catchError } from '../../../Helper/helper';
 import fireBaseTime from '../../../Helper/fireBaseTime';
+
+import { FORM_TYPES } from "../../../Enum/Form";
 
 import { STATUS_LIST } from "./config";
 
@@ -31,11 +34,13 @@ class Form extends Component {
     
         this.state = {
             form: {
+                id: null,
                 title: '',
                 task: '',
                 note: '',
                 progressNote: '',
-                status: true,
+                isActive: false,
+                statusFinish: false,
                 finishDate: null,
                 createdDate: null,
                 updatedDate: null,
@@ -48,49 +53,65 @@ class Form extends Component {
     }
 
     componentDidMount = () => {
-        const { loadingParam: { dispatchLoading } } = this.props;
+        const { loadingParam: { dispatchLoading }, params: { type } } = this.props;
 
         dispatchLoading(true);
-        this.getData();
+
+        if (type === FORM_TYPES.EDIT) {
+            this.getData();
+        } else {
+            this.setState({
+                isLoading: false,
+            }, () => {
+                dispatchLoading(false);
+            })
+        }
     }
 
     getData = async () => {
-        const { params: { id: selectedId }, mainTask } = this.props;
+        const { params: { id: selectedId } } = this.props;
 
-        await onSnapshot(doc(db, "toDoLists", mainTask), (doc) => {
-            const dataToArray = Object.entries(doc.data()).map(x => x[1]).find(({ id }) => (id === selectedId ));
+        try {
+            const data = await query(collection(db, "toDoLists"), where("id", "==", selectedId));
+            const res = await getDocs(data);
+            const formDetail = res.docs.map(doc => doc.data())[0];
             const {
-                id, updatedDate, task, note, finishDate, progressNote, createdDate, title, statusFinish,
-            } = dataToArray;
-
+                id, isActive, updatedDate, task, note, finishDate, progressNote, createdDate, title, statusFinish,
+            } = formDetail;
+            
             this.setState({
                 form: {
-                    title, task, note, progressNote, status: statusFinish, finishDate, createdDate, updatedDate,
+                    id, title, task, note, progressNote, statusFinish, finishDate, createdDate, updatedDate, isActive,
                 }
             }, () => {
                 this.getDetailTask(id);
             })
-        }, (error) => {
+        } catch (error) {
             NotificationManager.error(catchError(error), 'Terjadi Kesalahan', 5000);
-        });
+        }
     }
 
     getDetailTask = async (id) => {
-        await onSnapshot(doc(db, "toDoTaskLists", id), (doc) => {
-            const res = Object.entries(doc.data()).map(x => x[1]);
-            const dataDetails = res.sort((a, b) => a.orderNumber - b.orderNumber);
+        try {
+            const data = await query(collection(db, "toDoTaskLists"), where("id", "==", id));
+            const res = await getDocs(data);
+            const dataDetails = res.docs.map(doc => doc.data());
 
             this.setState({
                 dataDetails,
                 isLoading: false,
             })
-        }, (error) => {
-            NotificationManager.error(catchError(error), 'Terjadi Kesalahan', 5000);
-        });
+        } catch (error) {
+            this.setState({
+                isLoading: false,
+            }, () => {
+                NotificationManager.error(catchError(error), 'Terjadi Kesalahan', 5000);
+            })
+        }
     } 
 
     _onInputChangeValidate = ({ target }) => {
-        this.form.validateInput(target);
+        this.mainForm.validateInput(target);
     };
 
     _changeInputHandler = async (type, val, e) => {
@@ -110,6 +131,26 @@ class Form extends Component {
         });
     };
 
+    changeStatus = (val) => {
+        const { form, dataDetails } = this.state;
+
+        try {
+            if (val && dataDetails.length === 0) {
+                throw new Error ('Belum ada List Kegiatan yang di isi !')
+            } else {
+                const newForm = update(form, {
+                    'isActive': { $set: val },
+                });
+    
+                this.setState({
+                    form: newForm,
+                });
+            }
+        } catch (err) {
+            NotificationManager.error(catchError(err), "Terjadi Kesalahan", 5000);
+        }
+    }
+
     redirectLink = (link) => {
         const { navigate } = this.props;
 
@@ -123,13 +164,118 @@ class Form extends Component {
         return ((totalFinish/totalValue) * 100.0) || 0;
     }
 
+
+    submitHandel = async () => {
+        const isFormValid = await this.mainForm.validateForm();
+
+        if (isFormValid) {
+            this.setState({
+                onSend: true,
+            }, async () => {
+                await this.handleSubmit();
+            })
+        }
+    
+        this.setState({
+          isFormSubmitted: true,
+        });
+    }
+
+    handleSubmit = () => {
+        const { params: { type } } = this.props;
+
+        if (type === FORM_TYPES.EDIT) {
+            this.editHandel();
+        } else {
+            this.createHandel();
+        }
+    }
+
+    createHandel = async () => {
+        const {
+            form: {
+                title, task, note, progressNote, statusFinish,
+            },
+        } = this.state;
+        const { params: { uid }, navigate } = this.props;
+
+        try {
+            const combinedId = `${uid}${GenerateString(10)}`;
+
+            await setDoc(doc(db, "toDoLists", combinedId), {
+                id: combinedId,
+                uid,
+                title,
+                task,
+                note,
+                progressNote,
+                statusFinish,
+                finishDate: null,
+                isActive: false,
+                createdDate: serverTimestamp(),
+                updatedDate: serverTimestamp(),
+            });
+            
+            this.setState({
+                onSend: false,
+            }, () => {
+                NotificationManager.success('Data Telah Terseimpan!', 'Success', 5000);
+
+                setTimeout(() => {
+                    return navigate(`/client/to-do/edit/${uid}/${combinedId}`);
+                }, 3000);
+            });
+        } catch (err) {
+            this.setState({
+                onSend: false,
+            }, () => {
+                NotificationManager.error(catchError(err), "Terjadi Kesalahan", 5000);
+            });
+        }
+    }
+
+    editHandel = async () => {
+        const {
+            form: {
+                id, title, task, note, isActive, statusFinish,
+            },
+        } = this.state;
+
+        try {
+            await updateDoc(doc(db, 'toDoLists', id), {
+                title,
+                task,
+                note,
+                isActive,
+                statusFinish,
+                finishDate: statusFinish ? serverTimestamp() : null,
+                createdDate: serverTimestamp(),
+                updatedDate: serverTimestamp(),
+            });
+            
+            this.setState({
+                onSend: false,
+            }, () => {
+                NotificationManager.success('Data Telah Terseimpan!', 'Success', 5000);
+            });
+        } catch (err) {
+            this.setState({
+                onSend: false,
+            }, () => {
+                NotificationManager.error(catchError(err), "Terjadi Kesalahan", 5000);
+            });
+        }
+    }
+
     render() {
         const {
             form: {
-                title, task, note, progressNote, status, finishDate, createdDate, updatedDate,
+                title, task, note, progressNote, statusFinish, finishDate, createdDate, updatedDate,
+                isActive,
             },
             onSend, dataDetails, isLoading, 
         } = this.state;
+        const { params: { type } } = this.props;
 
         return (
             <Card
@@ -140,14 +286,14 @@ class Form extends Component {
                 {
                     isLoading ? (
                         <div className="overlay position-relative" style={{ height: "400px" }}>
-                          <Loading />
+                            <Loading />
                         </div>
                     ) : (
-                        <FormValidation ref={(c) => { this.form = c; }}>
+                        <FormValidation ref={(c) => { this.mainForm = c; }}>
                             <div
                                 className="p-1 m-1"
                                 style={{
-                                    height: '70vh', overflowY: 'auto', overflowX: 'hidden',
+                                    maxHeight: '70vh', overflowY: 'auto', overflowX: 'hidden',
                                 }}
                             >
                                 <div className="row">
@@ -168,7 +314,7 @@ class Form extends Component {
                                             </FieldFeedbacks>
                                         </div>
                                     </div>
-                                    <div className="col-md-8">
+                                    <div className="col-md-6">
                                         <div className="form-group">
                                             <label>Kegiatan</label>
                                             <InputText
@@ -183,6 +329,21 @@ class Form extends Component {
                                                     {GENERATE_ERROR_MESSAGE('Task', 'valueMissing')}
                                                 </FieldFeedback>
                                             </FieldFeedbacks>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-2">
+                                        <div className="form-group">
+                                            <label>Status Kegiatan</label>
+                                            <InputToggle
+                                                value={isActive}
+                                                disabled={type === FORM_TYPES.CREATE}
+                                                changeEvent={(val, e) => this.changeStatus(val, e)}
+                                                label={isActive ? (
+                                                    <code>Aktif</code>
+                                                ) : (
+                                                    <code>Tidak Aktif</code>
+                                                )}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -202,34 +363,42 @@ class Form extends Component {
                                         </FieldFeedback>
                                     </FieldFeedbacks>
                                 </div>
-                                <div className="form-group">
-                                    <label>Progress Persent</label>
-                                    <Progress
-                                        value={parseFloat(this.getPercentage(dataDetails)).toFixed(0)}
-                                        progressText="Selesai"
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <TabelTodoList title="Kegiatan List" data={dataDetails} />
-                                </div>
-                                <div className="form-group">
-                                    <label>Progress Kegiatan</label>
-                                    <InputTextArea                                        
-                                        value={progressNote}
-                                        name="progressNote"
-                                        placeholder="Progress Kegiatan"
-                                        row="4"
-                                        disabled
-                                    />
-                                </div>
-                                
+                                {
+                                    type === FORM_TYPES.EDIT && (
+                                        <>
+                                            <div className="form-group">
+                                                <label>Progress Persent</label>
+                                                <Progress
+                                                    value={parseFloat(this.getPercentage(dataDetails)).toFixed(0)}
+                                                    progressText="Selesai"
+                                                />
+                                            </div>
+                                            <div className="form-group">
+                                                <TabelTodoList title="Kegiatan List" data={dataDetails} />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>
+                                                    Progress Kegiatan
+                                                    <code> Input ini di isi dengan Client !</code>
+                                                </label>
+                                                <InputTextArea                                        
+                                                    value={progressNote}
+                                                    name="progressNote"
+                                                    placeholder="Progress Kegiatan"
+                                                    row="4"
+                                                    disabled
+                                                />
+                                            </div>
+                                        </>
+                                    )
+                                }
                                 <div className="form-group">
                                     <label>Status Kegiatan</label>
                                     <InputSelect
                                         data={STATUS_LIST}
-                                        value={status}
+                                        value={statusFinish}
                                         placeholder="Status kegiatan"
-                                        changeEvent={(val, e) => this._changeInputHandler('status', val, e)}
+                                        changeEvent={(val, e) => this._changeInputHandler('statusFinish', val, e)}
                                         name="status"
                                         required
                                     />
@@ -239,47 +408,56 @@ class Form extends Component {
                                         </FieldFeedback>
                                     </FieldFeedbacks>
                                 </div>
-                                <hr />
                                 {
-                                    status && (
-                                        <div className="form-group">
-                                            <label>Di Selesaikan Pada</label>
-                                            <InputText
-                                                name="finishDate"
-                                                value={
-                                                    `${fireBaseTime(finishDate).toDateString().toString("MMMM yyyy")} - ${fireBaseTime(finishDate).toLocaleTimeString()}`
-                                                }
-                                                disabled
-                                            />
-                                        </div>
+                                    type === FORM_TYPES.EDIT && (
+                                        <>
+                                            <hr />
+                                            {
+                                                statusFinish ? (
+                                                    <div className="form-group">
+                                                        <label>Di Selesaikan Pada</label>
+                                                        <InputText
+                                                            name="finishDate"
+                                                            value={
+                                                                `${fireBaseTime(finishDate).toDateString().toString("MMMM yyyy")} - ${fireBaseTime(finishDate).toLocaleTimeString()}`
+                                                            }
+                                                            disabled
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <></>
+                                                )
+                                            }
+
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <div className="form-group">
+                                                        <label>Di Buat Pada</label>
+                                                        <InputText
+                                                            name="createdDate"
+                                                            value={
+                                                                `${fireBaseTime(createdDate).toDateString().toString("MMMM yyyy")} - ${fireBaseTime(createdDate).toLocaleTimeString()}`
+                                                            }
+                                                            disabled
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <div className="form-group">
+                                                        <label>Di Ubah Pada</label>
+                                                        <InputText
+                                                            name="updatedDate"
+                                                            value={
+                                                                `${fireBaseTime(updatedDate).toDateString().toString("MMMM yyyy")} - ${fireBaseTime(updatedDate).toLocaleTimeString()}`
+                                                            }
+                                                            disabled
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </>
                                     )
                                 }
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <div className="form-group">
-                                            <label>Di Buat Pada</label>
-                                            <InputText
-                                                name="createdDate"
-                                                value={
-                                                    `${fireBaseTime(createdDate).toDateString().toString("MMMM yyyy")} - ${fireBaseTime(createdDate).toLocaleTimeString()}`
-                                                }
-                                                disabled
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="col-md-6">
-                                        <div className="form-group">
-                                            <label>Di Ubah Pada</label>
-                                            <InputText
-                                                name="updatedDate"
-                                                value={
-                                                    `${fireBaseTime(updatedDate).toDateString().toString("MMMM yyyy")} - ${fireBaseTime(updatedDate).toLocaleTimeString()}`
-                                                }
-                                                disabled
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                             <div className="form-group float-right">
                                 <Button
@@ -292,7 +470,7 @@ class Form extends Component {
                                     label={onSend ? "Memperoses !" : 'Simpan'}
                                     className="btn btn-primary"
                                     buttonIcon={ onSend ? "fas fa-sync-alt fa-spin" : "fa fa-save" }
-                                    onClick={() => {}}
+                                    onClick={() => { this.submitHandel(); }}
                                     disabled={onSend}
                                 />
                             </div>

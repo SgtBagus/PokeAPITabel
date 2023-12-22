@@ -9,6 +9,7 @@ import { withHocks } from '../../Context/WithParams';
 import Form from "./Components/Form";
 import Card from '../../Components/Card';
 import Badge from '../../Components/Badge';
+import Loading from "../../Components/Loading";
 
 import { catchError } from '../../Helper/helper';
 
@@ -25,6 +26,7 @@ class TodoLists extends Component {
                 photoURL: DEFAULT_IMAGE,
                 userDesc: '',
             },
+            isLoading: true,
         };
     }
 
@@ -33,14 +35,17 @@ class TodoLists extends Component {
     }
 
     getUserDetail = async () => {
-        const { loadingParam: { dispatchLoading }, params: { docsId }} = this.props;
+        const { loadingParam: { dispatchLoading }, params: { uid }} = this.props;
 
         try {
-            const data = await query(collection(db, "users"), where("uid", "==", docsId));
+            const data = await query(collection(db, "users"), where("uid", "==", uid));
             const res = await getDocs(data);
             const userDetail = res.docs.map(doc => doc.data())[0];
 
-            this.setState({ userDetail })
+            this.setState({
+                userDetail,
+                isLoading: false,
+            })
         } catch (err) {
             NotificationManager.error(catchError(err), 'Terjadi Kesalahan', 5000);
         } finally {
@@ -52,56 +57,64 @@ class TodoLists extends Component {
         const {
             userDetail: {
                 displayName, email, photoURL, userDesc
-            },
+            }, isLoading,
         } = this.state;
-        const { params: { docsId }} = this.props;
+        const { params: { uid }} = this.props;
 
         return (
             <div className="row">
                 <div className="col-md-12">
                     <div className="row">
                         <div className="col-md-9">
-                            <Form mainTask={docsId} />
+                            <Form mainTask={uid} />
                         </div>
                         <div className="col-md-3">
                             <Card type="card-primary card-outline">
-                                <div className="box-profile">
-                                    <div className="text-center">
-                                        <img
-                                            className="profile-user-img img-fluid img-circle"
-                                            src={photoURL}
-                                            style={{ width: '100px', height: '100px', objectFit: 'cover '}}
-                                            alt="User-profile"
-                                        />
-                                    </div>
+                                {
+                                    isLoading ? (
+                                        <div className="overlay position-relative" style={{ height: "400px" }}>
+                                            <Loading />
+                                        </div>
+                                    ) : (
+                                        <div className="box-profile">
+                                            <div className="text-center">
+                                                <img
+                                                    className="profile-user-img img-fluid img-circle"
+                                                    src={photoURL}
+                                                    style={{ width: '100px', height: '100px', objectFit: 'cover '}}
+                                                    alt="User-profile"
+                                                />
+                                            </div>
 
-                                    <h3 className="profile-username text-center">
-                                        {displayName}
-                                        <br />
-                                        <small>{email}</small>
-                                    </h3>
-                                    <p className="text-muted text-center">{userDesc}</p>
-                                    <ul className="list-group list-group-unbordered mb-3">
-                                        <li className="list-group-item">
-                                            <b>Total Kegiatan</b>
-                                            <b className="float-right">
-                                                15
-                                            </b>
-                                        </li>
-                                        <li className="list-group-item">
-                                            <b>Total Selesai</b>
-                                            <b className="float-right">
-                                                <Badge className="badge bg-success" label="15" />
-                                            </b>
-                                        </li>
-                                        <li className="list-group-item">
-                                            <b>Total Belum Selesai</b>
-                                            <b className="float-right">
-                                                <Badge className="badge bg-danger" label="5" />
-                                            </b>
-                                        </li>
-                                    </ul>
-                                </div>
+                                            <h3 className="profile-username text-center">
+                                                {displayName}
+                                                <br />
+                                                <small>{email}</small>
+                                            </h3>
+                                            <p className="text-muted text-center">{userDesc}</p>
+                                            <ul className="list-group list-group-unbordered mb-3">
+                                                <li className="list-group-item">
+                                                    <b>Total Kegiatan</b>
+                                                    <b className="float-right">
+                                                        15
+                                                    </b>
+                                                </li>
+                                                <li className="list-group-item">
+                                                    <b>Total Selesai</b>
+                                                    <b className="float-right">
+                                                        <Badge className="badge bg-success" label="15" />
+                                                    </b>
+                                                </li>
+                                                <li className="list-group-item">
+                                                    <b>Total Belum Selesai</b>
+                                                    <b className="float-right">
+                                                        <Badge className="badge bg-danger" label="5" />
+                                                    </b>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    )
+                                }
                             </Card>
                         </div>
                     </div>
