@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import update from "immutability-helper";
 import { FieldFeedback, FieldFeedbacks } from "react-form-with-constraints";
 import { NotificationManager } from "react-notifications";
-import { collection, doc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
 
 import { db } from "../../../firebase";
 
@@ -27,6 +27,7 @@ import fireBaseTime from '../../../Helper/fireBaseTime';
 import { FORM_TYPES } from "../../../Enum/Form";
 
 import { STATUS_LIST } from "./config";
+import Swal from "sweetalert2";
 
 class Form extends Component {
     constructor(props) {
@@ -267,10 +268,41 @@ class Form extends Component {
         }
     }
 
+    confirmDeleteHandel = (id, title) => {
+        Swal.fire({
+            title: "Apakah anda yakin akan menghapus Data ini",
+            text: `Code Reveral Code - ${title}`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Iya, Hapus data ini!",
+            showLoaderOnConfirm: true,
+            preConfirm: async () => {
+                try {
+                    await deleteDoc(doc(db, "toDoLists", id));
+                } catch (error) {
+                    Swal.showValidationMessage(`Request failed: ${error}`);
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+          }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Success",
+                    text: "Berhasil Menghapus data, halaman ini akan di mulai ulang",
+                    icon: "success"
+                });
+                
+                setTimeout(() => { window.location.reload() }, 3000);
+            }
+        });
+    }
+
     render() {
         const {
             form: {
-                title, task, note, progressNote, statusFinish, finishDate, createdDate, updatedDate,
+                id, title, task, note, progressNote, statusFinish, finishDate, createdDate, updatedDate,
                 isActive,
             },
             onSend, dataDetails, isLoading, 
@@ -461,18 +493,29 @@ class Form extends Component {
                             </div>
                             <div className="form-group float-right">
                                 <Button
-                                    className="btn btn-default mr-2"
+                                    className="btn btn-default"
                                     label="Kembali !"
                                     buttonIcon="fas fa-arrow-left"
                                     onClick={() => { this.redirectLink('/client') }}
                                 />
                                 <Button
                                     label={onSend ? "Memperoses !" : 'Simpan'}
-                                    className="btn btn-primary"
+                                    className="btn btn-primary mx-2"
                                     buttonIcon={ onSend ? "fas fa-sync-alt fa-spin" : "fa fa-save" }
                                     onClick={() => { this.submitHandel(); }}
                                     disabled={onSend}
                                 />
+                                {
+                                    type === FORM_TYPES.EDIT && (
+                                        <Button
+                                            label={onSend ? "Memperoses !" : 'Hapus'}
+                                            className="btn btn-danger"
+                                            buttonIcon={ onSend ? "fas fa-sync-alt fa-spin" : "fa fa-trash" }
+                                            onClick={() => { this.confirmDeleteHandel(id, title); }}
+                                            disabled={onSend}
+                                        />
+                                    )
+                                }
                             </div>
                         </FormValidation>
                     )
