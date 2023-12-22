@@ -108,7 +108,7 @@ export const TABEL_META = (
                         buttonIcon={
                             onSend ? "fas fa-sync-alt fa-spin" : "fas fa-trash fa-xs"
                         }
-                        onClick={() => DeleteData(id)}
+                        onClick={() => DeleteData(id, title)}
                         disabled={onSend}
                     />
                 </div>

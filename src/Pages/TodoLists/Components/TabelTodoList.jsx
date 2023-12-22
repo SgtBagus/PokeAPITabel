@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from "react-router-dom";
 import { NotificationManager } from 'react-notifications';
-import { doc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { deleteDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 
 import { db } from '../../../firebase';
 
@@ -12,9 +12,10 @@ import { TABEL_META } from './config';
 
 import { FORM_TYPES } from '../../../Enum/Form';
 import { catchError } from '../../../Helper/helper';
+import Swal from 'sweetalert2';
 
 const TabelTodoList = ({
-    title, data, mainTask,
+    title, data,
 }) => {
     const [onSend, setOnSend] = useState(false);
     const { id: mainDoctId } = useParams();
@@ -38,8 +39,35 @@ const TabelTodoList = ({
         }
     };
 
-    const deleteData = async (id) => {
-        console.log(id);
+    const deleteData = async (id, title) => {
+        Swal.fire({
+            title: "Apakah anda yakin akan menghapus Data ini",
+            text: `Kegiatan - ${title}`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Iya, Hapus data ini!",
+            showLoaderOnConfirm: true,
+            preConfirm: async () => {
+                try {
+                    await deleteDoc(doc(db, "toDoTaskLists", id));
+                } catch (error) {
+                    Swal.showValidationMessage(`Request failed: ${error}`);
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+          }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Success",
+                    text: "Berhasil Menghapus data, halaman ini akan di mulai ulang",
+                    icon: "success"
+                });
+                
+                setTimeout(() => { window.location.reload() }, 3000);
+            }
+        });
     } 
 
     return (
@@ -51,7 +79,7 @@ const TabelTodoList = ({
                         tabelHead: TABEL_META(
                             onSend,
                             (id, val) => updateStatus(id, val),
-                            (id) => deleteData(id),
+                            (id, title) => deleteData(id, title),
                         ),
                         coloumnData: data,
                     }}
