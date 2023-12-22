@@ -20,6 +20,7 @@ export const STATUS_LIST = [
 export const TABEL_META = (
     onSend,
     dataLength,
+    mainId,
     ChangeStatus,
     DeleteData,
 ) => [
@@ -94,6 +95,7 @@ export const TABEL_META = (
                         typeModal="info"
                         type={FORM_TYPES.EDIT}
                         dataLength={dataLength}
+                        mainId={mainId}
                         headerTitle={(
                             <>
                                 <i className={`${icon} mr-2`} />

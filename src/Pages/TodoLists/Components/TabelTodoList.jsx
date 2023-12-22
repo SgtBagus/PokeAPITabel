@@ -79,6 +79,7 @@ const TabelTodoList = ({
                         tabelHead: TABEL_META(
                             onSend,
                             data.length,
+                            mainId,
                             (id, val) => updateStatus(id, val),
                             (id, title) => deleteData(id, title),
                         ),

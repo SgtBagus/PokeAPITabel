@@ -99,8 +99,7 @@ class Form extends Component {
             onSnapshot(doc(db, "toDoTaskLists", taskListId), (doc) => {
                 let getData = [];
 
-                Object.entries(doc.data().data).forEach(x => {
-                    console.log(x[1]);
+                Object.entries(doc.exists() && doc.data().data).forEach(x => {
                     const data = Object.entries(x[1]).map(x => (x[1]));
 
                     return getData.push(data[0]);

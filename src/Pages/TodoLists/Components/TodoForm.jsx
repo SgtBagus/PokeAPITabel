@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FieldFeedback, FieldFeedbacks } from "react-form-with-constraints";
 import update from "immutability-helper";
-import { serverTimestamp, doc, updateDoc, setDoc, Timestamp, arrayUnion } from 'firebase/firestore';
+import { doc, updateDoc, setDoc, Timestamp, arrayUnion } from 'firebase/firestore';
 import { NotificationManager } from 'react-notifications';
 
 import { db } from '../../../firebase';
@@ -155,7 +155,6 @@ class TodoForm extends Component {
     }
     
     handelEdit = async () => {
-        const { params: { id: mainDoctId } } = this.props;
         const {
             form: {
                 id, title, icon, task, orderNumber, statusFinish,
@@ -167,9 +166,9 @@ class TodoForm extends Component {
             if (attact && ( attact !== currentImage)) {
                 const uploadImage = await this.uploadImage(attact);
 
-                await this.updateDoc(mainDoctId, id, uploadImage, icon, note, orderNumber, statusFinish, task, title);
+                await this.updateDocHandel(id, uploadImage, icon, note, orderNumber, statusFinish, task, title);
             } else {
-                await this.updateDoc(mainDoctId, id, null, icon, note, orderNumber, statusFinish, task, title);
+                await this.updateDocHandel(id, null, icon, note, orderNumber, statusFinish, task, title);
             }
 
             this.setState({
@@ -183,6 +182,7 @@ class TodoForm extends Component {
             this.setState({
                 onSend: false,
             }, () => {
+                console.log(err);
                 NotificationManager.error(catchError(err), "Terjadi Kesalahan", 5000);
 
                 document.getElementById(`btnCacelModalsTodo-${id}`).click();
@@ -258,37 +258,30 @@ class TodoForm extends Component {
         }
     }
 
-    updateDoc = async (
+    updateDocHandel = async (
         id, attact, icon, note, orderNumber, statusFinish, task, title,
     ) => {
-        console.log('masuk sini kah!');
-        // const { type } = this.props;
-        // const { mainId } = this.props;
+        const { mainId } = this.props;
 
-        // let timeStamp = {
-        //     [id + ".createdDate"]: serverTimestamp(),
-        //     [id + ".updatedDate"]: serverTimestamp(),
-        // }
-
-        // if (type === FORM_TYPES.EDIT) {
-        //     timeStamp = {
-        //         [id + ".updatedDate"]: serverTimestamp(),
-        //     }
-        // }
-
-        // await updateDoc(doc(db, "toDoTaskLists", mainId), {
-        //     [id + ".id"]: id,
-        //     [id + ".attact"]: attact,
-        //     [id + ".icon"]: icon,
-        //     [id + ".note"]: note,
-        //     [id + ".orderNumber"]: orderNumber,
-        //     [id + ".statusFinish"]: statusFinish,
-        //     [id + ".task"]: task,
-        //     [id + ".title"]: title,
-        //     [id + ".finishDate"]: statusFinish ? serverTimestamp() : null,
-        //     ...timeStamp,
-        // });
+        await updateDoc(doc(db, "toDoTaskLists", mainId), {
+            data: arrayUnion({
+                [id]: {
+                    id,
+                    attact,
+                    icon,
+                    note,
+                    orderNumber,
+                    statusFinish,
+                    task,
+                    title,
+                    finishDate: statusFinish ? Timestamp.now() : null,
+                    createdDate: Timestamp.now(),
+                    updatedDate: Timestamp.now(),
+                },
+            })
+        });
     }
+
     setImage = (val) => {
         const { form } = this.state;
 
