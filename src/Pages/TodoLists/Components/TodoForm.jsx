@@ -116,9 +116,7 @@ class TodoForm extends Component {
     handelCreate = async () => {
         const { params: { id: mainDoctId } } = this.props;
         const { 
-            form: {
-                title, icon, task, orderNumber, statusFinish, note, attact,
-            }
+            form: { title, icon, task, orderNumber, statusFinish, note, attact }
         } = this.state;
 
         try {
@@ -133,6 +131,8 @@ class TodoForm extends Component {
                     onSend: false,
                 }, () => {
                     NotificationManager.success('Berhasil Merubah Data', "Success !", 5000);
+                    
+                    document.getElementById(`btnCacelModalsTodo-${FORM_TYPES.CREATE}`).click();
                 });
             } else {
                 await this.updateDoc(mainDoctId, randomID, null, icon, note, orderNumber, statusFinish, task, title);
@@ -142,6 +142,8 @@ class TodoForm extends Component {
                 onSend: false,
             }, () => {
                 NotificationManager.error(catchError(err), "Terjadi Kesalahan", 5000);
+
+                document.getElementById(`btnCacelModalsTodo-${FORM_TYPES.CREATE}`).click();
             });
         }
     }
@@ -167,13 +169,16 @@ class TodoForm extends Component {
                 onSend: false,
             }, () => {
                 NotificationManager.success('Berhasil Merubah Data', "Success !", 5000);
+
+                document.getElementById(`btnCacelModalsTodo-${id}`).click();
             });
         } catch (err) {
             this.setState({
                 onSend: false,
             }, () => {
-                console.log(err);
                 NotificationManager.error(catchError(err), "Terjadi Kesalahan", 5000);
+
+                document.getElementById(`btnCacelModalsTodo-${id}`).click();
             });
         }
     }
@@ -230,7 +235,7 @@ class TodoForm extends Component {
     render() {
         const {
             form: {
-                title, icon, task, orderNumber, statusFinish,
+                id, title, icon, task, orderNumber, statusFinish,
                 note, attact,
                 createdDate, finishDate, updatedDate,
             }, onSend,
@@ -250,8 +255,9 @@ class TodoForm extends Component {
                     headerTitle={headerTitle}
                     btnSubmitHandel={() => { this.submitHandel(); }}
                     btnSubmitText={onSend ? "Memperoses" : btnSubmitText}
-                    buttonSubmitIcon={onSend ? "fas fa-sync-alt fa-spin mr-2" : "fa fa-save mr-2"}
+                    buttonSubmitIcon={onSend ? "fas fa-sync-alt fa-spin" : "fa fa-save"}
                     btnSubmitDisabled={onSend}
+                    btnCancelId={`btnCacelModalsTodo-${type === FORM_TYPES.EDIT ? id : FORM_TYPES.CREATE}`}
                     modalLarge
                 >
                     <FormValidation ref={(c) => { this.formDetail = c; }}>

@@ -1,4 +1,4 @@
-import React, { StrictMode } from "react";
+import React, { Fragment } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { NotificationContainer } from "react-notifications";
 
@@ -11,13 +11,13 @@ import Routes from "./Routes/Routes";
 function App() {
   return (
     <AuthContextProvider>
-      <StrictMode>
+      <Fragment>
         <BrowserRouter basename="/">
           <Routes />
 
           <NotificationContainer />
         </BrowserRouter>
-      </StrictMode>
+      </Fragment>
     </AuthContextProvider>
   );
 }

@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { useParams } from "react-router-dom";
+import { NotificationManager } from 'react-notifications';
+import { doc, serverTimestamp, updateDoc } from 'firebase/firestore';
+
+import { db } from '../../../firebase';
 
 import TodoForm from './TodoForm';
 import Tabel from '../../../Components/Tabel';
@@ -7,10 +11,7 @@ import Tabel from '../../../Components/Tabel';
 import { TABEL_META } from './config';
 
 import { FORM_TYPES } from '../../../Enum/Form';
-import { doc, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { db } from '../../../firebase';
 import { catchError } from '../../../Helper/helper';
-import { NotificationManager } from 'react-notifications';
 
 const TabelTodoList = ({
     title, data, mainTask,
@@ -37,6 +38,10 @@ const TabelTodoList = ({
         }
     };
 
+    const deleteData = async (id) => {
+        console.log(id);
+    } 
+
     return (
         <div className="row">
             <div className="col-12">
@@ -46,6 +51,7 @@ const TabelTodoList = ({
                         tabelHead: TABEL_META(
                             onSend,
                             (id, val) => updateStatus(id, val),
+                            (id) => deleteData(id),
                         ),
                         coloumnData: data,
                     }}

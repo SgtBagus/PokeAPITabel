@@ -17,7 +17,11 @@ export const STATUS_LIST = [
     },
 ]
 
-export const TABEL_META = (onSend, changeStatus) => [
+export const TABEL_META = (
+    onSend,
+    ChangeStatus,
+    DeleteData,
+) => [
     {
         title: 'No',
         key: 'orderNumber',
@@ -51,7 +55,7 @@ export const TABEL_META = (onSend, changeStatus) => [
                         buttonIcon={
                             onSend ? "fas fa-sync-alt fa-spin" : "fa fa-edit"
                         }
-                        onClick={() => changeStatus(id, !statusFinish)}
+                        onClick={() => ChangeStatus(id, !statusFinish)}
                         disabled={onSend}
                     />
                 </div>
@@ -62,14 +66,14 @@ export const TABEL_META = (onSend, changeStatus) => [
         title: 'Dibuat Pada',
         key: 'createdDate',
         Cell: (val) => (
-            `${fireBaseTime(val).toDateString().toString("MMMM yyyy")}`
+            onSend ? ( <i className="fas fa-sync-alt fa-spin"/> ) : `${fireBaseTime(val).toDateString().toString("MMMM yyyy")}`
         )
     },
     {
         title: 'Di update Pada',
         key: 'updatedDate',
         Cell: (val) => (
-            `${fireBaseTime(val).toDateString().toString("MMMM yyyy")}`
+            onSend ? ( <i className="fas fa-sync-alt fa-spin"/> ) : `${fireBaseTime(val).toDateString().toString("MMMM yyyy")}`
         )
     },
     {
@@ -95,9 +99,18 @@ export const TABEL_META = (onSend, changeStatus) => [
                             </>
                         )}
                     />
-                    <button type="button" className="btn btn-danger" onClick={() => {}}>
-                        <i className="fas fa-trash fa-xs" />
-                    </button>
+
+                    <Button
+                        label= {
+                            onSend ? "Memperoses" : ""
+                        }
+                        className="btn btn-danger"
+                        buttonIcon={
+                            onSend ? "fas fa-sync-alt fa-spin" : "fas fa-trash fa-xs"
+                        }
+                        onClick={() => DeleteData(id)}
+                        disabled={onSend}
+                    />
                 </div>
             )
         }

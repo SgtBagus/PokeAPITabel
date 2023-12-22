@@ -16,7 +16,12 @@ const Button = ({
         >
             {
                 buttonIcon && (
-                    <i className={`${buttonIcon} mr-2`}></i>
+                    <i
+                        className={`
+                            ${buttonIcon}
+                            ${label !== '' ? 'mr-2' : ''}
+                        `}
+                    />
                 )
             }
             {label}
@@ -38,7 +43,7 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
-    label: 'Button',
+    label: '',
     buttonIcon: null,
     className: 'btn btn-primary',
     type: 'button',

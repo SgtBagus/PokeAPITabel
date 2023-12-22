@@ -1,11 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types';
+import { createPortal } from 'react-dom';
 
 const Modals = ({
     buttonLabel, idModal, typeModal, children, className, disabled,
     btnSubmitText, btnCancelText, btnSubmitHandel, btnCancelHandel,
     buttonIcon, buttonSubmitIcon, btnSubmitDisabled, style, modalLarge,
-    headerTitle,
+    headerTitle, btnCancelId,
 }) => {
     return (
         <>
@@ -25,52 +26,60 @@ const Modals = ({
                 {buttonLabel}
             </button>
 
-            <div className="modal fade" id={idModal}>
-                <div className={`modal-dialog ${modalLarge && 'modal-lg'}`}>
-                    <div className="modal-content">
-                        {
-                            headerTitle && (
-                                <div className="modal-header">
-                                    <h4 className="modal-title">{headerTitle}</h4>
-                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
+            
+            {
+                createPortal(
+                    <div className="modal fade" id={idModal}>
+                        <div className={`modal-dialog ${modalLarge && 'modal-lg'}`}>
+                            <div className="modal-content">
+                                {
+                                    headerTitle && (
+                                        <div className="modal-header">
+                                            <h4 className="modal-title">{headerTitle}</h4>
+                                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                    )
+                                }
+                                <div className="modal-body">
+                                    {children}
                                 </div>
-                            )
-                        }
-                        <div className="modal-body">
-                            {children}
-                        </div>
-                        <div className="modal-footer justify-content-between">
-                            <button
-                                type="button"
-                                className="btn btn-default"
-                                data-dismiss="modal"
-                                onClick={btnCancelHandel}
-                            >
-                                {btnCancelText}
-                            </button>
-                            {
-                                btnSubmitHandel && (
+                                <div className="modal-footer justify-content-between">
                                     <button
                                         type="button"
-                                        className="btn btn-primary"
-                                        onClick={btnSubmitHandel}
-                                        disabled={btnSubmitDisabled}
+                                        className="btn btn-default"
+                                        data-dismiss="modal"
+                                        onClick={btnCancelHandel}
+                                        id={btnCancelId}
                                     >
-                                        {
-                                            buttonSubmitIcon && (
-                                                <i className={buttonSubmitIcon} />
-                                            )
-                                        }
-                                        {btnSubmitText}
+                                        {btnCancelText}
                                     </button>
-                                )
-                            }
+                                    {
+                                        btnSubmitHandel && (
+                                            <button
+                                                type="button"
+                                                className="btn btn-primary"
+                                                onClick={btnSubmitHandel}
+                                                disabled={btnSubmitDisabled}
+                                            >
+                                                {
+                                                    buttonSubmitIcon && (
+                                                        <i className={buttonSubmitIcon} />
+                                                    )
+                                                }
+                                                {btnSubmitText}
+                                            </button>
+                                        )
+                                    }
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </div>,
+                    
+                    document.getElementById('modals')
+                )
+            }
         </>
     )
 }
@@ -92,6 +101,7 @@ Modals.propTypes = {
     buttonIcon: PropTypes.string,
     className: PropTypes.string,
     buttonSubmitIcon: PropTypes.string,
+    btnCancelId: PropTypes.string,
     btnSubmitDisabled: PropTypes.bool,
     disabled: PropTypes.bool,
     style: PropTypes.shape(),
@@ -106,6 +116,7 @@ Modals.defaultProps = {
     headerTitle: null,
     btnSubmitText: 'Save changes',
     btnCancelText: 'Cancel',
+    btnCancelId: 'btn-cancel',
     btnSubmitHandel: null,
     btnCancelHandel: () => {},
     buttonIcon: null,
