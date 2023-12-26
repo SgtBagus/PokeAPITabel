@@ -206,7 +206,7 @@ class Form extends Component {
                 title, task, note, progressNote, statusFinish,
             },
         } = this.state;
-        const { params: { uid }, navigate } = this.props;
+        const { params: { uid } } = this.props;
 
         try {
             const combinedId = `${uid}${GenerateString(10)}`;
@@ -233,7 +233,7 @@ class Form extends Component {
                 NotificationManager.success('Data Telah Tersimpan!', 'Success', 5000);
 
                 setTimeout(() => {
-                    return navigate(`/client/to-do/edit/${uid}/${combinedId}`);
+                    return window.location.href = `/client/to-do/edit/${uid}/${combinedId}`
                 }, 3000);
             });
         } catch (err) {
@@ -279,6 +279,8 @@ class Form extends Component {
     }
 
     confirmDeleteHandel = (id, title) => {
+        const { navigate } = this.props;
+    
         Swal.fire({
             title: "Apakah anda yakin akan menghapus Data ini",
             text: `Code Reveral Code - ${title}`,
@@ -289,7 +291,10 @@ class Form extends Component {
             confirmButtonText: "Iya, Hapus data ini!",
             showLoaderOnConfirm: true,
             preConfirm: async () => {
+                const { taskListId } = this.state;
+
                 try {
+                    await deleteDoc(doc(db, "toDoTaskLists", taskListId));
                     await deleteDoc(doc(db, "toDoLists", id));
                 } catch (error) {
                     Swal.showValidationMessage(`Request failed: ${error}`);
@@ -304,7 +309,9 @@ class Form extends Component {
                     icon: "success"
                 });
                 
-                setTimeout(() => { window.location.reload() }, 3000);
+                setTimeout(() => {
+                    return navigate(`/client`);
+                }, 3000);
             }
         });
     }
