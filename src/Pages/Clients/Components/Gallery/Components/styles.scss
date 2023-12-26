@@ -1,0 +1,63 @@
+/* Responsive image gallery rules begin*/
+  
+  .image-gallery {
+	/* Mobile first */
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+  }
+  
+  .image-gallery .column {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+  }
+  
+  .image-item img {
+	width: 100%;
+	border-radius: 5px;
+	height: 100%;
+	object-fit: cover;
+  }
+  
+  .image-item video {
+	width: 100%;
+	border-radius: 5px;
+	height: 100%;
+	object-fit: cover;
+  }
+
+  @media only screen and (min-width: 768px) {
+	.image-gallery {
+	  flex-direction: row;
+	}
+  }
+  
+  /* overlay styles */
+  
+  .image-item {
+	position: relative;
+	cursor: pointer;
+  }
+  
+  .overlay-gallery {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+    background: rgb(255 255 255 / 53%);
+	top: 0;
+	left: 0;
+	transform: scale(0);
+	transition: all 0.2s 0.1s ease-in-out;
+	color: #000;
+	/* center overlay content */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+  }
+  
+  /* hover */
+  .image-item:hover .overlay-gallery {
+	transform: scale(1);
+  }
+  

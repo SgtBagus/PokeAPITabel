@@ -35,6 +35,7 @@ const Client = () => {
         });
         
         const getChats = async () => {
+
             const unsub = await onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
                 const arrayOfObject = (chatId, userInfo) => ({ chatId, userInfo });
                 const dataToArray = Object.entries(doc.data()).map(x => arrayOfObject(x[0], x[1]));
@@ -43,9 +44,7 @@ const Client = () => {
                 dispatchLoading(false);
             });
 
-            return async () => {
-                unsub();
-            };
+            return async () => { unsub(); };
         };
 
         currentUser.uid && getChats();
