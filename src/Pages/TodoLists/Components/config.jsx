@@ -22,7 +22,6 @@ export const TABEL_META = (
     dataLength,
     mainId,
     ChangeStatus,
-    DeleteData,
 ) => [
     {
         title: 'No',
@@ -89,31 +88,20 @@ export const TABEL_META = (
                     <TodoForm
                         data={val}
                         idModal={`modal-${id}`}
-                        buttonIcon="fas fa-edit fa-xs"
+                        buttonIcon="fas fa-edit fa-xs mr-2"
                         btnSubmitText="Simpan"
-                        buttonLabel=""
+                        buttonLabel="Edit"
                         typeModal="info"
                         type={FORM_TYPES.EDIT}
                         dataLength={dataLength}
                         mainId={mainId}
+                        className="btn-sm mx-2 rounded"
                         headerTitle={(
                             <>
                                 <i className={`${icon} mr-2`} />
                                 Detail Kegiatan - {title}
                             </>
                         )}
-                    />
-
-                    <Button
-                        label= {
-                            onSend ? "Memperoses" : ""
-                        }
-                        className="btn btn-danger"
-                        buttonIcon={
-                            onSend ? "fas fa-sync-alt fa-spin" : "fas fa-trash fa-xs"
-                        }
-                        onClick={() => DeleteData(id, title)}
-                        disabled={onSend}
                     />
                 </div>
             )

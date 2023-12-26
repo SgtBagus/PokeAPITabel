@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useParams } from "react-router-dom";
 import { NotificationManager } from 'react-notifications';
 import { deleteDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 
@@ -13,18 +12,18 @@ import { TABEL_META } from './config';
 import { FORM_TYPES } from '../../../Enum/Form';
 import { catchError } from '../../../Helper/helper';
 import Swal from 'sweetalert2';
+import Button from '../../../Components/Button';
 
 const TabelTodoList = ({
     title, data, mainId,
 }) => {
     const [onSend, setOnSend] = useState(false);
-    const { id: mainDoctId } = useParams();
 
     const updateStatus = async (id, val) => {
         setOnSend(true);
 
         try {
-            await updateDoc(doc(db, "toDoTaskLists", mainDoctId), {
+            await updateDoc(doc(db, "toDoTaskLists", mainId), {
                 [id + ".statusFinish"]: val,
                 [id + ".updatedDate"]: serverTimestamp(),
                 [id + ".finishDate"]: val ? serverTimestamp() : null,
@@ -39,7 +38,7 @@ const TabelTodoList = ({
         }
     };
 
-    const deleteData = async (id, title) => {
+    const deleteData = async (id) => {
         Swal.fire({
             title: "Apakah anda yakin akan menghapus Data ini",
             text: `Kegiatan - ${title}`,
@@ -64,8 +63,6 @@ const TabelTodoList = ({
                     text: "Berhasil Menghapus data, halaman ini akan di mulai ulang",
                     icon: "success"
                 });
-                
-                setTimeout(() => { window.location.reload() }, 3000);
             }
         });
     } 
@@ -81,25 +78,41 @@ const TabelTodoList = ({
                             data.length,
                             mainId,
                             (id, val) => updateStatus(id, val),
-                            (id, title) => deleteData(id, title),
                         ),
                         coloumnData: data,
                     }}
                 />
             </div>
             <div className="col-12">
-                <TodoForm
-                    idModal="modal-create-todo"
-                    buttonIcon="fas fa-plus fa-xs mr-2"
-                    buttonLabel="Tambah Kegiatan"
-                    btnSubmitText="Tambah"
-                    typeModal="primary"
-                    className="btn-block"
-                    headerTitle="Tambah Kegiatan"
-                    type={FORM_TYPES.CREATE}
-                    mainId={mainId}
-                    dataLength={data.length}
-                />
+                <div className="row">
+                    <div className="col-md-6">
+                        <TodoForm
+                            idModal="modal-create-todo"
+                            buttonIcon="fas fa-plus fa-xs mr-2"
+                            buttonLabel="Tambah Kegiatan"
+                            btnSubmitText="Tambah"
+                            typeModal="primary"
+                            className="btn-block"
+                            headerTitle="Tambah Kegiatan"
+                            type={FORM_TYPES.CREATE}
+                            mainId={mainId}
+                            dataLength={data.length}
+                        />
+                    </div>
+                    <div className="col-md-6">
+                        <Button
+                            label= {
+                                onSend ? "Memperoses" : "Hapus Semua Kegiatan"
+                            }
+                            className="btn btn-block btn-danger mx-2 rounded"
+                            buttonIcon={
+                                onSend ? "fas fa-sync-alt fa-spin" : "fa fa-trash"
+                            }
+                            onClick={() => deleteData(mainId)}
+                            disabled={onSend}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     );

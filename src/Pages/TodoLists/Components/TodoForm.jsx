@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FieldFeedback, FieldFeedbacks } from "react-form-with-constraints";
 import update from "immutability-helper";
-import { doc, updateDoc, setDoc, Timestamp, arrayUnion } from 'firebase/firestore';
+import { doc, updateDoc, setDoc, Timestamp } from 'firebase/firestore';
 import { NotificationManager } from 'react-notifications';
 
 import { db } from '../../../firebase';
@@ -53,21 +53,25 @@ class TodoForm extends Component {
 
     componentDidMount = () => {
         const { data } = this.props;
+
+        const {
+            id, title, icon, attact, note,
+            orderNumber, task, statusFinish, 
+            createdDate, finishDate, updatedDate,
+        } = data || {
+            id: '', title: '', icon: 'fas fa-solid fa-circle',
+            attact: null, note: '', orderNumber: '',
+            task: '', statusFinish: false,
+            createdDate: null, finishDate: null, updatedDate: null,
+        }
+
         this.setState({
-            form: data || {
-                id: '',
-                title: '',
-                icon: 'fas fa-solid fa-circle',
-                attact: null,
-                note: '',
-                orderNumber: '',
-                task: '',
-                statusFinish: false,
-                createdDate: null,
-                finishDate: null,
-                updatedDate: null,
+            form: {
+                id, title, icon, attact,
+                note, orderNumber, task, statusFinish,
+                createdDate, finishDate, updatedDate,
             },
-            currentImage: data ? data.attact : null,
+            currentImage: data ? attact : null,
         })
     }
     
@@ -132,24 +136,24 @@ class TodoForm extends Component {
                 const uploadImage = await this.uploadImage(attact);
 
                 await this.createDocs(uploadImage, icon, note, orderNumber, statusFinish, task, title);
-
-                this.setState({
-                    onSend: false,
-                }, () => {
-                    NotificationManager.success('Berhasil Merubah Data', "Success !", 5000);
-                    
-                    document.getElementById(`btnCacelModalsTodo-${FORM_TYPES.CREATE}`).click();
-                });
             } else {
                 await this.createDocs(null, icon, note, orderNumber, statusFinish, task, title);
             }
+            
+            this.setState({
+                onSend: false,
+            }, () => {
+                document.getElementById(`btnCancelModalsTodo-${FORM_TYPES.CREATE}`).click();
+
+                NotificationManager.success('Berhasil Merubah Data', "Success !", 5000);
+            });
         } catch (err) {
             this.setState({
                 onSend: false,
             }, () => {
                 NotificationManager.error(catchError(err), "Terjadi Kesalahan", 5000);
 
-                document.getElementById(`btnCacelModalsTodo-${FORM_TYPES.CREATE}`).click();
+                document.getElementById(`btnCancelModalsTodo-${FORM_TYPES.CREATE}`).click();
             });
         }
     }
@@ -176,16 +180,15 @@ class TodoForm extends Component {
             }, () => {
                 NotificationManager.success('Berhasil Merubah Data', "Success !", 5000);
 
-                document.getElementById(`btnCacelModalsTodo-${id}`).click();
+                document.getElementById(`btnCancelModalsTodo-${id}`).click();
             });
         } catch (err) {
             this.setState({
                 onSend: false,
             }, () => {
-                console.log(err);
                 NotificationManager.error(catchError(err), "Terjadi Kesalahan", 5000);
 
-                document.getElementById(`btnCacelModalsTodo-${id}`).click();
+                document.getElementById(`btnCancelModalsTodo-${id}`).click();
             });
         }
     }
@@ -200,47 +203,42 @@ class TodoForm extends Component {
     createDocs = async (
         attact, icon, note, orderNumber, statusFinish, task, title,
     ) => {
-        const { mainId, params: { id }, dataLength} = this.props;
+        const { mainId, dataLength} = this.props;
 
         const combineId = `${mainId}${GenerateString(5)}`;
 
         try {
             if (dataLength !== 0) {
                 await updateDoc(doc(db, "toDoTaskLists", mainId), {
-                    data: arrayUnion({
-                        [combineId]: {
-                            id: combineId,
-                            attact,
-                            icon,
-                            note,
-                            orderNumber,
-                            statusFinish,
-                            task,
-                            title,
-                            finishDate: statusFinish ? Timestamp.now() : null,
-                            createdDate: Timestamp.now(),
-                            updatedDate: Timestamp.now(),
-                        },
-                    })
+                    [combineId]: {
+                        id: combineId,
+                        attact,
+                        icon,
+                        note,
+                        orderNumber,
+                        statusFinish,
+                        task,
+                        title,
+                        finishDate: statusFinish ? Timestamp.now() : null,
+                        createdDate: Timestamp.now(),
+                        updatedDate: Timestamp.now(),
+                    },
                 });
             } else {
                 await setDoc(doc(db, "toDoTaskLists", mainId), {
-                    mainTaskId: id,
-                    data: arrayUnion({
-                        [combineId]: {
-                            id: combineId,
-                            attact,
-                            icon,
-                            note,
-                            orderNumber,
-                            statusFinish,
-                            task,
-                            title,
-                            finishDate: statusFinish ? Timestamp.now() : null,
-                            createdDate: Timestamp.now(),
-                            updatedDate: Timestamp.now(),
-                        },
-                    })
+                    [combineId]: {
+                        id: combineId,
+                        attact,
+                        icon,
+                        note,
+                        orderNumber,
+                        statusFinish,
+                        task,
+                        title,
+                        finishDate: statusFinish ? Timestamp.now() : null,
+                        createdDate: Timestamp.now(),
+                        updatedDate: Timestamp.now(),
+                    },
                 });
             }
 
@@ -264,21 +262,19 @@ class TodoForm extends Component {
         const { mainId } = this.props;
 
         await updateDoc(doc(db, "toDoTaskLists", mainId), {
-            data: arrayUnion({
-                [id]: {
-                    id,
-                    attact,
-                    icon,
-                    note,
-                    orderNumber,
-                    statusFinish,
-                    task,
-                    title,
-                    finishDate: statusFinish ? Timestamp.now() : null,
-                    createdDate: Timestamp.now(),
-                    updatedDate: Timestamp.now(),
-                },
-            })
+            [id]: {
+                id,
+                attact,
+                icon,
+                note,
+                orderNumber,
+                statusFinish,
+                task,
+                title,
+                finishDate: statusFinish ? Timestamp.now() : null,
+                createdDate: Timestamp.now(),
+                updatedDate: Timestamp.now(),
+            },
         });
     }
 
@@ -319,7 +315,7 @@ class TodoForm extends Component {
                     btnSubmitText={onSend ? "Memperoses" : btnSubmitText}
                     buttonSubmitIcon={onSend ? "fas fa-sync-alt fa-spin mr-2" : "fa fa-save mr-2"}
                     btnSubmitDisabled={onSend}
-                    btnCancelId={`btnCacelModalsTodo-${type === FORM_TYPES.EDIT ? id : FORM_TYPES.CREATE}`}
+                    btnCancelId={`btnCancelModalsTodo-${type === FORM_TYPES.EDIT ? id : FORM_TYPES.CREATE}`}
                     modalLarge
                 >
                     <FormValidation ref={(c) => { this.formDetail = c; }}>

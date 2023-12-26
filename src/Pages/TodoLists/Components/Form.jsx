@@ -99,10 +99,9 @@ class Form extends Component {
             onSnapshot(doc(db, "toDoTaskLists", taskListId), (doc) => {
                 let getData = [];
 
-                Object.entries(doc.exists() && doc.data().data).forEach(x => {
-                    const data = Object.entries(x[1]).map(x => (x[1]));
+                Object.entries(doc.exists() && doc.data()).forEach(x => {
 
-                    return getData.push(data[0]);
+                    return getData.push(x[1]);
                 });
                 const dataDetails = getData.sort((a, b) => a.orderNumber - b.orderNumber);
 
@@ -417,7 +416,7 @@ class Form extends Component {
                                                 />
                                             </div>
                                             <div className="form-group">
-                                                <TabelTodoList title="Kegiatan List" mainId={taskListId} data={dataDetails} />
+                                                <TabelTodoList title={`Kegiatan List - ${title}`} mainId={taskListId} data={dataDetails} />
                                             </div>
                                             <div className="form-group">
                                                 <label>
