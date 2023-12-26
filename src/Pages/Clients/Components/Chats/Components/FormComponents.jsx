@@ -184,7 +184,7 @@ const FormComponents = () => {
 
               <Button
                 label={onSend || "Kirim"}
-                className="btn-primary w-100 mx-2"
+                className="btn btn-primary rounded w-100 mx-2"
                 buttonIcon={
                   onSend ? "fas fa-sync-alt fa-spin" : "fa fa-paper-plane"
                 }

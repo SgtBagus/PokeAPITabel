@@ -53,7 +53,7 @@ const Tabs = ({
                                         aria-labelledby={`${tabKey}-tab`}
                                         key={id}
                                     >
-                                        <div className="overlay-wrapper">
+                                        <div className="overlay-wrapper" style={{ height: "50vh" }}>
                                             {children}
                                         </div>
                                     </div>

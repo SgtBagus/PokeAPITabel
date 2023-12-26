@@ -10,6 +10,7 @@ import Form from "./Components/Form";
 import Card from '../../Components/Card';
 import Badge from '../../Components/Badge';
 import Loading from "../../Components/Loading";
+import Image from "../../Components/Image";
 
 import { catchError } from '../../Helper/helper';
 
@@ -78,7 +79,7 @@ class TodoLists extends Component {
                                     ) : (
                                         <div className="box-profile">
                                             <div className="text-center">
-                                                <img
+                                                <Image
                                                     className="profile-user-img img-fluid img-circle"
                                                     src={photoURL}
                                                     style={{ width: '100px', height: '100px', objectFit: 'cover '}}

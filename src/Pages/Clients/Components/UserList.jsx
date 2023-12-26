@@ -45,15 +45,8 @@ const UserList = ({ clientLists }) => {
                 icon="fas fa-search"
             />
             <hr />
-            <div
-                style={{
-                    height: '60vh',
-                    overflow: 'auto',
-                }}
-            >
-                <ul
-                    className="nav nav-pills nav-sidebar flex-column chats-user-container
-                ">
+            <div style={{ height: '63vh', overflow: 'auto' }}>
+                <ul className="nav nav-pills nav-sidebar flex-column chats-user-container">
                     {
                         renderChats.sort((a, b) => b.userInfo.date - a.userInfo.date ).map(({ chatId, userInfo }) => {
                             const {
@@ -82,31 +75,38 @@ const UserList = ({ clientLists }) => {
                                                 className="img-circle img-bordered-sm"
                                                 src={photoURL}
                                                 alt={`User Photo - ${uid}`}
+                                                style={{
+                                                    width: '50px',
+                                                    height: '50px',
+                                                    objectFit: 'cover',
+                                                }}
                                             />
-                                            <span className="username">{displayName}</span>
-                                            <span className="description">
+                                            <div  style={{ marginLeft: '15px'}}>
+                                                <span className="username">{displayName}</span>
+                                                <span className="description">
+                                                    {
+                                                        lastMessage && (
+                                                            <>
+                                                                {lastMessage.text.length > 35 ? `${lastMessage.text.substring(0, 35)}...` : lastMessage.text}
+                                                            </>
+                                                        )
+                                                    }
+                                                <br />
                                                 {
-                                                    lastMessage && (
+                                                    date && (
                                                         <>
-                                                            {lastMessage.text.length > 35 ? `${lastMessage.text.substring(0, 35)}...` : lastMessage.text}
+                                                        {
+                                                            `${fireBaseTime(date).toDateString().toString("MMMM yyyy")}
+                                                            ${' '}
+                                                            -
+                                                            ${' '}
+                                                            ${fireBaseTime(date).toLocaleTimeString()}`
+                                                        }
                                                         </>
                                                     )
                                                 }
-                                            <br />
-                                            {
-                                                date && (
-                                                    <>
-                                                    {
-                                                        `${fireBaseTime(date).toDateString().toString("MMMM yyyy")}
-                                                        ${' '}
-                                                        -
-                                                        ${' '}
-                                                        ${fireBaseTime(date).toLocaleTimeString()}`
-                                                    }
-                                                    </>
-                                                )
-                                            }
-                                            </span>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </li>

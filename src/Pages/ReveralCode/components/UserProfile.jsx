@@ -6,6 +6,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
 
 import Loading from "../../../Components/Loading";
+import Image from "../../../Components/Image";
 
 import defaultImage from "./defaultImage.png";
 
@@ -46,7 +47,12 @@ const UserProfile = ({
                     <Loading title="Memuat..." />
                 ) : (
                     <div className="d-flex">
-                        <img src={photoURL} alt="User Revelar Code Handel" className="rounded-circle" style={{ width: '50px', height: '50px', objectFit: 'cover' }}/>
+                        <Image
+                            className="rounded-circle"
+                            src={photoURL}
+                            alt="User Revelar Code Handel"
+                            style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                        />
                         <div className="d-flex flex-column ml-3">
                             <div className="users-list-name">{displayName}</div>
                             <span className="users-list-date">{email}</span>

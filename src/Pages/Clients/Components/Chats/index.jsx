@@ -31,12 +31,12 @@ const Chat = () => {
   return (
     <>
         {isLoading ? (
-          <div className="overlay position-relative" style={{ height: "400px" }}>
+          <div className="overlay position-relative">
             <Loading />
           </div>
         ) : (
           <>
-              <div className="direct-chat-messages" style={{ height: "400px" }}>
+              <div className="direct-chat-messages" style={{ height: '90%' }}>
                 {messages.map((m) => (
                   <MessagesComponents message={m} key={m.id} />
                 ))}
