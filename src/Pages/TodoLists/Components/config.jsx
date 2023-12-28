@@ -22,6 +22,7 @@ export const TABEL_META = (
     dataLength,
     mainId,
     ChangeStatus,
+    DeleteTask,
 ) => [
     {
         title: 'No',
@@ -67,14 +68,18 @@ export const TABEL_META = (
         title: 'Dibuat Pada',
         key: 'createdDate',
         Cell: (val) => (
-            onSend ? ( <i className="fas fa-sync-alt fa-spin"/> ) : `${fireBaseTime(val).toDateString().toString("MMMM yyyy")}`
+            onSend
+            ? ( <i className="fas fa-sync-alt fa-spin"/> )
+            : <small>{fireBaseTime(val).toDateString().toString("MMMM yyyy")} - {fireBaseTime(val).toLocaleTimeString()}</small>
         )
     },
     {
         title: 'Di update Pada',
         key: 'updatedDate',
         Cell: (val) => (
-            onSend ? ( <i className="fas fa-sync-alt fa-spin"/> ) : `${fireBaseTime(val).toDateString().toString("MMMM yyyy")}`
+            onSend
+            ? ( <i className="fas fa-sync-alt fa-spin"/> )
+            : <small>{fireBaseTime(val).toDateString().toString("MMMM yyyy")} - {fireBaseTime(val).toLocaleTimeString()}</small>
         )
     },
     {
@@ -95,13 +100,20 @@ export const TABEL_META = (
                         type={FORM_TYPES.EDIT}
                         dataLength={dataLength}
                         mainId={mainId}
-                        className="btn-sm mx-2 rounded"
+                        className="btn-sm"
                         headerTitle={(
                             <>
                                 <i className={`${icon} mr-2`} />
                                 Detail Kegiatan - {title}
                             </>
                         )}
+                    />
+                    <Button
+                        label= {onSend ? "Memperoses" : "Hapus"}
+                        className="btn btn-danger btn-sm"
+                        buttonIcon={ onSend ? "fas fa-sync-alt fa-spin" : "fa fa-trash"}
+                        onClick={() => DeleteTask(id)}
+                        disabled={onSend}
                     />
                 </div>
             )

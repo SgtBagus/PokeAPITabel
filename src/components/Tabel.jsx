@@ -82,7 +82,7 @@ const Tabel = ({
     title, dataMeta: { tabelHead, coloumnData }, actionButton,
 }) => {
     return (
-      <div className="card">
+      <div className="card my-1">
         <div className="card-header">
           <h3 className="card-title">{ title }</h3>
         </div>

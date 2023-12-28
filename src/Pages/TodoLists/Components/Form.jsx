@@ -16,7 +16,6 @@ import InputText from "../../../Components/form/InputText";
 import InputTextArea from "../../../Components/form/InputTextArea";
 import InputSelect from "../../../Components/form/InputSelect";
 import Button from "../../../Components/Button";
-import Progress from "../../../Components/ProgressBar";
 import Loading from "../../../Components/Loading";
 import InputToggle from "../../../Components/form/InputToggle";
 
@@ -100,7 +99,6 @@ class Form extends Component {
                 let getData = [];
 
                 Object.entries(doc.exists() && doc.data()).forEach(x => {
-
                     return getData.push(x[1]);
                 });
                 const dataDetails = getData.sort((a, b) => a.orderNumber - b.orderNumber);
@@ -382,7 +380,7 @@ class Form extends Component {
                                     </div>
                                     <div className="col-md-2">
                                         <div className="form-group">
-                                            <label>Status Kegiatan</label>
+                                            <label>Status Aktif</label>
                                             <InputToggle
                                                 value={isActive}
                                                 disabled={type === FORM_TYPES.CREATE}
@@ -415,16 +413,7 @@ class Form extends Component {
                                 {
                                     type === FORM_TYPES.EDIT && (
                                         <>
-                                            <div className="form-group">
-                                                <label>Progress Persent</label>
-                                                <Progress
-                                                    value={parseFloat(this.getPercentage(dataDetails)).toFixed(0)}
-                                                    progressText="Selesai"
-                                                />
-                                            </div>
-                                            <div className="form-group">
-                                                <TabelTodoList title={`Kegiatan List - ${title}`} mainId={taskListId} data={dataDetails} />
-                                            </div>
+                                            <TabelTodoList title={`Kegiatan List - ${title}`} mainId={taskListId} data={dataDetails} />
                                             <div className="form-group">
                                                 <label>
                                                     Progress Kegiatan
