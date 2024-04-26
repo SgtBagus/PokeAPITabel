@@ -3,6 +3,7 @@ import update from "immutability-helper";
 import { FieldFeedback, FieldFeedbacks } from "react-form-with-constraints";
 import { NotificationManager } from "react-notifications";
 import { deleteDoc, doc, onSnapshot, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import Swal from "sweetalert2";
 
 import { db } from "../../../firebase";
 
@@ -26,7 +27,9 @@ import fireBaseTime from '../../../Helper/fireBaseTime';
 import { FORM_TYPES } from "../../../Enum/Form";
 
 import { STATUS_LIST } from "./config";
-import Swal from "sweetalert2";
+import InputFile from "../../../Components/form/InputFile";
+import { checkThisFileIsImageOrNot } from "../../../Helper/checkFile";
+import { uploadFile } from "../../../Data/uploadFile";
 
 class Form extends Component {
     constructor(props) {
@@ -38,6 +41,7 @@ class Form extends Component {
                 title: '',
                 task: '',
                 note: '',
+                attact: null,
                 progressNote: '',
                 isActive: false,
                 statusFinish: false,
@@ -75,13 +79,13 @@ class Form extends Component {
         try {
             onSnapshot(doc(db, "toDoLists", id), (doc) => {
                 const {
-                    id, isActive, updatedDate, task, note, finishDate, progressNote, createdDate, title, statusFinish,
+                    id, isActive, updatedDate, task, note, finishDate, attact, progressNote, createdDate, title, statusFinish,
                     taskListId,
                 } = doc.data();
           
                 this.setState({
                     form: {
-                        id, title, task, note, progressNote, statusFinish, finishDate, createdDate, updatedDate, isActive,
+                        id, title, task, note, progressNote, attact, statusFinish, finishDate, createdDate, updatedDate, isActive,
                     },
                     taskListId,
                 }, () => {
@@ -137,6 +141,18 @@ class Form extends Component {
             form: newForm,
         });
     };
+
+    setImage = (val) => {
+        const { form } = this.state;
+
+        const newForm = update(form, {
+            'attact': { $set: val },
+        });
+
+        this.setState({
+            form: newForm,
+        });
+    }
 
     changeStatus = (val) => {
         const { form, dataDetails } = this.state;
@@ -198,10 +214,17 @@ class Form extends Component {
         }
     }
 
+    uploadImage = async (val) => {
+        const thisFileisImage = checkThisFileIsImageOrNot(val);
+        const uploadImage = await uploadFile(val, thisFileisImage ? "to-do/images/" : "to-do/videos" );
+
+        return uploadImage;
+    }
+
     createHandel = async () => {
         const {
             form: {
-                title, task, note, progressNote, statusFinish,
+                title, task, note, progressNote, statusFinish, attact,
             },
         } = this.state;
         const { params: { uid } } = this.props;
@@ -209,6 +232,11 @@ class Form extends Component {
         try {
             const combinedId = `${uid}${GenerateString(10)}`;
             const taskListId = `${combinedId}${GenerateString(10)}`;
+
+            let uploadImage = null;
+            if (attact) {
+                uploadImage = await this.uploadImage(attact);
+            }
 
             await setDoc(doc(db, "toDoLists", combinedId), {
                 id: combinedId,
@@ -219,6 +247,7 @@ class Form extends Component {
                 note,
                 progressNote,
                 statusFinish,
+                attact: uploadImage,
                 finishDate: null,
                 isActive: false,
                 createdDate: serverTimestamp(),
@@ -246,9 +275,14 @@ class Form extends Component {
     editHandel = async () => {
         const {
             form: {
-                id, title, task, note, isActive, statusFinish,
+                id, title, task, note, isActive, statusFinish, attact,
             },
         } = this.state;
+
+        let uploadImage = null;
+        if (attact) {
+            uploadImage = await this.uploadImage(attact);
+        }
 
         try {
             await updateDoc(doc(db, 'toDoLists', id), {
@@ -257,6 +291,7 @@ class Form extends Component {
                 note,
                 isActive,
                 statusFinish,
+                attact: uploadImage,
                 finishDate: statusFinish ? serverTimestamp() : null,
                 createdDate: serverTimestamp(),
                 updatedDate: serverTimestamp(),
@@ -317,7 +352,8 @@ class Form extends Component {
     render() {
         const {
             form: {
-                id, title, task, note, progressNote, statusFinish, finishDate, createdDate, updatedDate,
+                id, title, task, note, progressNote, statusFinish, attact,
+                finishDate, createdDate, updatedDate,
                 isActive,
             },
             onSend, dataDetails, isLoading, taskListId,
@@ -394,21 +430,34 @@ class Form extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="form-group">
-                                    <label>Catatan</label>  
-                                    <InputTextArea                                        
-                                        value={note}
-                                        changeEvent={(val, e) => this._changeInputHandler('note', val, e)}
-                                        row="5"
-                                        name="note"
-                                        placeholder="Catatan"
-                                        required
-                                    />
-                                    <FieldFeedbacks for="note">
-                                        <FieldFeedback when="valueMissing">
-                                            {GENERATE_ERROR_MESSAGE('Catatan', 'valueMissing')}
-                                        </FieldFeedback>
-                                    </FieldFeedbacks>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <div className="form-group">
+                                            <label>Catatan</label>  
+                                            <InputTextArea                                        
+                                                value={note}
+                                                changeEvent={(val, e) => this._changeInputHandler('note', val, e)}
+                                                row="15"
+                                                name="note"
+                                                placeholder="Catatan"
+                                                required
+                                            />
+                                            <FieldFeedbacks for="note">
+                                                <FieldFeedback when="valueMissing">
+                                                    {GENERATE_ERROR_MESSAGE('Catatan', 'valueMissing')}
+                                                </FieldFeedback>
+                                            </FieldFeedbacks>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <label>Gambar</label>
+                                        <InputFile                 
+                                            value={attact}
+                                            placeHolder="Pilih File"
+                                            style={{ objectFit: 'contain', height: '325px' }}
+                                            changeEvent={(val) => this.setImage(val)}
+                                        />
+                                    </div>    
                                 </div>
                                 {
                                     type === FORM_TYPES.EDIT && (

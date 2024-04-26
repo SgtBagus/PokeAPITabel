@@ -18,21 +18,26 @@ const srcImageRender = (value) => {
     }
 }
 
-const renderFile = (isNew, value, rawFile = null) => {
+const renderFile = (
+    isNew,
+    value,
+    rawFile = null,
+    style,
+) => {
     const isFileIsImage = isNew ? checkThisFileIsImageOrNot(rawFile) : checkfileUrl(value);
 
     return isFileIsImage ? (
         <Image
             src={value}
             className="rounded w-100"
-            style={{ objectFit: "cover", height: '200px' }}
+            style={style}
             alt="Preview Image"
         />
     ) : (
         <Video
             src={value}
             className="rounded w-100"
-            style={{ objectFit: "cover", height: '200px' }}
+            style={style}
             alt="Preview Image"
         />
     )
@@ -52,19 +57,21 @@ const renderPlaceHolder = (isNew, value, placeHolder) => {
     return newPlaceHolder;
 }
 
-const InputFile = ({ value, changeEvent, placeHolder }) => {
+const InputFile = ({
+    value, changeEvent, placeHolder, style,
+}) => {
     const { valueSrcRender, isNew } = srcImageRender(value);
 
     return (
         <div className="input-group">
             {
                 value ? (
-                    renderFile(isNew, valueSrcRender, value)
+                    renderFile(isNew, valueSrcRender, value, style)
                 ) : (
                     <Image
                         src={DEFAULT_IMAGE}
                         className="rounded w-100"
-                        style={{ objectFit: "cover", height: '200px' }}
+                        style={style}
                         alt="Preview Image"
                     />
                 )
@@ -100,11 +107,13 @@ InputFile.propTypes = {
         PropTypes.func,
     ]),
     changeEvent: PropTypes.func.isRequired,
+    style: PropTypes.shape({}),
 };
 
 InputFile.defaultProps = {
     value: null,
-    placeHolder: 'Pilih File'
+    placeHolder: 'Pilih File',
+    style: { objectFit: "cover", height: '200px' },
 };
 
 export default InputFile;

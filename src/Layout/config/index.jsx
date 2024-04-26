@@ -19,12 +19,18 @@ export const MENU_LIST = [
     },
     {
         id: 4,
+        menuName: 'Cons Bot Manage',
+        path: '/cons-bot-manage',
+        icon: 'nav-icon fas fa-robot',
+    },
+    {
+        id: 5,
         menuName: 'Settings',
         path: '/settings',
         icon: 'nav-icon fas fa-cog',
     },
     {
-        id: 5,
+        id: 6,
         menuName: 'Change Logs',
         path: '/change-logs',
         icon: 'nav-icon fas fa-history',
