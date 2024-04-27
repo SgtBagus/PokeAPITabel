@@ -19,7 +19,9 @@ import EditFormReveralCode from "../Pages/ReveralCode/Components/EditFormReveral
 import UsersTodo from "../Pages/UsersTodo/";
 import Client from "../Pages/Clients";
 import TodoLists from "../Pages/TodoLists";
+
 import ConsBotManage from "../Pages/ConsBotManage";
+import ConsBotManageForm from "../Pages/ConsBotManage/Form";
 
 const RenderDefaultLayout = (page, pageName, currentUser, path) => (
   <LayoutDefault
@@ -116,14 +118,38 @@ const App = () => {
         </ProtectedRoute>
         }
       />
+
+
       <Route
-        path="cons-bot-manage" element={
+        path="cons-bot-manage"
+        element={
           <ProtectedRoute>
-            {RenderDefaultLayout(<ConsBotManage dataLogin={currentUser} />, "Cons Bot Management", currentUser, "/cons-bot-manage" )}
+            {
+              RenderDefaultLayout(<ConsBotManage dataLogin={currentUser}/>, "Cons Bot Management", currentUser, "/cons-bot-manage" ,)
+            }
           </ProtectedRoute>
-          }
-        />
-      
+        }
+      />
+      <Route
+        path="cons-bot-manage/create"
+        element={
+          <ProtectedRoute>
+            {
+              RenderDefaultLayout(<ConsBotManageForm dataLogin={currentUser}/>, "Cons Bot Management - Create", currentUser, "/cons-bot-manage" ,)
+            }
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="cons-bot-manage/edit/:id"
+        element={
+          <ProtectedRoute>
+            {
+              RenderDefaultLayout(<ConsBotManageForm dataLogin={currentUser}/>, "Cons Bot Management - Edit", currentUser, "/cons-bot-manage" ,)
+            }
+          </ProtectedRoute>
+        }
+      />
 
       <Route path="login" element={
           <HasRoute>

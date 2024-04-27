@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { query } from 'firebase/database';
+import { useNavigate } from "react-router-dom";
 import { collection, getDocs } from 'firebase/firestore';
 import { NotificationManager } from 'react-notifications';
 
@@ -12,34 +13,43 @@ import Card from '../../Components/Card';
 
 import { LoadingContext } from '../../Context/LoadingContext';
 
+import { ButtonContext } from "../../Context/ButtonContext";
+
+import { FORM_TYPES } from '../../Enum/Form';
 import { catchError } from '../../Helper/helper';
 import { TABEL_META } from './config';
 
 
 const ConsBotManage = () => {
     const [isLoading, setIsLoading] = useState(true);
-    const [settings, setSettings] = useState({ locale: '', name: '', version: '' })
     const [dataMeta, setDataMeta] = useState({ tabelHead: TABEL_META, coloumnData: [] });
 
     const { dispatchLoading } = useContext(LoadingContext);
+    const { dispatch } = useContext(ButtonContext);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         setIsLoading(true);
+
+        dispatch({
+            typeSwtich: "CHANGE_BUTTON",
+            dataButtonList: [
+                {
+                    type: 'button',
+                    className: 'btn btn-primary',
+                    buttonText: 'Create New Argum Key',
+                    onClick: () => { navigate(FORM_TYPES.CREATE) },
+                },
+            ]
+        });
 
         const getData = async () => {
             try {
                 const res = query(collection(db, "chatBotDatas"));
                 const data = await getDocs(res);
                 
-                let getDataTable = [];
-                data.docs.map((x) => {
-                    const { locale, name, version, data } = x.data();
-
-                    setSettings({ locale, name, version});
-
-                    getDataTable = data;
-                    return null;
-                });
+                const getDataTable = data.docs.map((x) => (x.data()));
 
                 setDataMeta({
                     tabelHead: TABEL_META,
@@ -55,9 +65,8 @@ const ConsBotManage = () => {
         };
         
         getData();
-    }, [dispatchLoading]);
+    }, [dispatch, dispatchLoading, navigate]);
 
-    const { locale, name, version } = settings;
     return (
         <div className="row">
             <div className="col-12">
@@ -77,7 +86,7 @@ const ConsBotManage = () => {
                                             Nama
                                         </label>
                                         <InputText
-                                            value={name}
+                                            value="Corpus"
                                             changeEvent={() => {}}
                                             disabled
                                         />
@@ -89,7 +98,7 @@ const ConsBotManage = () => {
                                             Version
                                         </label>
                                         <InputText
-                                            value={version}
+                                            value="1.0"
                                             changeEvent={() => {}}
                                             disabled
                                         />
@@ -101,7 +110,7 @@ const ConsBotManage = () => {
                                             Locale
                                         </label>
                                         <InputText
-                                            value={locale}
+                                            value="en-US"
                                             changeEvent={() => {}}
                                             disabled
                                         />

@@ -39,10 +39,10 @@ const RenderActionButton = (actionButton, data) => {
     )
 }
 
-const RenderTableData = (tabelHead, coloumnData, actionButton) => {
+const RenderTableData = (tabelHead, coloumnData, actionButton, tabelStyle) => {
     if (coloumnData.length === 0) {
         return (
-            <tr>
+            <tr style={tabelStyle}>
                 <td colSpan={tabelHead.length + 1} className='text-center'>
                     Data masih Kosong !
                 </td>
@@ -51,13 +51,13 @@ const RenderTableData = (tabelHead, coloumnData, actionButton) => {
     } else {
         return coloumnData.map((x, idx) => {
             return (
-                <tr key={idx}>
+                <tr key={idx} style={tabelStyle}>
                     {
                         tabelHead.map((data, indexColoumn) => {
-                            const { key, Cell } = data;
+                            const { key, className, style, Cell } = data;
 
                             return (
-                                <td key={indexColoumn}>
+                                <td key={indexColoumn} className={className} style={style}>
                                     {
                                         Cell ? (
                                             data.AllData ? Cell(x) : Cell(x[key])
@@ -79,7 +79,7 @@ const RenderTableData = (tabelHead, coloumnData, actionButton) => {
 }
 
 const Tabel = ({
-    title, dataMeta: { tabelHead, coloumnData }, actionButton,
+    title, dataMeta: { tabelHead, coloumnData }, actionButton, tabelStyle,
 }) => {
     return (
       <div className="card my-1">
@@ -102,7 +102,7 @@ const Tabel = ({
               </tr>
             </thead>
             <tbody>
-                {RenderTableData(tabelHead, coloumnData, actionButton)}
+                {RenderTableData(tabelHead, coloumnData, actionButton, tabelStyle)}
             </tbody>
           </table>
         </div>
@@ -144,30 +144,40 @@ Tabel.defaultProps = {
                 key: 'ID',
                 title: 'Id',
                 Cell: () => {},
+                className: '',
+                style: {},
                 AllData: false,
             },
             {
                 key: 'User',
                 title: 'User',
                 Cell: () => {},
+                className: '',
+                style: {},
                 AllData: false,
             },
             {
                 key: 'Date',
                 title: 'Date',
                 Cell: () => {},
+                className: '',
+                style: {},
                 AllData: false,
             },
             {
                 key: 'Status',
                 title: 'Status',
                 Cell: () => {},
+                className: '',
+                style: {},
                 AllData: false,
             },
             {
                 key: 'Reason',
                 title: 'Reason',
                 Cell: () => {},
+                className: '',
+                style: {},
                 AllData: false,
             },
         ],
