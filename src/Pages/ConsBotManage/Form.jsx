@@ -12,7 +12,6 @@ import Button from '../../Components/Button';
 
 import InputText from "../../Components/form/InputText";
 import InputTextArea from "../../Components/form/InputTextArea";
-import TextEditor from "../../Components/form/TextEditor";
 
 import { GENERATE_ERROR_MESSAGE } from "../../Helper/error";
 
@@ -66,9 +65,79 @@ class ConsBotManageForm extends Component {
         });
     };
 
-    changeAnswer = (val, idx) => {
-        console.log(idx);
-        console.log(val);
+    createNewArray = (type) => {
+        const { form } = this.state;
+        const { utterances, answers } = form;
+
+        const newUtterances = [...utterances, ''];
+        const newAnswers = [...answers, ''];
+
+        let newForm = {};
+        if (type === 'utterances') {
+            newForm = update(form, {
+                utterances: { $set: newUtterances },
+            });
+        } else {
+            newForm = update(form, {
+                answers: { $set: newAnswers },
+            });
+        }
+
+        this.setState({
+            form: newForm,
+        });
+    }
+
+    deleteArray = (type, index) => {
+        const { form } = this.state;
+        const { utterances, answers } = form;
+        
+        const newUtterances = utterances.filter((x, idx) => idx !== index);
+        const newAnswers = answers.filter((x, idx) => idx !== index);
+
+        let newForm = {};
+        if (type === 'utterances') {
+            newForm = update(form, {
+                utterances: { $set: newUtterances },
+            });
+        } else {
+            newForm = update(form, {
+                answers: { $set: newAnswers },
+            });
+        }
+
+        this.setState({
+            form: newForm,
+        });
+    }
+
+    changeAnswer = (type, value, index) => {
+        const { form } = this.state;
+        const { utterances, answers } = form;
+
+        const newUtterances = utterances.map((x, idx) => idx === index ? value : x )
+        const newAnswers = answers.map((x, idx) => idx === index ? value : x )
+
+        let newForm = {};
+        if (type === 'utterances') {
+            newForm = update(form, {
+                utterances: { $set: newUtterances },
+            });
+        } else {
+            newForm = update(form, {
+                answers: { $set: newAnswers },
+            });
+        }
+
+        this.setState({
+            form: newForm,
+        });
+    }
+
+    sumbitHandel = () => {
+        const { form } = this.state;
+
+        console.log(form);
     }
 
     render() {
@@ -77,6 +146,7 @@ class ConsBotManageForm extends Component {
                 intent, utterances, answers,
             }
         } = this.state;
+        const { navigate } = this.props;
 
         return (
             <Card>
@@ -120,18 +190,18 @@ class ConsBotManageForm extends Component {
                                             <div className="flex-fill">
                                                 <InputTextArea
                                                     value={x}
-                                                    changeEvent={(val, e) => this._changeInputHandler('note', val, e)}
+                                                    changeEvent={(val, e) => { this.changeAnswer('utterances', val, idx) }}
                                                     row="3"
-                                                    name="note"
-                                                    placeholder="Catatan"
+                                                    name="utterances"
+                                                    placeholder="Utterances"
                                                     required
                                                 />
                                             </div>
                                             <div>
                                                 <Button
                                                     className="btn btn-danger rounded mx-2"
-                                                    buttonIcon="fa fa-trash"
-                                                    onClick={() => {}}
+                                                    buttonIcon="fa fa-trash"deleteArray
+                                                    onClick={() => { this.deleteArray('utterances', idx) }}
                                                 />
                                             </div>
                                         </div>
@@ -142,7 +212,7 @@ class ConsBotManageForm extends Component {
                             <Button
                                 label="Tambah Utterances - (Ucapan)"
                                 className="btn btn-primary rounded w-100 mx-2"
-                                onClick={() => {}}
+                                onClick={() => { this.createNewArray('utterances') }}
                             />
                         </div>
                     </div>
@@ -163,16 +233,20 @@ class ConsBotManageForm extends Component {
                                                 <b>{no}</b>
                                             </div>
                                             <div className="flex-fill">
-                                                <TextEditor
+                                                <InputTextArea
                                                     value={x}
-                                                    changeEvent={(val) => { this.changeAnswer(val, idx) }}
+                                                    changeEvent={(val, e) => { this.changeAnswer('answers', val, idx) }}
+                                                    row="3"
+                                                    name="answers"
+                                                    placeholder="Answers"
+                                                    required
                                                 />
                                             </div>
                                             <div>
                                                 <Button
                                                     className="btn btn-danger rounded mx-2"
                                                     buttonIcon="fa fa-trash"
-                                                    onClick={() => {}}
+                                                    onClick={() => { this.deleteArray('answers', idx) }}
                                                 />
                                             </div>
                                         </div>
@@ -183,7 +257,7 @@ class ConsBotManageForm extends Component {
                             <Button
                                 label="Tambah Answers - (Jawaban)"
                                 className="btn btn-primary rounded w-100 mx-2"
-                                onClick={() => {}}
+                                onClick={() => { this.createNewArray('answers') }}
                             />
                         </div>
                     </div>
@@ -193,13 +267,13 @@ class ConsBotManageForm extends Component {
                                 label="Back"
                                 className="btn btn-default rounded mx-2"
                                 buttonIcon="fa fa-arrow-left"
-                                onClick={() => {}}
+                                onClick={() => navigate('/cons-bot-manage')}
                             />
                             <Button
                                 label="Save"
                                 className="btn btn-primary rounded mx-2"
                                 buttonIcon="fa fa-save"
-                                onClick={() => {}}
+                                onClick={() => this.sumbitHandel()}
                             />
                         </div>
                     </div>
