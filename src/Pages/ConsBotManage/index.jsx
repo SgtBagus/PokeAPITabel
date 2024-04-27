@@ -125,7 +125,7 @@ const ConsBotManage = () => {
                                     edit: {
                                         enabled: true,
                                         onClick: ({id}) => {
-                                            console.log(id);
+                                            navigate(`${FORM_TYPES.EDIT}/${id}`)
                                         },
                                     },
                                     delete: {

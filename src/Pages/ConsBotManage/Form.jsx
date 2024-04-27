@@ -16,36 +16,36 @@ import InputTextArea from "../../Components/form/InputTextArea";
 import { GENERATE_ERROR_MESSAGE } from "../../Helper/error";
 
 class ConsBotManageForm extends Component {
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    this.state = {
-      form: {
-        id: '',
-        intent: '',
-        utterances: [
-            "say about you",
-            "why are you here",
-            "what is your personality",
-            "describe yourself",
-        ],
-        answers: [
-            "I'm a virtual agent",
-            "Think of me as a virtual agent",
-            "Well, I'm not a person, I'm a virtual agent",
-        ]
-      },
-      isFormSubmitted: false,
+        this.state = {
+        form: {
+            id: '',
+            intent: '',
+            utterances: [
+                "say about you",
+                "why are you here",
+                "what is your personality",
+                "describe yourself",
+            ],
+            answers: [
+                "I'm a virtual agent",
+                "Think of me as a virtual agent",
+                "Well, I'm not a person, I'm a virtual agent",
+            ]
+        },
+        isFormSubmitted: false,
+        };
+    }
+
+    componentDidMount = () => {
+        const {
+        loadingParam: { dispatchLoading },
+        } = this.props;
+
+        dispatchLoading(false);
     };
-  }
-
-  componentDidMount = () => {
-    const {
-      loadingParam: { dispatchLoading },
-    } = this.props;
-
-    dispatchLoading(false);
-  };
 
 
     _changeInputHandler = async (type, val, e) => {
