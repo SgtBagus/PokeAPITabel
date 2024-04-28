@@ -131,7 +131,7 @@ const App = () => {
         }
       />
       <Route
-        path="cons-bot-manage/create"
+        path="cons-bot-manage/:type"
         element={
           <ProtectedRoute>
             {
@@ -141,7 +141,7 @@ const App = () => {
         }
       />
       <Route
-        path="cons-bot-manage/edit/:id"
+        path="cons-bot-manage/:type/:id"
         element={
           <ProtectedRoute>
             {

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { query } from 'firebase/database';
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { NotificationManager } from 'react-notifications';
+import Swal from 'sweetalert2';
 
 import { db } from "../../firebase";
 
@@ -66,6 +67,39 @@ const ConsBotManage = () => {
         
         getData();
     }, [dispatch, dispatchLoading, navigate]);
+
+    const confirmDeleteHandel = (data) => {
+        const { intent, id } = data;
+
+        Swal.fire({
+            title: "Apakah anda yakin akan menghapus Data ini",
+            text: `Cons Bot Management - ${intent}`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Iya, Hapus data ini!",
+            showLoaderOnConfirm: true,
+            preConfirm: async () => {
+                try {
+                    await deleteDoc(doc(db, "chatBotDatas", id));
+                } catch (error) {
+                    Swal.showValidationMessage(`Request failed: ${error}`);
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+          }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Success",
+                    text: "Berhasil Menghapus data, halaman ini akan di mulai ulang",
+                    icon: "success"
+                });
+
+                setTimeout(() => { window.location.reload() }, 3000);
+            }
+        });
+    }
 
     return (
         <div className="row">
@@ -131,7 +165,7 @@ const ConsBotManage = () => {
                                     delete: {
                                         enabled: true,
                                         onClick: (data) => {
-                                            console.log(data);
+                                            confirmDeleteHandel(data);
                                         },
                                     },
                                 }}
