@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 
 import { LayoutDefault } from "../Layout"; 
 
-import PokemonTabel from "../Pages";
+import PokemonTabel from "../Pages/Pokemon";
 import { NotFound404 } from "../Layout/404";
 
 const RenderDefaultLayout = (page, pageName, currentUser, path) => (
@@ -14,12 +14,7 @@ const RenderDefaultLayout = (page, pageName, currentUser, path) => (
 const App = () => {
   return (
     <Routes>
-      <Route
-        path=""
-        element={
-          RenderDefaultLayout(<PokemonTabel dataLogin={null}/>, "Pokemon List", [], "/" ,)
-        }
-      />
+      <Route path="pokemon" element={ RenderDefaultLayout(<PokemonTabel dataLogin={null}/>, "Pokemon List", [], "/pokemon" ,)}/>
 
       <Route path="*" element={<NotFound404 />} />
     </Routes>

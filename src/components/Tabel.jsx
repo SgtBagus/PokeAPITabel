@@ -83,10 +83,6 @@ const Tabel = ({
 }) => {
     return (
       <div className="card my-1">
-        <div className="card-header">
-          <h3 className="card-title">{ title }</h3>
-        </div>
-
         <div className="card-body table-responsive p-0">
           <table className="table table-head-fixed text-nowrap">
             <thead>
