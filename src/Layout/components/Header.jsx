@@ -18,6 +18,11 @@ export const HeaderComponents = () => {
                 Home
               </a>
             </li>
+            <li className="nav-item">
+              <a href="index3.html" className="nav-link">
+                Form
+              </a>
+            </li>
           </ul>
           <form className="form-inline ml-0 ml-md-3">
             <div className="input-group input-group-sm">

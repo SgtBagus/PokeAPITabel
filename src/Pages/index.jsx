@@ -1,9 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
 import { NotificationManager } from "react-notifications";
+import { useNavigate } from "react-router-dom";
 
 import { LoadingContext } from "../Context/LoadingContext";
+import { ButtonContext } from "../Context/ButtonContext";
 
-import Card from "../Components/Card";
+import Card from "../Components/CardProduct";
 import InputText from "../Components/form/InputText";
 import InputSelect from '../Components/form/InputSelect';
 import Button from "../Components/Button";
@@ -11,9 +13,11 @@ import Button from "../Components/Button";
 import { catchError } from "../Helper/helper";
 
 const PokemonTabel = () => {
+  const navigate = useNavigate();
+
   const [productsList, setProductList] = useState([]);
   const [filter, setFilter] = useState({
-    limit: 12,
+    limit: 10,
     search: '',
     order: 'asd',
     sortBy: 'title',
@@ -23,6 +27,7 @@ const PokemonTabel = () => {
   const [currentAPI, setCurrentAPI] = useState(`https://dummyjson.com/products/search?q=${search}&limit=${limit}&sortBy=${sortBy}&sortBy=${order}`);
 
   const { dispatchLoading } = useContext(LoadingContext);
+  const { dispatch } = useContext(ButtonContext);
 
   useEffect(() => {
     const getData = async () => {
@@ -40,11 +45,24 @@ const PokemonTabel = () => {
         NotificationManager.error(catchError(err), "Terjadi Kesalahan", 5000);
       }
 
+      dispatch({
+        typeSwtich: "CHANGE_BUTTON",
+        dataButtonList: [
+          {
+            id: 1,
+            type: "button",
+            className: "btn btn-primary",
+            onClick: () => { navigate('create') },
+            buttonText: "Create",
+            iconButton: "fa fa-plus",
+          },
+        ],
+      });
       dispatchLoading(false);
     };
 
     getData();
-  }, [currentAPI, dispatchLoading]);
+  }, [currentAPI, dispatch, dispatchLoading, navigate]);
 
   return (
     <>
@@ -90,7 +108,6 @@ const PokemonTabel = () => {
             className="btn btn-primary mx-2"
             type="button"
             onClick={() => {
-              console.log(`https://dummyjson.com/products/search?q=${search}&limit=${limit}&sortBy=${sortBy}&order=${order}`);
               setCurrentAPI(`https://dummyjson.com/products/search?q=${search}&limit=${limit}&sortBy=${sortBy}&order=${order}`)
             }}
           />
@@ -107,7 +124,7 @@ const PokemonTabel = () => {
                 icon="fa fa-icon"
                 img={images[0]}
                 type="card-primary"
-                onClickData={data}
+                data={data}
               >
                 {description}
                 <br />
