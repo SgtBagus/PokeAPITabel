@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import { LayoutDefault } from "../Layout"; 
 
-import Home from "../Pages/Dashboard";
+// import Home from "../Pages/Dashboard";
 
 import Login from "../Pages/Login/";
 import ForgotPassword from "../Pages/Login/ForgotPassword";
@@ -23,12 +23,10 @@ import TodoLists from "../Pages/TodoLists";
 import ConsBotManage from "../Pages/ConsBotManage";
 import ConsBotManageForm from "../Pages/ConsBotManage/Form";
 
+import PokemonTabel from "../Pages/PokemonTabel";
+
 const RenderDefaultLayout = (page, pageName, currentUser, path) => (
-  <LayoutDefault
-    dataLogin={currentUser}
-    pageName={pageName}
-    path={path}
-  >
+  <LayoutDefault dataLogin={currentUser} pageName={pageName} path={path}>
     {page}
   </LayoutDefault>
 )
@@ -59,12 +57,12 @@ const App = () => {
 
   return (
     <Routes>
-      <Route path="" element={
+      {/* <Route path="" element={
         <ProtectedRoute>
           {RenderDefaultLayout(<Home dataLogin={currentUser} />, "Home", currentUser, "/" )}
         </ProtectedRoute>
         }
-      />
+      /> */}
       <Route path="client">
         <Route
           index
@@ -161,6 +159,13 @@ const App = () => {
           <ForgotPassword />
         </HasRoute>
       } />
+
+      <Route
+        path=""
+        element={
+          RenderDefaultLayout(<PokemonTabel dataLogin={null}/>, "Pokemon List", [], "/" ,)
+        }
+      />
 
       <Route path="*" element={<NotFound404 />} />
     </Routes>
