@@ -117,9 +117,8 @@ const PokemonTabel = () => {
         {productsList.map((data) => {
           const { id, title, description, images, price, stock} = data;
           return (
-            <div className="col-lg-3 col-md-4 col-sm-6 col-xs-12 d-flex align-items-stretch">
+            <div className="col-lg-3 col-md-4 col-sm-6 col-xs-12 d-flex align-items-stretch" key={id}>
               <Card
-                key={id}
                 title={title}
                 icon="fa fa-icon"
                 img={images[0]}

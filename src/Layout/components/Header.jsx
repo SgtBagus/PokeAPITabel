@@ -14,13 +14,13 @@ export const HeaderComponents = () => {
         <div className="collapse navbar-collapse order-3" id="navbarCollapse">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a href="index3.html" className="nav-link">
+              <a href="/" className="nav-link">
                 Home
               </a>
             </li>
             <li className="nav-item">
-              <a href="index3.html" className="nav-link">
-                Form
+              <a href="/pokemon" className="nav-link">
+                Pokemon
               </a>
             </li>
           </ul>
