@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { withHocks } from '../../Context/WithParams';
+import { withHocks } from '../Context/WithParams';
 
 class PokemonTabel extends Component {
   componentDidMount = () => {
