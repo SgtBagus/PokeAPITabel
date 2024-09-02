@@ -10,7 +10,7 @@ export const HeaderPageComponent = ({
     const { dataButtonList } = useContext(ButtonContext);
     return (
         <div className="content-header">
-            <div className="container-fluid">
+            <div className="container">
                 <div className="row mb-2">
                     <div className="col-sm-4">
                         <h1 className="m-0">{pageName}</h1>

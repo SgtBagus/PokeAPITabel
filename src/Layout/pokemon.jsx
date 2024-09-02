@@ -1,24 +1,19 @@
 import React from "react";
 
-import { HeaderComponents } from "./components/Header";
-import { FooterComponents } from "./components/Footer";
-
 import { HeaderPageComponent } from "./components/HeaderPageComponent";
 
 import { ButtonContextProvider } from "../Context/ButtonContext";
 import { LoadingContextProvider } from "../Context/LoadingContext";
 
-export const LayoutDefault = ({ children, pageName }) => (
+export const LayoutPokemon = ({ children, pageName }) => (
   <LoadingContextProvider>
-    <HeaderComponents />
-    <div className="content-wrapper">
+    <div className="p-3">
       <ButtonContextProvider>
         <HeaderPageComponent pageName={pageName} />
         <section className="content">
-          <div className="container">{children}</div>
+          <div className="container-fluid">{children}</div>
         </section>
       </ButtonContextProvider>
     </div>
-    <FooterComponents />
   </LoadingContextProvider>
 );

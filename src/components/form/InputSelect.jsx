@@ -50,15 +50,21 @@ class InputSelect extends PureComponent {
   render() {
     const {
       disabled, name, id, value,
-      required, placeholder, data,
+      required, placeholder, data, classes,
     } = this.props;
     const { picked } = this.state;
+
+    let inputStyleClass = 'form-control';
+
+    if (classes) {
+      inputStyleClass = `${inputStyleClass} ${classes}`;
+    }
 
     return (
       <select
         name={name}
         id={id}
-        className="form-control"
+        className={inputStyleClass}
         value={value}
         required={!!required}
         onChange={(e) => this.handleChange(e.target.value, e)}

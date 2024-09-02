@@ -41,7 +41,7 @@ const PokemonTabel = () => {
 
             columnData = results.map(({ name, url }) => {
               const pokemonIndex = url.split("/")[url.split("/").length - 2];
-              return { no: pokemonIndex, name };
+              return { id: pokemonIndex, no: pokemonIndex, name };
             });
 
             setNextPage({ previous, next });
@@ -76,7 +76,7 @@ const PokemonTabel = () => {
           iconButton: "fa fa-arrow-left",
         },
         {
-          id: 1,
+          id: 2,
           type: "button",
           className: "btn btn-default",
           onClick: () => {
